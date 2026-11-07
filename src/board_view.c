@@ -6,6 +6,7 @@
 
 u8 g_view_bx;
 u8 g_view_by;
+u8 g_view_lines_done;
 
 /* What's on screen now, to redraw only what changed. */
 static u8 s_cur_x;
@@ -237,11 +238,13 @@ static void refresh_lines(u8 r, u8 c)
 
     if (done != s_row_done[r]) {
         s_row_done[r] = done;
+        g_view_lines_done += done;
         draw_row_clues(r);
     }
     done = board_col_done(c);
     if (done != s_col_done[c]) {
         s_col_done[c] = done;
+        g_view_lines_done += done;
         draw_col_clues(c);
     }
 }

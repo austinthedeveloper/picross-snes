@@ -20,6 +20,11 @@ extern u16 g_board_dirty[BOARD_DIRTY_MAX];
 extern u8 g_board_dirty_count;
 extern u8 g_board_dirty_all;
 
+/* Every board_set that changed a cell bumps this, and the value it set is
+ * kept, for the play screen's sounds. */
+extern u8 g_board_changes;
+extern u8 g_board_last_value;
+
 /* Empties every cell of g_puzzle. */
 void board_clear(void);
 /* Sets a cell, keeping the counts and the dirty list. */

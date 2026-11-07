@@ -6,6 +6,8 @@ u16 g_wrong_filled;
 u16 g_board_dirty[BOARD_DIRTY_MAX];
 u8 g_board_dirty_count;
 u8 g_board_dirty_all;
+u8 g_board_changes;
+u8 g_board_last_value;
 
 void board_clear(void)
 {
@@ -38,6 +40,8 @@ void board_set(u16 index, u8 value)
             g_wrong_filled++;
     }
     g_cells[index] = value;
+    g_board_changes++;
+    g_board_last_value = value;
     if (g_board_dirty_count < BOARD_DIRTY_MAX)
         g_board_dirty[g_board_dirty_count++] = index;
     else

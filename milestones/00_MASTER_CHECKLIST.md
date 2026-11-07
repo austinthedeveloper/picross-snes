@@ -32,7 +32,10 @@
 
 ## M2: Polish (version 0.2)
 
-- [ ] `M2-SFX-01` Sound effects
+- [x] `M2-SFX-01` Sound effects
+  - Accept: board, line, mistake, hint, solve, news and menu sounds; an option
+    to turn them off
+  - Verified: ADR-006, `mesen_voices.lua` on `solve_heart.timeline`
 - [ ] `M2-THUMB-01` Live thumbnail in the HUD
 - [ ] `M2-BIG-01` 16-pixel cells for small boards
 - [ ] `M2-MURAL-01` Murals

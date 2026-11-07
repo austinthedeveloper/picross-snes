@@ -1,3 +1,4 @@
+#include "audio.h"
 #include "board.h"
 #include "input.h"
 #include "play.h"
@@ -77,6 +78,8 @@ void result_enter(void)
     for (i = 0; i < g_news_count && y < 26; i++)
         draw_news(i, y++);
     bg3_center(27, "A NEXT  B LIST", TEXT_DIM);
+    if (g_news_count)
+        audio_play(SFX_NEWS, 12);
 }
 
 void result_update(void)

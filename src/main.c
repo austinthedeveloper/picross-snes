@@ -1,3 +1,6 @@
+#include "audio.h"
+#include "board.h"
+#include "board_view.h"
 #include "input.h"
 #include "save.h"
 #include "scene.h"
@@ -22,6 +25,19 @@ static u8 s_next;
 void scene_goto(u8 scene)
 {
     s_next = scene;
+}
+
+/* Menu sounds on every screen but the board, which plays its own. */
+static void menu_sounds(void)
+{
+    if (s_scene == SCENE_PLAY)
+        return;
+    if (g_pressed & KEY_B)
+        audio_play(SFX_BACK, 9);
+    else if (g_pressed & (KEY_A | KEY_START))
+        audio_play(SFX_CONFIRM, 9);
+    else if (g_repeat & (KEY_UP | KEY_DOWN | KEY_LEFT | KEY_RIGHT | KEY_SELECT))
+        audio_play(SFX_BLIP, 7);
 }
 
 static void enter(u8 scene)
@@ -61,6 +77,7 @@ int main(void)
     consoleInit();
     video_init();
     save_load();
+    audio_init();
     /* WRAM is not cleared at power-on: every global the scenes share. */
     menu_init();
     badges_init();
@@ -71,6 +88,9 @@ int main(void)
     g_play_slot = 0;
     g_play_resume = 0;
     g_news_count = 0;
+    g_board_changes = 0;
+    g_board_last_value = 0;
+    g_view_lines_done = 0;
     g_solve_result = 0;
     s_next = SCENE_NONE;
     s_scene = SCENE_TITLE;
@@ -79,7 +99,9 @@ int main(void)
     video_fade_in();
     while (1) {
         input_update();
+        menu_sounds();
         update(s_scene);
+        audio_update();
         if (s_next != SCENE_NONE) {
             video_fade_out();
             s_scene = s_next;
@@ -88,6 +110,7 @@ int main(void)
             enter(s_scene);
             input_swallow();
             video_fade_in();
+            audio_update();
             continue;
         }
         video_frame();

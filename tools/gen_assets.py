@@ -10,6 +10,7 @@ here and in tools/font.py. Outputs (never committed):
   board.pic        BG1 tiles, 4bpp: cells, clues, frames, bars, medals
   obj.pic          sprite tiles, 4bpp: the board cursor
   palette.pal      all of CGRAM (256 colours, BGR555)
+  sfx.it, sfx.h    the sound effects (tools/sfx.py), for smconv
   pack_*.bin       the puzzle pack (docs/PUZZLES.md has the layout)
   tiles.h          tile and palette numbers for the C code
   pack.h           pack counts and limits
@@ -26,6 +27,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from font import ACCENT, GLYPHS, LOGO_FONT, NARROW  # noqa: E402
+from sfx import sfx_assets  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "assets" / "generated"
@@ -454,6 +456,9 @@ def main():
     write_if_changed(OUT / "board.pic", bytes(tiles.data))
     write_if_changed(OUT / "obj.pic", obj_tiles())
     write_if_changed(OUT / "palette.pal", build_palette())
+    module, sfx_h, seconds = sfx_assets()
+    write_if_changed(OUT / "sfx.it", module)
+    write_if_changed(OUT / "sfx.h", sfx_h)
     bins = pack_bins(pack, by_id)
     for name, data in bins.items():
         write_if_changed(OUT / f"{name}.bin", data)

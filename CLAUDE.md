@@ -70,5 +70,7 @@ runs. Conventions come from Pickleball '94 (`../pickleball`, especially
   `g_solve_frames` holds the last solve's bookkeeping cost.
 - Pillow is not installed; `tools/contact_sheet.py` tiles screenshots and
   `sips -z 448 512 in.png --out out.png` upscales one.
+- Sound: `tools/mesen_voices.lua` (same environment variables, no
+  `--noAudio`) prints each SPC700 voice start, to show effects really play.
 - MesenCE keeps saves in `~/Library/Application Support/MesenCE/Saves/`,
   named after the ROM file.

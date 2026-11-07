@@ -7,17 +7,24 @@ BUILD_ID ?= $(shell id=$$(git rev-parse --short HEAD 2>/dev/null || echo dev); \
 ROMNAME := picross-$(VERSION_NAME)-$(CONFIG)-$(BUILD_ID)
 ROMTITLE := PICROSS 94
 
-# FastROM LoROM, 4 banks of 32 KiB to start (ADR-001); grow ROMBANKS and
-# ROMSIZE together (ROMSIZE is log2 of the size in KiB: $07 = 128 KiB).
+# FastROM LoROM, 8 banks of 32 KiB (ADR-001); grow ROMBANKS and ROMSIZE
+# together (ROMSIZE is log2 of the size in KiB: $08 = 256 KiB).
 FASTROM := 1
-ROMBANKS := 4
-ROMSIZE := 07
+ROMBANKS := 8
+ROMSIZE := 08
 
 # ROM + RAM + battery, 8 KiB SRAM: two save copies (ADR-003).
 CARTRIDGETYPE := 02
 SRAMSIZE := 03
 
 export ROMNAME ROMTITLE FASTROM
+
+# Sound (ADR-006): tools/sfx.py writes sfx.it; smconv turns it into a
+# SNESMOD soundbank at bank 6 (one bank: under 32 KiB). -f checks it fits
+# sound RAM.
+AUDIOFILES := assets/generated/sfx.it
+export SOUNDBANK := assets/generated/soundbank
+SMCONVFLAGS := -s -o $(SOUNDBANK) -b 6 -f
 
 CONFIG_TAG := $(CONFIG)
 ifeq ($(CONFIG),debug)
@@ -47,6 +54,7 @@ release:
 rom: assets
 	@$(MAKE) --no-print-directory cleanBuildRes CONFIG=$(CONFIG)
 	@rm -f $(ROMNAME).sfc $(ROMNAME).sym $(ROMNAME).symfull
+	@$(MAKE) --no-print-directory $(SOUNDBANK).asm CONFIG=$(CONFIG)
 	@$(MAKE) --no-print-directory $(ROMNAME).sfc CONFIG=$(CONFIG)
 	@mkdir -p build/$(CONFIG)
 	@rm -f build/$(CONFIG)/picross-*

@@ -67,11 +67,13 @@ static void draw_row_clues(u8 r)
     u8 x = (u8)(g_view_bx - g_max_row_clues);
     const u8 *clues = g_row_clues + ((u16)r << 4);
     u8 k;
+    u16 blank = (r & 1) ? T_CLUE_BLANK_ALT : T_CLUE_BLANK;
+    u16 base = (r & 1) ? T_CLUE_ALT : T_CLUE;
 
     for (k = 0; k < g_max_row_clues - count; k++)
-        bg1_put(x++, y, BG_ENTRY(T_CLUE_BLANK, pal));
+        bg1_put(x++, y, BG_ENTRY(blank, pal));
     for (k = 0; k < count; k++)
-        bg1_put(x++, y, BG_ENTRY(T_CLUE + clues[k], pal));
+        bg1_put(x++, y, BG_ENTRY(base + clues[k], pal));
 }
 
 static void draw_col_clues(u8 c)
@@ -82,11 +84,13 @@ static void draw_col_clues(u8 c)
     u8 y = (u8)(g_view_by - g_max_col_clues);
     const u8 *clues = g_col_clues + ((u16)c << 4);
     u8 k;
+    u16 blank = (c & 1) ? T_CLUE_BLANK_ALT : T_CLUE_BLANK;
+    u16 base = (c & 1) ? T_CLUE_ALT : T_CLUE;
 
     for (k = 0; k < g_max_col_clues - count; k++)
-        bg1_put(x, y++, BG_ENTRY(T_CLUE_BLANK, pal));
+        bg1_put(x, y++, BG_ENTRY(blank, pal));
     for (k = 0; k < count; k++)
-        bg1_put(x, y++, BG_ENTRY(T_CLUE + clues[k], pal));
+        bg1_put(x, y++, BG_ENTRY(base + clues[k], pal));
 }
 
 static void draw_row(u8 r)

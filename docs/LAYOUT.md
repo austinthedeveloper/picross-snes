@@ -23,7 +23,7 @@ cursor. BG2 is off.
   accent glyphs (heart, star).
 - BG1 palettes 2-7 (colours 32-127) share one index layout:
   1 cell, 2 grid line, 3 guide line (every 5th), 4 ink, 5 mark, 6 clue
-  background, 8 card, 9 card border, 12-15 medal (dark, light, plate,
+  background, 7 striped clue background (odd lines), 8 card, 9 card border, 12-15 medal (dark, light, plate,
   picture).
   - 2 normal, 3 highlighted (1 and 6 turn highlighter yellow), 4 mistake
     (5 turns accent), 5 mistake + highlighted, 6 finished clue (4 turns
@@ -56,4 +56,6 @@ BG3.
 Row clues are right-aligned against the board, column clues bottom-aligned
 above it, each number in its own tile (1-9 in the 5x7 font, 10-20 in 3x7
 narrow digits). A line's whole clue band takes its palette, so the
-highlight runs from the board to the far clue.
+highlight runs from the board to the far clue. Odd lines' clue tiles use a
+slightly darker background (colour 7), so two-digit clues in neighbouring
+columns don't read as one number.

@@ -40,6 +40,9 @@ void bg1_clear(void);
 void bg3_clear(void);
 void bg1_put(u8 x, u8 y, u16 entry);
 void bg1_fill(u8 x, u8 y, u8 w, u8 h, u16 entry);
+/* Scrolls rows y..y+rows-1 of both maps by one row, up or down; the row
+ * that comes in keeps its old contents for the caller to redraw. */
+void maps_scroll_rows(u8 y, u8 rows, u8 up);
 /* Sets or clears palette bit 0 (the board highlight) on n entries going
  * right, or down when down is 1. */
 void bg1_highlight(u8 x, u8 y, u8 n, u8 down, u8 on);

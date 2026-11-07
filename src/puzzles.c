@@ -103,8 +103,18 @@ static void scroll_to_selection(void)
         s_top = g_sel_index;
     else if (g_sel_index >= s_top + LIST_ROWS)
         s_top = (u8)(g_sel_index - LIST_ROWS + 1);
-    if (old != s_top)
+    if (old == s_top)
+        return;
+    /* One row: shift the rows on screen and draw the one coming in. */
+    if (s_top == old + 1) {
+        maps_scroll_rows(LIST_Y, LIST_ROWS, 1);
+        draw_row((u8)(s_top + LIST_ROWS - 1));
+    } else if (s_top + 1 == old) {
+        maps_scroll_rows(LIST_Y, LIST_ROWS, 0);
+        draw_row(s_top);
+    } else {
         draw_list();
+    }
 }
 
 void puzzles_enter(void)

@@ -1,0 +1,54 @@
+# Hearts mode: a mistake, the hint menu, a 20x20, the save after reboot.
+shot 60
+80 80 down
+84 84 down
+88 88 down
+92 92 down
+96 96 down
+100 101 a
+145 145 right
+shot 149
+153 154 b
+198 198 up
+202 202 up
+206 206 up
+210 210 up
+214 214 up
+218 219 a
+263 264 a
+308 309 a
+353 353 a
+shot 359
+363 363 down
+367 367 x
+shot 373
+377 377 down
+381 381 a
+shot 389
+393 394 start
+shot 408
+438 438 down
+442 442 down
+446 447 a
+491 492 b
+536 536 up
+540 540 up
+544 544 up
+548 548 up
+552 552 up
+556 556 up
+560 560 up
+564 564 up
+568 568 up
+572 572 up
+576 576 up
+580 580 up
+584 584 up
+588 588 up
+592 592 up
+596 596 up
+600 600 up
+604 604 up
+608 608 up
+612 613 b
+shot 657

@@ -27,6 +27,10 @@ u16 md_entry;
 extern void map_text(void);
 extern void map_fill(void);
 extern void map_hl(void);
+u16 wm_src;
+u16 wm_dst;
+u16 wm_len;
+extern void wram_move(void);
 static void map_fill_rect(u16 *map, u8 x, u8 y, u8 w, u8 h, u16 entry);
 
 void video_init(void)
@@ -140,6 +144,32 @@ static void map_fill_rect(u16 *map, u8 x, u8 y, u8 w, u8 h, u16 entry)
     md_h = h;
     md_entry = entry;
     map_fill();
+}
+
+void maps_scroll_rows(u8 y, u8 rows, u8 up)
+{
+    /* Rows y..y+rows-1 of both maps move one row up (or down). */
+    u16 top = (u16)y << 5;
+    u16 bytes = (u16)(rows - 1) << 6;
+
+    wm_len = bytes;
+    if (up) {
+        wm_src = (u16)(g_bg1_map + top + 32);
+        wm_dst = (u16)(g_bg1_map + top);
+        wram_move();
+        wm_src = (u16)(g_bg3_map + top + 32);
+        wm_dst = (u16)(g_bg3_map + top);
+        wram_move();
+    } else {
+        wm_src = (u16)(g_bg1_map + top);
+        wm_dst = (u16)(g_bg1_map + top + 32);
+        wram_move();
+        wm_src = (u16)(g_bg3_map + top);
+        wm_dst = (u16)(g_bg3_map + top + 32);
+        wram_move();
+    }
+    g_bg1_dirty |= band_bits(y, rows);
+    g_bg3_dirty |= band_bits(y, rows);
 }
 
 void bg1_highlight(u8 x, u8 y, u8 n, u8 down, u8 on)

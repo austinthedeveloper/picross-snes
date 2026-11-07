@@ -1,0 +1,16 @@
+# Generated (make assets / make debug)
+assets/generated/
+build/
+dist/
+hdr.asm
+linkfile
+*.obj
+*.ps
+src/*.asm
+picross-*.sfc
+picross-*.sym
+picross-*.symfull
+picross-*.log
+*.dbg
+__pycache__/
+.DS_Store

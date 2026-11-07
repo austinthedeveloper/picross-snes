@@ -72,5 +72,8 @@ runs. Conventions come from Pickleball '94 (`../pickleball`, especially
   `sips -z 448 512 in.png --out out.png` upscales one.
 - Sound: `tools/mesen_voices.lua` (same environment variables, no
   `--noAudio`) prints each SPC700 voice start, to show effects really play.
+- A `test/smoke/<name>.pokes` file next to a timeline writes RAM by symbol
+  before the run plays (`tools/pokes.py`): set up a save instead of playing
+  up to it (`badge.pokes` marks 21 starter puzzles solved).
 - MesenCE keeps saves in `~/Library/Application Support/MesenCE/Saves/`,
   named after the ROM file.

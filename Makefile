@@ -102,11 +102,14 @@ SMOKE_FRAMES ?= 600
 
 # Headless MesenCE run of test/smoke/$(SMOKE).timeline against the debug ROM;
 # screenshots land in build/smoke/$(SMOKE)/. Starts from a blank battery
-# save unless KEEP_SAVE=1.
+# save unless KEEP_SAVE=1. test/smoke/$(SMOKE).pokes, when there is one, sets
+# up RAM by symbol first (tools/pokes.py).
+SMOKE_POKE_FILE := test/smoke/$(SMOKE).pokes
 smoke: debug
 	@rm -rf build/smoke/$(SMOKE) && mkdir -p build/smoke/$(SMOKE)
 	@test "$(KEEP_SAVE)" = 1 || rm -f "$(MESEN_SAVES)/picross-$(VERSION_NAME)-debug-$(BUILD_ID).srm"
-	@SMOKE_TIMELINE=$(CURDIR)/test/smoke/$(SMOKE).timeline \
+	@SMOKE_POKES="$(if $(wildcard $(SMOKE_POKE_FILE)),$(shell python3 tools/pokes.py $(SMOKE_POKE_FILE) build/debug/picross-$(VERSION_NAME)-debug-$(BUILD_ID).sym 2>/dev/null))" \
+		SMOKE_TIMELINE=$(CURDIR)/test/smoke/$(SMOKE).timeline \
 		SMOKE_OUT=$(CURDIR)/build/smoke/$(SMOKE) SMOKE_FRAMES=$(SMOKE_FRAMES) \
 		"$(MESEN_BIN)" --testRunner --doNotSaveSettings --noAudio \
 		--debug.scriptWindow.allowIoOsAccess=true \

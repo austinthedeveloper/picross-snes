@@ -1,0 +1,54 @@
+# Title -> FREE PLAY -> STARTER SET -> HEART, solved with strokes.
+# The heart: .#.#. ##### ##### .###. ..#..  (left of column 0 wraps)
+shot 90
+100 101 a
+shot 150
+160 161 a
+shot 210
+220 221 a
+shot 275
+290 290 right
+292 292 a
+294 294 right
+296 296 right
+298 298 a
+300 300 down
+302 302 left
+304 304 left
+306 306 left
+308 309 a
+310 310 a,right
+311 311 a
+312 312 a,right
+313 313 a
+314 314 a,right
+315 315 a
+316 316 a,right
+317 317 a
+shot 320
+320 320 down
+322 323 a
+324 324 a,left
+325 325 a
+326 326 a,left
+327 327 a
+328 328 a,left
+329 329 a
+330 330 a,left
+331 331 a
+334 334 down
+336 336 right
+338 339 a
+340 340 a,right
+341 341 a
+342 342 a,right
+343 343 a
+346 346 down
+348 348 left
+shot 350
+350 350 a
+shot 372
+412 413 a
+shot 472
+492 493 b
+shot 552

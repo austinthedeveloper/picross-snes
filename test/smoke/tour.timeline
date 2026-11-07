@@ -1,0 +1,73 @@
+# Tour: a 20x20 board, pause, then every title screen.
+shot 60
+80 81 a
+120 121 a
+160 160 down
+162 162 down
+164 164 down
+166 166 down
+168 168 down
+170 170 down
+172 172 down
+174 174 down
+176 176 down
+178 178 down
+180 180 down
+182 182 down
+184 184 down
+186 186 down
+188 188 down
+190 190 down
+192 192 down
+194 194 down
+196 196 down
+shot 202
+208 209 a
+248 248 right
+250 250 right
+252 252 right
+254 254 down
+256 256 down
+258 258 down
+260 260 down
+262 263 a
+264 264 a,right
+265 265 a
+266 266 a,right
+267 267 a
+268 268 a,right
+269 269 a
+270 270 a,right
+271 271 a
+272 272 a,right
+273 273 a
+shot 278
+284 285 start
+shot 294
+324 324 down
+326 326 down
+328 329 a
+shot 368
+374 375 b
+414 415 b
+shot 454
+460 460 down
+464 465 a
+shot 504
+510 511 b
+550 550 down
+554 555 a
+shot 594
+600 601 b
+640 640 down
+644 645 a
+shot 684
+690 691 b
+730 730 down
+734 735 a
+shot 774
+780 781 b
+820 820 down
+824 825 a
+shot 864
+870 871 b

@@ -23,6 +23,8 @@ void view_draw_picture(void);
 void view_draw_hud(void);
 /* Clears HUD rows from..to-1 (messages and menus below the HUD). */
 void view_clear_corner(u8 from, u8 to);
+/* The thumbnail's tiles back on the map (after a menu covered them). */
+void view_place_thumb(void);
 /* Board cursor sprite on or off. */
 void view_cursor(u8 on);
 

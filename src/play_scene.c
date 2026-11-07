@@ -136,6 +136,7 @@ static void open_hint(void)
     audio_play(SFX_CONFIRM, 9);
     s_state = PS_HINT;
     s_sel = 0;
+    view_clear_corner(HUD_MENU_ROW, HUD_MENU_ROW + 4);
     bg3_text(1, HUD_MENU_ROW, "HINT:", TEXT_SELECTED);
     draw_menu(s_hint_items, 3, 3, HUD_MENU_ROW + 1);
 }
@@ -143,6 +144,7 @@ static void open_hint(void)
 static void close_hint(void)
 {
     view_clear_corner(HUD_MENU_ROW, HUD_MENU_ROW + 4);
+    view_place_thumb();
     s_state = PS_PLAY;
 }
 
@@ -151,6 +153,7 @@ static void show_failed(void)
     s_state = PS_FAILED;
     audio_play(SFX_BACK, 12);
     view_cursor(0);
+    view_clear_corner(HUD_MENU_ROW, HUD_MENU_ROW + 4);
     bg3_text(1, HUD_MENU_ROW, "NO HEARTS", TEXT_SELECTED);
     bg3_text(1, HUD_MENU_ROW + 1, "A RETRY", TEXT_INK);
     bg3_text(1, HUD_MENU_ROW + 2, "B QUIT", TEXT_INK);

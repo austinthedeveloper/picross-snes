@@ -13,16 +13,19 @@
 
 static const u8 s_tier_pal[4] = { TEXT_DIM, TEXT_BRONZE, TEXT_SILVER, TEXT_GOLD };
 
-static void draw_picture(u8 x0, u8 y0)
+/* The picture, scale tiles a cell (2 for 5x5 and 10x10). */
+static void draw_picture(u8 x0, u8 y0, u8 scale)
 {
     u8 r;
     u8 c;
+    u16 entry;
 
     for (r = 0; r < g_puzzle.height; r++)
-        for (c = 0; c < g_puzzle.width; c++)
-            bg1_put((u8)(x0 + c), (u8)(y0 + r),
-                BG_ENTRY(g_solution[g_row_start[r] + c] ? T_PIC_FULL : T_PIC_EMPTY,
-                    PAL_NORMAL));
+        for (c = 0; c < g_puzzle.width; c++) {
+            entry = BG_ENTRY(g_solution[g_row_start[r] + c] ? T_PIC_FULL : T_PIC_EMPTY,
+                PAL_NORMAL);
+            bg1_fill((u8)(x0 + c * scale), (u8)(y0 + r * scale), scale, scale, entry);
+        }
 }
 
 static void draw_news(u8 i, u8 y)
@@ -49,19 +52,20 @@ static void draw_news(u8 i, u8 y)
 
 void result_enter(void)
 {
-    u8 x0 = (u8)((32 - g_puzzle.width) >> 1);
-    u8 y0 = g_puzzle.height == 20 ? 1 : 2;
+    u8 scale = g_puzzle.width <= 10 ? 2 : 1;
+    u8 side = (u8)(g_puzzle.width * scale);
+    u8 x0 = (u8)((32 - side) >> 1);
+    u8 y0 = side == 20 ? 1 : 2;
     u8 y;
     u8 i;
     const Record *rec = progress_record(g_puzzle.slot);
 
     bg1_clear();
     bg3_clear();
-    if (g_puzzle.height < 20)
-        bg1_frame((u8)(x0 - 1), (u8)(y0 - 1), (u8)(g_puzzle.width + 2),
-            (u8)(g_puzzle.height + 2));
-    draw_picture(x0, y0);
-    y = (u8)(y0 + g_puzzle.height + 1);
+    if (side < 20)
+        bg1_frame((u8)(x0 - 1), (u8)(y0 - 1), (u8)(side + 2), (u8)(side + 2));
+    draw_picture(x0, y0, scale);
+    y = (u8)(y0 + side + 1);
     bg3_center(y++, (const char *)pack_name(g_puzzle.slot), TEXT_INK);
     bg3_text(4, y, "TIME", TEXT_DIM);
     bg3_time(9, y, g_play.seconds, TEXT_INK);

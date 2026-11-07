@@ -11,6 +11,11 @@ u16 g_bg1_map[1024];
 u16 g_bg3_map[1024];
 u8 g_bg1_dirty;
 u8 g_bg3_dirty;
+/* 2bpp tiles of the thumbnail: plane 0 is ink, plane 1 the empty cells. */
+static u8 s_thumb[9 * 16];
+static u8 s_thumb_dirty;
+static u8 s_thumb_w;
+static u8 s_thumb_h;
 
 extern void map_commit(void);
 
@@ -61,11 +66,65 @@ void video_init(void)
     dmaCopyVram((u8 *)g_bg3_map, VRAM_BG3_MAP, 2048);
     g_bg1_dirty = 0;
     g_bg3_dirty = 0;
+    s_thumb_dirty = 0;
+    s_thumb_w = 0;
+    s_thumb_h = 0;
 }
 
 void video_commit(void)
 {
     map_commit();
+    if (s_thumb_dirty) {
+        s_thumb_dirty = 0;
+        dmaCopyVram(s_thumb, VRAM_BG3_TILES + THUMB_TILE * 8, sizeof s_thumb);
+    }
+}
+
+void thumb_clear(u8 width, u8 height)
+{
+    u8 i;
+    u8 x;
+    u8 y;
+
+    for (i = 0; i < sizeof s_thumb; i++)
+        s_thumb[i] = 0;
+    s_thumb_w = width;
+    s_thumb_h = height;
+    for (y = 0; y < height; y++)
+        for (x = 0; x < width; x++)
+            thumb_set(x, y, 0);
+    s_thumb_dirty = 1;
+}
+
+void thumb_set(u8 x, u8 y, u8 filled)
+{
+    /* Tile (y / 8) * 3 + x / 8, row y % 8, bit 7 - x % 8. */
+    u8 ty = (u8)(y >> 3);
+    u8 tile = (u8)(ty + ty + ty + (x >> 3));
+    u8 *row = s_thumb + (tile << 4) + ((y & 7) << 1);
+    u8 bit = (u8)(0x80 >> (x & 7));
+
+    if (filled) {
+        row[0] |= bit;
+        row[1] &= (u8)~bit;
+    } else {
+        row[0] &= (u8)~bit;
+        row[1] |= bit;
+    }
+    s_thumb_dirty = 1;
+}
+
+void thumb_place(u8 x, u8 y)
+{
+    u8 tw = (u8)((s_thumb_w + 7) >> 3);
+    u8 th = (u8)((s_thumb_h + 7) >> 3);
+    u8 i;
+    u8 j;
+
+    for (j = 0; j < th; j++)
+        for (i = 0; i < tw; i++)
+            bg3_put((u8)(x + i), (u8)(y + j),
+                (u16)(THUMB_TILE + j * 3 + i) | ((u16)TEXT_INK << 10) | BG_PRIO);
 }
 
 void video_frame(void)
@@ -333,6 +392,12 @@ void bg3_center(u8 y, const char *s, u8 pal)
 void cursor_show(u16 x, u16 y)
 {
     oamSet(0, x, y, 3, 0, 0, 0, 0);
+    oamSetEx(0, OBJ_LARGE, OBJ_SHOW);
+}
+
+void cursor_show_big(u16 x, u16 y)
+{
+    oamSet(0, x, y, 3, 0, 0, 2, 0);
     oamSetEx(0, OBJ_LARGE, OBJ_SHOW);
 }
 

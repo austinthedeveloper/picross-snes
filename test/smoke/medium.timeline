@@ -1,0 +1,26 @@
+# A 10x10 (HOUSE, starter index 4) at 16-pixel cells, a stroke, a hint.
+100 101 a
+150 151 a
+200 200 down
+206 206 down
+212 212 down
+218 218 down
+228 229 a
+shot 288
+288 288 down
+294 294 down
+300 300 down
+306 307 a
+308 308 a,right
+309 309 a
+312 312 a,right
+313 313 a
+316 316 a,right
+317 317 a
+320 320 a,right
+321 321 a
+330 330 x
+336 336 down
+342 342 down
+348 348 a
+shot 358

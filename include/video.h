@@ -62,8 +62,18 @@ void bg3_time(u8 x, u8 y, u16 seconds, u8 pal);
 /* Centered text on the 32-column screen. */
 void bg3_center(u8 y, const char *s, u8 pal);
 
+/* The thumbnail: BG3 tiles THUMB_TILE.. (3x3, after the font), one pixel
+ * a cell, uploaded in VBlank when thumb_set changes it. */
+#define THUMB_TILE 96
+void thumb_clear(u8 width, u8 height);
+void thumb_set(u8 x, u8 y, u8 filled);
+/* Puts the thumbnail's tiles on the map at (x, y). */
+void thumb_place(u8 x, u8 y);
+
 /* The board cursor sprite. */
 void cursor_show(u16 x, u16 y);
+/* The 16x16 box, for 16-pixel cells. */
+void cursor_show_big(u16 x, u16 y);
 void cursor_hide(void);
 
 #endif

@@ -12,6 +12,7 @@ static void reset_state(void)
     g_play.mistakes = 0;
     g_play.solved = 0;
     g_play.failed = 0;
+    g_play.hits = 0;
     g_play.stroke = STROKE_NONE;
     g_play.frames = 0;
     g_play.seconds = 0;
@@ -58,11 +59,15 @@ static void apply(u16 index)
     case STROKE_FILL:
         if (cell != CELL_EMPTY)
             return;
-        if (g_play.mode == MODE_HEARTS && g_solution[index] == 0) {
+        if (g_play.mode != MODE_RELAXED && g_solution[index] == 0) {
             set(index, CELL_MISTAKE);
             g_play.mistakes++;
-            g_play.hearts--;
             g_play.stroke = STROKE_BLOCKED;
+            if (g_play.mode == MODE_BATTLE) {
+                g_play.hits++;
+                return;
+            }
+            g_play.hearts--;
             if (g_play.hearts == 0)
                 g_play.failed = 1;
             return;

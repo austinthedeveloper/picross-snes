@@ -1,0 +1,22 @@
+# Title -> STORY -> First Job's intro: lines type out, A moves on, a choice.
+shot 80
+90 91 a
+shot 170
+shot 230
+240 241 a
+250 251 a
+shot 300
+310 311 a
+320 321 a
+330 331 a
+340 341 a
+350 351 a
+360 361 a
+shot 420
+430 431 a
+440 441 a
+shot 520
+530 531 down
+shot 560
+570 571 a
+shot 640

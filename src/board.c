@@ -48,6 +48,24 @@ void board_set(u16 index, u8 value)
         g_board_dirty_all = 1;
 }
 
+/* The counts again after cells were written directly (a resume, a turn). */
+void board_recount(void)
+{
+    u16 i;
+
+    g_right_filled = 0;
+    g_wrong_filled = 0;
+    for (i = 0; i < g_puzzle.cells; i++) {
+        if (g_cells[i] == CELL_FILLED) {
+            if (g_solution[i])
+                g_right_filled++;
+            else
+                g_wrong_filled++;
+        }
+    }
+    g_board_dirty_all = 1;
+}
+
 u8 board_solved(void)
 {
     return g_wrong_filled == 0 && g_right_filled == g_puzzle.filled;

@@ -8,6 +8,14 @@
 u8 g_view_bx;
 u8 g_view_by;
 u8 g_view_lines_done;
+/* Story fights (ADR-010) change what the board shows; NULL: free play. */
+u8 (*g_view_clue_hook)(u8 id, u8 *out);
+u8 (*g_view_done_hook)(u8 id);
+u8 (*g_view_ink_hook)(u16 index);
+void (*g_view_hud_hook)(void);
+u8 g_view_new_lines[VIEW_NEW_MAX];
+u8 g_view_new_count;
+static u8 s_shown[16];
 
 /* What's on screen now, to redraw only what changed. */
 static u8 s_cur_x;
@@ -68,7 +76,11 @@ static void draw_cell(u8 r, u8 c)
         }
         return;
     }
-    if (cell == CELL_MISTAKE) {
+    if (g_view_ink_hook && g_view_ink_hook(g_row_start[r] + c)) {
+        /* Ink hides what's under it: a muted block, whatever the cell. */
+        state = CELL_FILLED;
+        pal = hl ? PAL_DONE_HL : PAL_DONE;
+    } else if (cell == CELL_MISTAKE) {
         state = CELL_MARKED;
         pal = hl ? PAL_MISTAKE_HL : PAL_MISTAKE;
     } else {
@@ -88,6 +100,16 @@ static void draw_cell(u8 r, u8 c)
     bg1_put(x, y, BG_ENTRY(tile, pal));
 }
 
+static u8 row_done(u8 r)
+{
+    return g_view_done_hook ? g_view_done_hook(r) : board_row_done(r);
+}
+
+static u8 col_done(u8 c)
+{
+    return g_view_done_hook ? g_view_done_hook((u8)(20 + c)) : board_col_done(c);
+}
+
 static u8 clue_pal(u8 done, u8 hl)
 {
     if (done)
@@ -95,13 +117,13 @@ static u8 clue_pal(u8 done, u8 hl)
     return hl ? PAL_HL : PAL_NORMAL;
 }
 
-/* One clue (n, or a blank when n is 0xFF) at a tile position. */
+/* One clue (n, or a blank when n is 0xFF, or 0xFE for fog) at a tile position. */
 static void put_clue(u8 x, u8 y, u8 n, u8 striped, u8 pal)
 {
     u16 attr = (u16)pal << 10;
 
     if (s_big) {
-        if (n == 0xFF) {
+        if (n >= 0xFE) {
             u16 blank = (striped ? T_CLUE_BLANK_ALT : T_CLUE_BLANK) | attr;
 
             bg1_put(x, y, blank);
@@ -114,7 +136,7 @@ static void put_clue(u8 x, u8 y, u8 n, u8 striped, u8 pal)
         }
         return;
     }
-    if (n == 0xFF)
+    if (n >= 0xFE)
         bg1_put(x, y, (striped ? T_CLUE_BLANK_ALT : T_CLUE_BLANK) | attr);
     else
         bg1_put(x, y, ((striped ? T_CLUE_ALT : T_CLUE) + n) | attr);
@@ -128,6 +150,13 @@ static void draw_row_clues(u8 r)
     u8 step = (u8)(1 << s_big);
     u8 x = (u8)(g_view_bx - (g_max_row_clues << s_big));
     const u8 *clues = g_row_clues + ((u16)r << 4);
+
+    if (g_view_clue_hook) {
+        count = g_view_clue_hook(r, s_shown);
+        if (count > g_max_row_clues)
+            count = g_max_row_clues;
+        clues = s_shown;
+    }
     u8 striped = r & 1;
     u8 k;
 
@@ -149,6 +178,13 @@ static void draw_col_clues(u8 c)
     u8 step = (u8)(1 << s_big);
     u8 y = (u8)(g_view_by - (g_max_col_clues << s_big));
     const u8 *clues = g_col_clues + ((u16)c << 4);
+
+    if (g_view_clue_hook) {
+        count = g_view_clue_hook((u8)(20 + c), s_shown);
+        if (count > g_max_col_clues)
+            count = g_max_col_clues;
+        clues = s_shown;
+    }
     u8 striped = c & 1;
     u8 k;
 
@@ -250,6 +286,14 @@ void view_draw_hud(void)
     u8 s = g_puzzle.width == 5 ? 0 : g_puzzle.width == 10 ? 1 :
         g_puzzle.width == 15 ? 2 : 3;
 
+    if (g_view_hud_hook) {
+        g_view_hud_hook();
+        s_shown_seconds = g_play.seconds;
+        s_shown_hearts = g_play.hearts;
+        s_shown_hints = g_play.hints_used;
+        return;
+    }
+
     bg3_text(1, HUD_SIZE_ROW, sizes[s], TEXT_DIM);
     bg3_text(1, HUD_TIME_ROW, "TIME", TEXT_DIM);
     bg3_time(6, HUD_TIME_ROW, g_play.seconds, TEXT_INK);
@@ -288,9 +332,9 @@ void view_draw_all(void)
     bg3_clear();
     thumb_clear(g_puzzle.width, g_puzzle.height);
     for (r = 0; r < g_puzzle.height; r++)
-        s_row_done[r] = board_row_done(r);
+        s_row_done[r] = row_done(r);
     for (c = 0; c < g_puzzle.width; c++)
-        s_col_done[c] = board_col_done(c);
+        s_col_done[c] = col_done(c);
     for (r = 0; r < g_puzzle.height; r++)
         draw_row(r);
     for (c = 0; c < g_puzzle.width; c++)
@@ -305,7 +349,8 @@ void view_draw_all(void)
     g_board_dirty_count = 0;
     g_board_dirty_all = 0;
     view_draw_hud();
-    view_place_thumb();
+    if (g_view_hud_hook == 0)
+        view_place_thumb();
     view_cursor(1);
 }
 
@@ -328,21 +373,47 @@ void view_draw_picture(void)
     cursor_hide();
 }
 
+static void note_new(u8 id)
+{
+    if (g_view_new_count < VIEW_NEW_MAX)
+        g_view_new_lines[g_view_new_count++] = id;
+}
+
 static void refresh_lines(u8 r, u8 c)
 {
-    u8 done = board_row_done(r);
+    u8 done = row_done(r);
 
     if (done != s_row_done[r]) {
         s_row_done[r] = done;
         g_view_lines_done += done;
+        if (done)
+            note_new(r);
         draw_row_clues(r);
     }
-    done = board_col_done(c);
+    done = col_done(c);
     if (done != s_col_done[c]) {
         s_col_done[c] = done;
         g_view_lines_done += done;
+        if (done)
+            note_new((u8)(20 + c));
         draw_col_clues(c);
     }
+}
+
+/* Redraws one line's clues (a fight changed what they show). */
+void view_redraw_line(u8 id)
+{
+    if (id >= 20)
+        draw_col_clues((u8)(id - 20));
+    else
+        draw_row_clues(id);
+}
+
+/* After a fight changed the board under the player (a swap's wipe, a
+ * reveal): every cell, and lines re-checked without reporting them. */
+void view_refresh_all(void)
+{
+    g_board_dirty_all = 1;
 }
 
 void view_update(void)
@@ -358,11 +429,11 @@ void view_update(void)
         g_board_dirty_all = 0;
         g_board_dirty_count = 0;
         for (r = 0; r < g_puzzle.height; r++) {
-            s_row_done[r] = board_row_done(r);
+            s_row_done[r] = row_done(r);
             draw_row(r);
         }
         for (c = 0; c < g_puzzle.width; c++) {
-            s_col_done[c] = board_col_done(c);
+            s_col_done[c] = col_done(c);
             draw_col_clues(c);
         }
     }
@@ -390,7 +461,7 @@ void view_update(void)
         s_cur_y = g_play.cur_y;
         view_cursor(1);
     }
-    if (s_shown_seconds != g_play.seconds) {
+    if (s_shown_seconds != g_play.seconds && g_view_hud_hook == 0) {
         s_shown_seconds = g_play.seconds;
         bg3_time(6, HUD_TIME_ROW, g_play.seconds, TEXT_INK);
     }

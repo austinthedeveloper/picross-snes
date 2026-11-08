@@ -5,19 +5,20 @@
 #include "progress.h"
 #include "puzzle.h"
 #include "scene.h"
+#include "story.h"
 #include "tiles.h"
 #include "video.h"
 
 enum {
-    ITEM_CONTINUE, ITEM_FREE_PLAY, ITEM_RECORDS, ITEM_BADGES,
+    ITEM_CONTINUE, ITEM_STORY, ITEM_FREE_PLAY, ITEM_RECORDS, ITEM_BADGES,
     ITEM_ACHIEVEMENTS, ITEM_HOW_TO, ITEM_OPTIONS, ITEM_COUNT
 };
 static const char *const s_items[ITEM_COUNT] = {
-    "CONTINUE", "FREE PLAY", "RECORDS", "BADGES", "ACHIEVEMENTS",
+    "CONTINUE", "STORY", "FREE PLAY", "RECORDS", "BADGES", "ACHIEVEMENTS",
     "HOW TO PLAY", "OPTIONS"
 };
 static const u8 s_scenes[ITEM_COUNT] = {
-    SCENE_PLAY, SCENE_COLLECTIONS, SCENE_RECORDS, SCENE_BADGES,
+    SCENE_PLAY, SCENE_DIALOGUE, SCENE_COLLECTIONS, SCENE_RECORDS, SCENE_BADGES,
     SCENE_ACHIEVEMENTS, SCENE_HOW_TO, SCENE_OPTIONS
 };
 static const char s_logo[] = LOGO_ROWS;
@@ -72,7 +73,7 @@ void title_enter(void)
     bg3_clear();
     draw_logo();
     bg3_center(LOGO_Y + LOGO_H + 1, "'94", TEXT_SELECTED);
-    s_first = g_save.suspend.slot1 ? ITEM_CONTINUE : ITEM_FREE_PLAY;
+    s_first = g_save.suspend.slot1 ? ITEM_CONTINUE : ITEM_STORY;
     if (s_sel < s_first || s_sel >= ITEM_COUNT)
         s_sel = s_first;
     draw_items();
@@ -106,6 +107,10 @@ void title_update(void)
                         g_sel_index = i;
                 g_return_scene = SCENE_PUZZLES;
             }
+        }
+        if (s_sel == ITEM_STORY) {
+            story_open();
+            return;
         }
         scene_goto(s_scenes[s_sel]);
     }

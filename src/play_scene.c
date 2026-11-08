@@ -6,13 +6,16 @@
 #include "progress.h"
 #include "scene.h"
 #include "stats.h"
+#include "story.h"
+#include "story_play.h"
+#include "story_run.h"
 #include "video.h"
 
 /* The play screen (docs/CONTROLS.md):
  *   d-pad move (repeats; wraps at the edges)   A fill / erase (hold to paint)
  *   B mark / unmark (hold to paint)            L undo   R redo
  *   X hint menu                                START pause */
-enum { PS_PLAY, PS_PAUSE, PS_HINT, PS_SOLVED, PS_FAILED };
+enum { PS_PLAY, PS_PAUSE, PS_HINT, PS_SOLVED, PS_FAILED, PS_CALL, PS_GADGET, PS_OUT };
 enum { PAUSE_RESUME, PAUSE_RESTART, PAUSE_QUIT, PAUSE_COUNT };
 
 static u8 s_state;
@@ -30,6 +33,9 @@ static const char *const s_pause_items[PAUSE_COUNT] = {
     "RESUME", "RESTART", "QUIT"
 };
 static const char *const s_hint_items[3] = { "CELL", "ROW", "COLUMN" };
+static const char *const s_call_items[2] = { "ROW", "COLUMN" };
+static const char *s_gadget_items[RUN_GADGET_CAP];
+static u8 s_gadget_count;
 
 static void snapshot_stats(void)
 {
@@ -114,6 +120,11 @@ static void close_pause(void)
 
 static void quit_to_list(void)
 {
+    if (g_play_story) {
+        story_play_quit();
+        scene_goto(SCENE_MAP);
+        return;
+    }
     if (g_play.solved == 0 && g_play.failed == 0) {
         u16 i;
         u8 started = 0;
@@ -144,8 +155,50 @@ static void open_hint(void)
 static void close_hint(void)
 {
     view_clear_corner(HUD_MENU_ROW, HUD_MENU_ROW + 4);
-    view_place_thumb();
+    if (g_play_story)
+        view_draw_hud();
+    else
+        view_place_thumb();
     s_state = PS_PLAY;
+}
+
+/* Story fights (ADR-010): Y calls out a clue, SELECT uses a gadget. */
+static void open_call(void)
+{
+    audio_play(SFX_CONFIRM, 9);
+    s_state = PS_CALL;
+    s_sel = 0;
+    view_clear_corner(HUD_MENU_ROW, HUD_MENU_ROW + 4);
+    bg3_text(1, HUD_MENU_ROW, "CALL OUT:", TEXT_SELECTED);
+    draw_menu(s_call_items, 2, 3, HUD_MENU_ROW + 1);
+}
+
+static void open_gadgets(void)
+{
+    u8 i;
+
+    s_gadget_count = run_gadget_count_held();
+    if (s_gadget_count == 0)
+        return;
+    for (i = 0; i < s_gadget_count; i++)
+        s_gadget_items[i] = (const char *)story_string(gadget_name(g_run.gadgets[i] - 1));
+    audio_play(SFX_CONFIRM, 9);
+    s_state = PS_GADGET;
+    s_sel = 0;
+    view_clear_corner(HUD_MENU_ROW, HUD_MENU_ROW + 1 + s_gadget_count);
+    bg3_text(1, HUD_MENU_ROW, "USE:", TEXT_SELECTED);
+    draw_menu(s_gadget_items, s_gadget_count, 3, HUD_MENU_ROW + 1);
+}
+
+static void show_out(void)
+{
+    s_state = PS_OUT;
+    audio_play(SFX_BACK, 12);
+    view_cursor(0);
+    view_clear_corner(HUD_MENU_ROW, HUD_MENU_ROW + 4);
+    bg3_text(1, HUD_MENU_ROW, "KNOCKED", TEXT_SELECTED);
+    bg3_text(1, HUD_MENU_ROW + 1, "OUT", TEXT_SELECTED);
+    bg3_text(1, HUD_MENU_ROW + 2, "A RESULTS", TEXT_INK);
 }
 
 static void show_failed(void)
@@ -167,8 +220,13 @@ static void show_solved(void)
     view_update();
     view_draw_picture();
     view_clear_corner(0, g_view_by);
-    bg3_text(1, 1, "SOLVED!", TEXT_SELECTED);
     audio_play(SFX_SOLVE, 13);
+    if (g_play_story) {
+        story_play_solved();
+        story_play_draw_result();
+        return;
+    }
+    bg3_text(1, 1, "SOLVED!", TEXT_SELECTED);
     audio_update();
     /* Show the picture before the bookkeeping (about 7 frames). */
     video_frame();
@@ -219,6 +277,8 @@ static void board_sounds(u8 changes, u8 lines, u8 moved)
 
 static void update_play(void)
 {
+    u8 ended;
+    u8 ev;
     u8 changes = g_board_changes;
     u8 lines = g_view_lines_done;
     u8 cur = (u8)(g_play.cur_x ^ (g_play.cur_y << 3));
@@ -230,9 +290,11 @@ static void update_play(void)
         return;
     }
     /* A stroke ends when its button is let go. */
+    ended = 0;
     if (s_stroke_button && (g_held & s_stroke_button) == 0) {
         play_stroke_end();
         s_stroke_button = 0;
+        ended = 1;
     }
     if (s_stroke_button == 0) {
         if (g_pressed & KEY_A) {
@@ -248,6 +310,12 @@ static void update_play(void)
         } else if (g_pressed & KEY_X) {
             open_hint();
             return;
+        } else if (g_play_story && (g_pressed & KEY_Y)) {
+            open_call();
+            return;
+        } else if (g_play_story && (g_pressed & KEY_SELECT)) {
+            open_gadgets();
+            return;
         }
     }
     move_cursor();
@@ -255,6 +323,15 @@ static void update_play(void)
     view_update();
     board_sounds(changes, lines,
         (u8)(cur != (u8)(g_play.cur_x ^ (g_play.cur_y << 3))));
+    if (g_play_story) {
+        ev = story_play_frame(ended);
+        if (ev == STORY_BUSY)
+            return;
+        if (ev == STORY_KNOCKED_OUT) {
+            show_out();
+            return;
+        }
+    }
     if (g_play.solved)
         show_solved();
     else if (g_play.failed)
@@ -263,15 +340,21 @@ static void update_play(void)
 
 void play_scene_enter(void)
 {
-    snapshot_stats();
-    if (g_play_resume == 0 || progress_resume(g_play_slot) == 0)
-        play_start(g_play_slot, g_save.mode);
+    if (g_play_story) {
+        story_play_enter();
+    } else {
+        snapshot_stats();
+        if (g_play_resume == 0 || progress_resume(g_play_slot) == 0)
+            play_start(g_play_slot, g_save.mode);
+    }
     g_play_resume = 0;
     s_state = PS_PLAY;
     s_sel = 0;
     s_stroke_button = 0;
     s_timer = 0;
     view_draw_all();
+    if (g_play_story)
+        story_play_drawn();
     bgSetEnable(0);
 }
 
@@ -341,7 +424,46 @@ void play_scene_update(void)
         if (s_timer < 255)
             s_timer++;
         if (s_timer > 30 && (g_pressed & (KEY_A | KEY_B | KEY_START)))
-            scene_goto(SCENE_RESULT);
+            scene_goto(g_play_story ? story_play_next_scene() : SCENE_RESULT);
+        break;
+    case PS_OUT:
+        if (g_pressed & (KEY_A | KEY_START))
+            scene_goto(SCENE_RUN_RESULT);
+        break;
+    case PS_CALL:
+        if (menu_move(&s_sel, 2)) {
+            audio_play(SFX_BLIP, 7);
+            draw_menu(s_call_items, 2, 3, HUD_MENU_ROW + 1);
+        }
+        if (g_pressed & (KEY_B | KEY_Y)) {
+            audio_play(SFX_BACK, 9);
+            close_hint();
+        } else if (g_pressed & KEY_A) {
+            close_hint();
+            if (story_play_call_out(s_sel) == 0)
+                audio_play(SFX_BACK, 9);
+            input_swallow();
+        }
+        break;
+    case PS_GADGET:
+        if (menu_move(&s_sel, s_gadget_count)) {
+            audio_play(SFX_BLIP, 7);
+            draw_menu(s_gadget_items, s_gadget_count, 3, HUD_MENU_ROW + 1);
+        }
+        if (g_pressed & (KEY_B | KEY_SELECT)) {
+            audio_play(SFX_BACK, 9);
+            view_clear_corner(HUD_MENU_ROW, HUD_MENU_ROW + 1 + s_gadget_count);
+            close_hint();
+        } else if (g_pressed & KEY_A) {
+            view_clear_corner(HUD_MENU_ROW, HUD_MENU_ROW + 1 + s_gadget_count);
+            close_hint();
+            if (story_play_gadget(s_sel) == 0)
+                audio_play(SFX_BACK, 9);
+            input_swallow();
+            view_update();
+            if (g_play.solved)
+                show_solved();
+        }
         break;
     }
 }

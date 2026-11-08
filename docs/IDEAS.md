@@ -13,3 +13,8 @@ Unplanned; not to be built by accident.
 - **A fight or two**: a single boss with fog and scramble as a bonus
   collection, once version 1 is done.
 - **Name reveal sparkle**: the solved picture animates (palette cycle).
+- **Enemy sprites in fights**: the 48x48 sprites are in ROM; show them as
+  OBJs over the corner, or give fights a battle bar strip (KNOWN_ISSUES #7).
+- **Chapter story replay**: the web's "Chapter story" button on an open
+  chapter.
+

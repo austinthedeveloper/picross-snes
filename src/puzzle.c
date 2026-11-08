@@ -198,7 +198,6 @@ void puzzle_load(u16 slot)
     u8 r;
     u8 c;
     u16 index = 0;
-    u8 count;
 
     g_puzzle.slot = slot;
     g_puzzle.width = w;
@@ -223,6 +222,16 @@ void puzzle_load(u16 slot)
         bits += row_bytes;
     }
     g_puzzle.cells = index;
+    puzzle_derive_clues();
+}
+
+void puzzle_derive_clues(void)
+{
+    u8 w = g_puzzle.width;
+    u8 h = g_puzzle.height;
+    u8 r;
+    u8 c;
+    u8 count;
 
     g_max_row_clues = 0;
     for (r = 0; r < h; r++) {
@@ -239,4 +248,22 @@ void puzzle_load(u16 slot)
         if (count > g_max_col_clues)
             g_max_col_clues = count;
     }
+}
+
+/* A square puzzle turned a quarter clockwise (web turnedPuzzle, #83): cell
+ * (r, c) goes to (c, n-1-r); the clues are worked out again. */
+void puzzle_turn(void)
+{
+    static u8 turned[MAX_CELLS];
+    u8 n = g_puzzle.width;
+    u8 r;
+    u8 c;
+
+    for (r = 0; r < n; r++)
+        for (c = 0; c < n; c++)
+            turned[g_row_start[c] + (n - 1 - r)] = g_solution[g_row_start[r] + c];
+    for (r = 0; r < n; r++)
+        for (c = 0; c < n; c++)
+            g_solution[g_row_start[r] + c] = turned[g_row_start[r] + c];
+    puzzle_derive_clues();
 }

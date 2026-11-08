@@ -1,0 +1,18 @@
+# Title -> STORY -> First Job (intro skipped) -> the Goblin, with its board
+# poked to one cell short of solved (story_win.pokes); the timeline fills
+# it: the finisher, then A back to the map, now on the dig site.
+90 91 a
+160 161 a
+240 241 start
+310 311 a
+375 376 right
+379 380 right
+383 384 right
+387 388 right
+391 392 right
+395 396 right
+399 400 a
+shot 419
+shot 469
+489 490 a
+shot 559

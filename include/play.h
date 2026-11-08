@@ -5,7 +5,10 @@
 
 /* How mistakes work (web: src/game/game.ts): relaxed never checks fills;
  * hearts checks each fill, marks a wrong one, and fails after three. */
-enum { MODE_RELAXED = 0, MODE_HEARTS = 1 };
+enum { MODE_RELAXED = 0, MODE_HEARTS = 1, MODE_BATTLE = 2 };
+/* MODE_BATTLE (a Hits-on fight, ADR-010; the web's 'battle' mode): a wrong
+ * fill becomes an X and ends the stroke like hearts, but costs no heart;
+ * it adds to g_play.hits for the fight to turn into enemy hits. */
 #define MAX_HEARTS 3
 #define MAX_HINTS 3
 
@@ -34,6 +37,8 @@ typedef struct {
     /* Frames into the current second, and whole seconds played. */
     u8 frames;
     u16 seconds;
+    /* MODE_BATTLE: wrong fills not yet answered by the fight. */
+    u8 hits;
 } Play;
 
 extern Play g_play;

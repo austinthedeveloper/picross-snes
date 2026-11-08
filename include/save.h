@@ -9,7 +9,7 @@
  * loses only that write. Records are indexed by pack slot, which never
  * changes (tools/import_pack.py). */
 #define SAVE_MAGIC 0x5850
-#define SAVE_VERSION 1
+#define SAVE_VERSION 2
 #define SAVE_SLOTS 700
 #define SAVE_COPY_B 0x1000
 #define SAVE_SRAM_BYTES 0x2000
@@ -49,6 +49,58 @@ typedef struct {
     u8 cells[100];
 } Suspend;
 
+/* Story progress (ADR-010), version 2 on. Every field's offset is the same
+ * on the SNES and the host (u16s at even offsets). */
+#define STORY_JOB_CAP 48
+#define STORY_SCENE_CAP 128
+#define RUN_GADGET_CAP 8
+
+typedef struct {
+    u8 plays;
+    u8 wins;
+    u8 hits_on_wins;  /* Hits-on (hearts mode) wins */
+    u8 best_hp;       /* HP left on the best Hits-on win */
+} JobStats;
+
+enum { RUN_NONE = 0, RUN_ACTIVE = 1, RUN_WON = 2, RUN_LOST = 3 };
+
+/* The run in progress (web RunState), with its encounter's board and
+ * fight. */
+typedef struct {
+    u8 slot1;         /* job save slot + 1; 0 when there's no run */
+    u8 node;          /* the next encounter */
+    u8 hp;
+    u8 max_hp;
+    u8 status;        /* RUN_* */
+    u8 mode;          /* MODE_* at the start */
+    u8 recorded;      /* its result is in the job stats */
+    u8 battle_on;     /* battle holds the current fight */
+    u8 gadgets[RUN_GADGET_CAP];  /* gadget index + 1, 0 empty */
+    u8 tally[7];      /* web Tally: the fight counts, then hints used */
+    u8 has_tally;
+    u16 endless_seed;
+    u8 endless[6];    /* Endless's pools (M5) */
+    u8 board_on;      /* the encounter's board below is in play */
+    u8 hints_used;
+    u16 seconds;
+    u8 hearts;
+    u8 mistakes;
+    u8 cells[100];    /* two bits a cell, as Suspend */
+    u8 battle[106];   /* a BattleState (battle.h) */
+} RunSave;
+
+typedef struct {
+    JobStats jobs[STORY_JOB_CAP];
+    u16 endless_best;
+    u8 seen_scenes[STORY_SCENE_CAP / 8];
+    u8 seen_tips;     /* one bit per power */
+    u8 reserved[29];
+    RunSave run;
+} StorySave;
+
+/* Version 1's whole layout is version 2's first SAVE_BYTES_V1 bytes. */
+#define SAVE_BYTES_V1 2976
+
 typedef struct {
     u16 magic;
     u8 version;
@@ -70,9 +122,11 @@ typedef struct {
     u8 reserved[36];
     Suspend suspend;
     Record records[SAVE_SLOTS];
+    /* Version 2. */
+    StorySave story;
 } SaveData;
 
-#define SAVE_BYTES 2976
+#define SAVE_BYTES 3460
 
 extern SaveData g_save;
 
@@ -83,7 +137,7 @@ u8 save_load(void);
  * a menu): the checksum costs a few frames. */
 void save_write(void);
 void save_blank(void);
-/* The checksum of an image as save_write stores it. */
+/* The checksum of an image as save_write stores it: its version's bytes. */
 u16 save_checksum(const SaveData *data);
 
 /* SRAM access: src/sram.c on the SNES, an array in the host tests. */

@@ -41,6 +41,46 @@ static void test_layout(void)
     CHECK_EQ(offsetof(SaveData, suspend), 64);
     CHECK(SAVE_BYTES <= SAVE_COPY_B);
     CHECK(SAVE_COPY_B + SAVE_BYTES <= SAVE_SRAM_BYTES);
+    /* Version 2: version 1 is its prefix; the story follows the records. */
+    CHECK_EQ(offsetof(SaveData, story), SAVE_BYTES_V1);
+    CHECK_EQ(sizeof(JobStats), 4);
+    CHECK_EQ(sizeof(RunSave), 244);
+    CHECK_EQ(sizeof(StorySave), 484);
+    CHECK_EQ(offsetof(StorySave, endless_best), 192);
+    CHECK_EQ(offsetof(StorySave, run), 240);
+    CHECK_EQ(offsetof(RunSave, endless_seed), 24);
+    CHECK_EQ(offsetof(RunSave, seconds), 34);
+    CHECK_EQ(offsetof(RunSave, battle), 138);
+}
+
+/* A save from 0.2.0 (version 1) loads, keeps its records and starts the
+ * story empty, whatever was in SRAM after it. */
+static void test_migrate_v1(void)
+{
+    memset(g_host_sram, 0xA5, sizeof g_host_sram);
+    save_blank();
+    solve_slot(3, MODE_HEARTS, 77, 0);
+    memset(&g_save.story, 0x5A, sizeof g_save.story);
+    g_save.version = 1;
+    g_save.seq = 9;
+    g_save.sum = save_checksum(&g_save);
+    sram_write_bytes((const u8 *)&g_save, 0, SAVE_BYTES_V1);
+    memset(&g_save, 0, sizeof g_save);
+    CHECK_EQ(save_load(), 1);
+    CHECK_EQ(g_save.version, SAVE_VERSION);
+    CHECK(progress_solved(3));
+    CHECK_EQ(progress_record(3)->best, 77);
+    CHECK_EQ(g_save.story.run.slot1, 0);
+    CHECK_EQ(g_save.story.jobs[0].plays, 0);
+    CHECK_EQ(g_save.story.seen_scenes[0], 0);
+    CHECK_EQ(g_save.story.endless_best, 0);
+    /* And the next write is a version 2 image that loads as itself. */
+    g_save.story.jobs[2].wins = 4;
+    save_write();
+    memset(&g_save, 0, sizeof g_save);
+    CHECK_EQ(save_load(), 1);
+    CHECK_EQ(g_save.story.jobs[2].wins, 4);
+    CHECK(progress_solved(3));
 }
 
 static void test_blank_and_round_trip(void)
@@ -230,6 +270,7 @@ static void test_ranks_and_hours(void)
 int main(void)
 {
     test_layout();
+    test_migrate_v1();
     test_blank_and_round_trip();
     test_two_copies();
     test_sequence_wrap();

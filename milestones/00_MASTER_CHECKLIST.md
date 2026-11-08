@@ -73,25 +73,50 @@ and the engine helpers line for line, with host tests.
   - Verified: `--check` passes on a re-run; `--preview` looked at
 - [x] `M4-SYNC-01` Daily sync workflow: PR when it imports, issue when it
   needs porting (`sync-web.yml`, `tools/sync_summary.py`)
-- [ ] `M4-ENGINE-01` Run and battle rules in C: chip, finisher, phases,
-  armor, fog, scramble, fakes and call-outs, charge, ink, swaps, turns,
-  gadgets (blast, shield, wash), hits; host tests mirroring the web's
-- [ ] `M4-DIALOGUE-01` Scene runner (flags, choices, conditions) and the
+- [x] `M4-DATA-01` Story ROM tables (`tools/gen_story.py`, `src/story.c`):
+  chapters, runs, encounters, enemies with phases, scenes, gadgets,
+  backdrops; strings in 32 KiB banks; story puzzles from ROM index 700
+- [x] `M4-ENGINE-01` Battle rules in C (`src/battle.c`,
+  `src/fight_rules.c`): chip, finisher, phases, armor and its hit-back,
+  fog, scramble, fakes and call-outs, charge and warm-up, ink, swaps, turns,
+  gadgets, shields; the web's line-complete rule (`line_satisfied`)
+  - Verified: `test/test_battle.c` against the real story (Gremlin phases,
+    Beetle armor, Forger call-outs, Eel charge, Mimic swaps, Weathervane
+    turns, fake clues, ink, live line, bombs)
+- [x] `M4-DIALOGUE-01` Scene runner (flags, choices, conditions) and the
   scene player: backdrop, portraits on a stage of three, typed text, choices
-- [ ] `M4-SAVE-01` Save version 2: job results, seen scenes and tips, the
+  (`src/dialogue.c`, `src/scene_view.c`, `src/art.c`; lower case and story
+  glyphs in the font; the ROM grows to 512 KiB)
+  - Verified: `test/test_story.c` (First Job's intro and choice, the
+    outro's won flag, the stage, every scene ends), `scene.timeline`
+- [x] `M4-SAVE-01` Save version 2: job results, seen scenes and tips, the
   current run with its board and battle; migration from version 1
-- [ ] `M4-JOBS-01` Jobs board by chapter (unlocks, chapter openings) and
-  the path map (nodes, HP, gadgets)
-- [ ] `M4-FIGHT-01` The fight screen: battle bar (enemy, HP, meters,
-  gadgets), clue overlays (fog, scramble, weak points, suspects, wipes, the
-  live line), ink, call-outs, phase banners, announcements
-- [ ] `M4-DIG-01` Digs and rest stops
-- [ ] `M4-RESULT-01` Results with the outro, job stats
+  (`save.h StorySave`, `src/story_run.c`: the web's run.ts, runSave.ts and
+  unlock rules)
+  - Verified: `test_migrate_v1` loads a 0.2.0 image; `test_unlocks_and_runs`
+- [x] `M4-JOBS-01` Jobs board by chapter (unlocks, chapter openings,
+  Overtime and boss fights under cleared jobs) and the path map (nodes, HP,
+  gadgets) (`src/jobs.c`, `src/map.c`)
+  - Verified: `story.timeline`
+- [x] `M4-FIGHT-01` The fight screen (`src/story_play.c` on the play
+  screen): the corner (enemy, HP, your HP, meters, messages), clue overlays
+  (fog blanks, scrambles sorted, forgeries shown) and marks (weak points,
+  suspects, wipes, the live line), ink, phase cards with taunts, hits in
+  Hits-on runs, swaps and turns after the stroke, call-outs (Y), gadgets
+  (SELECT), the finisher, knock-outs
+  - Verified: `story.timeline`, `story_win.timeline` (the Goblin to its
+    finisher and back to the map); KNOWN_ISSUES #7-#9
+- [x] `M4-DIG-01` Digs (the gadget reward) and rest stops (the countdown
+  and its heal)
+- [x] `M4-RESULT-01` Results with the outro's sign-off, job stats
+  (`src/run_result.c`)
 
 ## M5: Story extras
 
-- [ ] `M5-OVERTIME-01` Overtime runs
-- [ ] `M5-BOSS-01` Standalone boss fights
+- [ ] `M5-OVERTIME-01` Overtime runs (on the board and playable; not
+  played through yet)
+- [ ] `M5-BOSS-01` Standalone boss fights (on the board; not played
+  through yet)
 - [ ] `M5-ENDLESS-01` Endless
 - [ ] `M5-BADGE-01` The web game's story badges
 - [ ] `M5-TIPS-01` Power tips the first time each power appears

@@ -50,7 +50,8 @@ jobs:
           cp build/release/picross-*.sfc "dist/picross-94-$TAG.sfc"
           cp build/release/picross-*.sym "dist/picross-94-$TAG.sym"
           (cd dist && sha256sum picross-94-$TAG.sfc > picross-94-$TAG.sfc.sha256)
-          test "$(stat -c %s dist/picross-94-$TAG.sfc)" -eq 262144
+          banks=$(sed -n 's/^ROMBANKS := //p' Makefile)
+          test "$(stat -c %s dist/picross-94-$TAG.sfc)" -eq $((banks * 32768))
           ls -l dist
 
       - name: Publish the release

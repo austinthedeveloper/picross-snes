@@ -6,8 +6,9 @@
 
 /* Achievements: a list with progress, and the selected one's goal. */
 
-#define LIST_Y 4
-#define INFO_Y 24
+/* 21 rows from just under the header; the goal box takes rows 24-27. */
+#define LIST_Y 3
+#define INFO_Y 25
 
 static u8 s_sel;
 

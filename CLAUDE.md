@@ -15,7 +15,8 @@ runs. Conventions come from Pickleball '94 (`../pickleball`, especially
   directly.
 - A release: bump `VERSION_NAME`, write `docs/releases/vX.Y.Z.md`, merge,
   then tag `vX.Y.Z` on `main` and push the tag; `release.yml` publishes
-  the ROM (ADR-009).
+  the ROM (ADR-009). Smoke-run the published ROM: CI's build differs from
+  a local one byte for byte.
 - A feature gets an ADR in `docs/decisions/` (next free number) and a task
   in `milestones/`. A defect gets a row in `docs/KNOWN_ISSUES.md`. Unplanned
   ideas go in `docs/IDEAS.md`.

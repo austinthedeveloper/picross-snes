@@ -28,8 +28,11 @@ its install guide says. It isn't cached; the download is 14 MB.
 - A failed release run can be rerun by hand (`workflow_dispatch` with the
   same tag); it builds the tagged commit and uploads to the existing
   release, so a tag never has to move.
-- The ROM's build ID is the commit, so CI's ROM and a local `make release`
-  of the same commit carry the same ID.
+- The ROM's build ID is the commit. A Linux build is not byte-identical
+  to a macOS build of the same commit (about 5 KB differ: the toolchain
+  links the objects in another order), so the release ROM is CI's, and a
+  release smoke-runs CI's ROM, not a local one: download the artifact and
+  play `solve_heart.timeline` on it (CLAUDE.md, running headless).
 
 ## Rejected
 - Smoke runs on CI: MesenCE has no headless Linux package to install the

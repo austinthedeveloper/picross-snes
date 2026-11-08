@@ -49,6 +49,9 @@ C = {
     "bronze": 0xA8672F, "silver": 0x7F8A96, "gold": 0xC99A06,
     "bronze_dk": 0x6E4320, "silver_dk": 0x525A63, "gold_dk": 0x8A6A04,
     "bronze_lt": 0xD69A62, "silver_lt": 0xB9C2CC, "gold_lt": 0xF0CC4A,
+    # The striped clue lines (every other line, so neighbouring two-digit
+    # clues don't run together).
+    "paper2": 0xE9E4D7, "hl2": 0xF4E2AE,
 }
 
 
@@ -76,7 +79,7 @@ def build_palette():
 
     base = {
         1: "cellbg", 2: "line", 3: "guide", 4: "ink", 5: "mark", 6: "paper",
-        7: "ink", 8: "surface", 9: "guide", 10: "accent", 11: "ok",
+        7: "paper2", 8: "surface", 9: "guide", 10: "accent", 11: "ok",
         12: "guide", 13: "line", 14: "backdrop", 15: "line",
     }
     medal = {
@@ -88,6 +91,7 @@ def build_palette():
         if pal in (3, 5, 7):                       # highlighted line
             cols[1] = "hl"
             cols[6] = "hl"
+            cols[7] = "hl2"
         if pal in (4, 5):                          # mistake X
             cols[5] = "accent"
         if pal in (6, 7):                          # finished clue
@@ -188,8 +192,8 @@ def cell_tile(state, left_guide, top_guide, bottom=False):
     return t
 
 
-def clue_tile(n):
-    t = [[6] * 8 for _ in range(8)]
+def clue_tile(n, bg=6):
+    t = [[bg] * 8 for _ in range(8)]
     s = str(n)
     if len(s) == 1:
         stamp(t, GLYPHS[s], 2, 1, 4)
@@ -291,6 +295,9 @@ def board_tiles(collections, puzzles_by_id):
     tiles.add([[6] * 8 for _ in range(8)], "T_CLUE_BLANK")
     for n in range(MAX_SIDE + 1):
         tiles.add(clue_tile(n), "T_CLUE" if n == 0 else None)
+    tiles.add([[7] * 8 for _ in range(8)], "T_CLUE_BLANK_ALT")
+    for n in range(MAX_SIDE + 1):
+        tiles.add(clue_tile(n, 7), "T_CLUE_ALT" if n == 0 else None)
     for i, t in enumerate(frame_tiles()):
         tiles.add(t, "T_FRAME" if i == 0 else None)
     tiles.add(bar_tile(False), "T_BAR_EMPTY")

@@ -74,8 +74,36 @@ static void test_every_puzzle(void)
             CHECK_EQ(pack_collection(collection_slot(c, i)), c);
         CHECK(collection_emblem(c) < PUZZLE_COUNT);
     }
-    CHECK_EQ(seen, PUZZLE_COUNT);
+    CHECK_EQ(seen, PACK_LIVE_COUNT);
     CHECK(strcmp((const char *)collection_name(0), "STARTER SET") == 0);
+}
+
+static void test_murals(void)
+{
+    u8 m;
+    u8 t;
+    u8 tile;
+    u16 tiles = 0;
+    u16 slot;
+
+    CHECK_EQ(MURAL_COUNT, 16);
+    CHECK(strcmp((const char *)mural_name(0), "BLUE WHALE") == 0);
+    for (m = 0; m < MURAL_COUNT; m++) {
+        u8 n = (u8)(mural_across(m) * mural_down(m));
+
+        CHECK(n >= 4 && n <= 9);
+        for (t = 0; t < n; t++) {
+            slot = mural_first_slot(m) + t;
+            CHECK_EQ(pack_collection(slot), MURAL_COLLECTION);
+            CHECK_EQ(pack_width(slot), MURAL_TILE);
+            CHECK_EQ(mural_of(slot, &tile), m);
+            CHECK_EQ(tile, t);
+            CHECK(strcmp((const char *)pack_name(slot), (const char *)mural_name(m)) == 0);
+        }
+        tiles += n;
+    }
+    CHECK_EQ(tiles, PACK_TILE_COUNT);
+    CHECK_EQ(PACK_LIVE_COUNT + PACK_TILE_COUNT, PUZZLE_COUNT);
 }
 
 static void test_relaxed_solve(void)
@@ -257,6 +285,7 @@ int main(void)
 {
     test_heart();
     test_every_puzzle();
+    test_murals();
     test_relaxed_solve();
     test_strokes();
     test_hearts();

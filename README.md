@@ -1,19 +1,22 @@
 # Picross '94
 
-A Super Nintendo demake of the [Picross web game](../../picross), built in C
+A Super Nintendo demake of the [Picross web game](https://github.com/austinthedeveloper/picross), built in C
 and 65816 assembly with [PVSnesLib](https://github.com/alekmaul/pvsneslib)
 4.6.0. It is the free-play half of that game: all 523 handmade puzzles in
-their 19 collections, with the tracking, ranks, badges and achievements
-around them. Story mode (jobs, fights, scenes, endless, the daily) is cut
-from this first version (docs/decisions/ADR-002).
+their 19 collections plus the 16 murals, with the tracking, ranks, badges
+and achievements around them. Story mode (jobs, fights, scenes, endless,
+the daily) is cut from this first version (docs/decisions/ADR-002).
+
+![Title, free play, a puzzle list, a 10x10 and a 15x15 board, a result, the badge shelf, murals](docs/screens.png)
 
 - 523 puzzles from 5×5 to 20×20, each one with a unique solution, drawn in
   the web game and imported as data (`data/pack.json`)
+- 16 murals: big pictures in 90 tile puzzles that fill in as you solve them
 - Relaxed or Hearts mode, 3 hints a puzzle, undo and redo, a clock
 - Hold A or B to paint a stroke across cells, like dragging in the browser
 - Records: rank (the same ten as the web game), totals, solves by size,
   play time
-- A badge per collection (bronze, silver, gold) and 19 achievements
+- A badge per collection (bronze, silver, gold) and 21 achievements
 - Battery save: every record, plus one board to come back to
 - Synthesized sound effects (pencil taps, line chimes, a solve jingle)
 
@@ -47,6 +50,8 @@ LoROM with 8 KiB of battery SRAM.
 
 ## Docs
 
+- [Wiki](https://github.com/austinthedeveloper/picross-snes/wiki): how to
+  play, building, testing, architecture, adding puzzles
 - [CLAUDE.md](CLAUDE.md): workflow, the rules of the code, running headless
 - [Product brief](docs/00_PRODUCT_BRIEF.md): what this version is and isn't
 - [Layout](docs/LAYOUT.md): screens, VRAM, palettes, the board's placement

@@ -7,7 +7,7 @@ The first SNES version has only the puzzles: free play over the web game's
 achievements stay, rebuilt around free play. Story mode is cut: jobs,
 chapters, scenes and dialogue, fights (enemy HP, powers: fog, scramble,
 swaps, forgeries, ink, charge, turns), gadgets, the path map, digs and
-endless. The daily puzzle and murals are cut too.
+endless. The daily puzzle is cut too.
 
 ## Why
 - The user asked for it: "Cut story mode. It's just the puzzles."
@@ -26,4 +26,8 @@ endless. The daily puzzle and murals are cut too.
   earned.
 
 ## Later
-Murals and a version of the fights are in docs/IDEAS.md.
+A version of the fights is in docs/IDEAS.md.
+
+## Amendments
+- 2026-11-07: murals are in after all (ADR-008): they're free-play
+  puzzles, and as pack slots they cost little.

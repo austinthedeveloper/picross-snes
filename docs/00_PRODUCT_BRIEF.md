@@ -20,16 +20,19 @@ In:
   a clock. Lines whose filled runs match their clues dim.
 - **Strokes.** Holding A or B paints across cells, as a drag does in the
   browser; the first cell decides fill or erase, mark or unmark.
+- **Murals** (ADR-008): the web game's 16 big pictures, 90 tiles, each tile
+  a 15x15 puzzle; the picture fills in as you solve its tiles.
 - **Tracking.** Every puzzle's best time, times solved, and how it was
   solved (hearts, perfect, without hints); totals; play time; one board
   kept to come back to.
 - **Ranks.** The web game's ten ranks and thresholds, by points per solve
   (1/2/3/6 by size; there are no murals or dailies here, so the pack is
-  worth 1,778 points and the top rank, 1,500, is still reachable).
+  worth 1,778 points, 2,048 with the mural tiles at 3 each; the top rank,
+  1,500, is still reachable).
 - **Badges.** One per collection, in three tiers: bronze for solving all of
   it, silver for solving all of it in hearts mode, gold for solving all of
   it perfectly (hearts mode, no mistakes, no hints).
-- **Achievements.** 19 milestones (ADR-004).
+- **Achievements.** 21 milestones (ADR-004, ADR-008).
 - **Sound effects** (ADR-006), synthesized; an option turns them off.
 
 Out of version 1 (ADR-002):
@@ -37,7 +40,6 @@ Out of version 1 (ADR-002):
 - Story mode: jobs, chapters, scenes, fights and enemy powers, gadgets,
   the path map, digs, endless.
 - The daily puzzle: a cartridge has no clock to know the date.
-- Murals (tiled pictures): a candidate for version 2 (docs/IDEAS.md).
 - The editor, pinch zoom, haptics, the high-contrast theme.
 
 ## Feel

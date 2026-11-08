@@ -11,9 +11,10 @@ enum { TIER_NONE = 0, TIER_BRONZE = 1, TIER_SILVER = 2, TIER_GOLD = 3 };
 enum { SIZE_5 = 0, SIZE_10 = 1, SIZE_15 = 2, SIZE_20 = 3 };
 
 #define RANK_COUNT 10
-#define ACHIEVEMENT_COUNT 19
+#define ACHIEVEMENT_COUNT 21
 
 typedef struct {
+    /* Pack puzzles (not mural tiles) solved. */
     u16 solved;
     u16 solved_by_size[4];
     u16 points;
@@ -25,6 +26,9 @@ typedef struct {
     u8 rank;
     u8 badges;
     u8 golds;
+    u16 tiles_solved;
+    u8 murals_done;
+    u8 mural_solved[MURAL_COUNT];
     u8 tiers[COLLECTION_COUNT];
     u8 collection_solved[COLLECTION_COUNT];
 } Stats;

@@ -35,5 +35,9 @@ call per puzzle it cost about three frames more on the SNES.
   drawn by hand): 19 new drawings. The medal reuses each collection's own
   art.
 
+## Amendments
+- 2026-11-07: mural tiles count 3 points each (the pack is worth 2,048),
+  and two achievements follow murals (ADR-008): 21 in all.
+
 ## Verification
 `test/test_save.c` `test_stats`, `test_ranks_and_hours`.

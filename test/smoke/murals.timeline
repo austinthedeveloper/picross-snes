@@ -1,0 +1,17 @@
+# Murals: the list and preview, pick the whale's last tile, play, quit back.
+100 101 a
+150 150 up
+shot 160
+170 171 a
+shot 230
+240 241 a
+250 250 right
+256 256 down
+shot 266
+276 277 a
+shot 340
+350 351 start
+360 360 down
+366 366 down
+372 373 a
+shot 430

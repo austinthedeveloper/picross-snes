@@ -14,6 +14,7 @@ enum {
     SCENE_ACHIEVEMENTS,
     SCENE_OPTIONS,
     SCENE_HOW_TO,
+    SCENE_MURALS,
     SCENE_COUNT,
     SCENE_NONE = 0xFF
 };
@@ -24,6 +25,9 @@ void scene_goto(u8 scene);
 /* What the menus remember between screens. */
 extern u8 g_sel_collection;
 extern u8 g_sel_index;
+extern u8 g_sel_mural;
+/* Where the play and result screens go back to (puzzles or murals). */
+extern u8 g_return_scene;
 /* The slot to play, and whether to resume its suspended board. */
 extern u16 g_play_slot;
 extern u8 g_play_resume;
@@ -58,6 +62,13 @@ void options_enter(void);
 void options_update(void);
 void how_to_enter(void);
 void how_to_update(void);
+void murals_enter(void);
+void murals_update(void);
+void murals_init(void);
+/* The next unsolved tile of g_sel_mural (selected), or 0xFF. */
+u8 murals_next_tile(void);
+/* Opens the murals screen on this tile of g_sel_mural. */
+void murals_select_tile(u8 tile);
 
 /* The selected row's highlighter band (BG1). */
 #define SEL_BAR BG_ENTRY(T_CLUE_BLANK, PAL_HL)

@@ -67,6 +67,17 @@ void result_enter(void)
     draw_picture(x0, y0, scale);
     y = (u8)(y0 + side + 1);
     bg3_center(y++, (const char *)pack_name(g_puzzle.slot), TEXT_INK);
+    if (pack_collection(g_puzzle.slot) == MURAL_COLLECTION) {
+        u8 tile;
+        u8 m = mural_of(g_puzzle.slot, &tile);
+        u8 x;
+
+        x = bg3_text(10, y, "TILE", TEXT_DIM);
+        bg3_number((u8)(x + 1), y, (u16)(tile + 1), 1, 0, TEXT_INK);
+        bg3_text((u8)(x + 3), y, "OF", TEXT_DIM);
+        bg3_number((u8)(x + 6), y, (u16)(mural_across(m) * mural_down(m)), 1, 0, TEXT_INK);
+        y++;
+    }
     bg3_text(4, y, "TIME", TEXT_DIM);
     bg3_time(9, y, g_play.seconds, TEXT_INK);
     bg3_text(17, y, "BEST", TEXT_DIM);
@@ -88,6 +99,22 @@ void result_enter(void)
 
 void result_update(void)
 {
+    if (g_return_scene == SCENE_MURALS) {
+        if (g_pressed & KEY_A) {
+            u8 t = murals_next_tile();
+
+            if (t == 0xFF) {
+                scene_goto(SCENE_MURALS);
+            } else {
+                g_play_slot = (u16)(mural_first_slot(g_sel_mural) + t);
+                g_play_resume = g_save.suspend.slot1 == g_play_slot + 1;
+                scene_goto(SCENE_PLAY);
+            }
+        } else if (g_pressed & KEY_B) {
+            scene_goto(SCENE_MURALS);
+        }
+        return;
+    }
     if (g_pressed & KEY_A) {
         if ((u8)(g_sel_index + 1) < collection_size(g_sel_collection) &&
             collection_slot(g_sel_collection, g_sel_index) == g_puzzle.slot) {

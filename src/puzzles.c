@@ -162,6 +162,7 @@ void puzzles_update(void)
         slot = collection_slot(g_sel_collection, g_sel_index);
         g_play_slot = slot;
         g_play_resume = g_save.suspend.slot1 == slot + 1;
+        g_return_scene = SCENE_PUZZLES;
         scene_goto(SCENE_PLAY);
     } else if (g_pressed & KEY_B) {
         menu_save_settings();

@@ -62,11 +62,21 @@ void bg3_time(u8 x, u8 y, u16 seconds, u8 pal);
 /* Centered text on the 32-column screen. */
 void bg3_center(u8 y, const char *s, u8 pal);
 
-/* The thumbnail: BG3 tiles THUMB_TILE.. (3x3, after the font), one pixel
- * a cell, uploaded in VBlank when thumb_set changes it. */
+/* The thumbnail: BG3 tiles THUMB_TILE.. (6x6 of them, after the font),
+ * one pixel a cell, uploaded in VBlank when it changes. The board's is up
+ * to 20x20; a mural preview is up to 45x45. Colours: 0 clear, 1 ink,
+ * 2 light (an empty cell), 3 accent. */
 #define THUMB_TILE 96
+#define THUMB_COLS 6
 void thumb_clear(u8 width, u8 height);
+/* A board cell: filled (ink) or not (light). */
 void thumb_set(u8 x, u8 y, u8 filled);
+void thumb_pixel(u8 x, u8 y, u8 colour);
+/* Clears the whole buffer to colour 0 and sets its size, without the
+ * light background thumb_clear gives a board. */
+void thumb_reset(u8 width, u8 height);
+/* A 15x15 picture from pack rows (2 bytes a row, MSB first) at (x0, y0). */
+void thumb_tile_bits(u8 x0, u8 y0, const u8 *bits);
 /* Puts the thumbnail's tiles on the map at (x, y). */
 void thumb_place(u8 x, u8 y);
 

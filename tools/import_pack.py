@@ -8,6 +8,11 @@ truth for the drawings. This copies, for every pack puzzle: its id, name,
 size, rows, difficulty rating (solver passes), and its collection (the theme
 comments in src/puzzles/index.ts's ORDER).
 
+Murals (src/puzzles/murals/*.json): each picture splits into tile x tile
+puzzles, row by row, imported as pack puzzles "<mural>-<n>" in collection
+"Murals" (not a real collection: the game lists them on the murals screen),
+plus a "murals" list giving each mural's size in tiles and its tile ids.
+
 Save slots (ADR-003) are append-only: a puzzle keeps the slot it was first
 imported with, forever, because the battery save indexes records by slot.
 New puzzles go on the end; a puzzle removed from the web pack keeps its slot
@@ -76,12 +81,32 @@ def main():
         for pid in loose:
             collection_of[pid] = "Extras"
 
-    # Slots: keep every old one, append new ids in ORDER.
+    murals = []
+    for path in (web / "src/puzzles/murals").glob("*.json"):
+        m = json.loads(path.read_text(encoding="utf-8"))
+        t, rows = m["tile"], m["solution"]
+        across, down = len(rows[0]) // t, len(rows) // t
+        ids = []
+        for n in range(across * down):
+            tr, tc = divmod(n, across)
+            tid = f"{m['id']}-{n + 1}"
+            pack[tid] = {
+                "id": tid, "name": m["name"], "width": t, "height": t,
+                "solution": [r[tc * t:(tc + 1) * t] for r in rows[tr * t:(tr + 1) * t]],
+            }
+            collection_of[tid] = "Murals"
+            ids.append(tid)
+        murals.append({"id": m["id"], "name": m["name"], "order": m["order"],
+                       "across": across, "down": down, "tiles": ids})
+    murals.sort(key=lambda m: m["order"])
+
+    # Slots: keep every old one, append new ids: collections in ORDER, then
+    # the murals' tiles.
     slots = [p["id"] for p in previous.values()]
-    for c in collections:
-        for pid in c["puzzles"]:
-            if pid not in previous:
-                slots.append(pid)
+    for pid in [pid for c in collections for pid in c["puzzles"]] + \
+            [tid for m in murals for tid in m["tiles"]]:
+        if pid not in previous:
+            slots.append(pid)
 
     puzzles = []
     for slot, pid in enumerate(slots):
@@ -109,9 +134,11 @@ def main():
     OUT.write_text(json.dumps({
         "source": "picross web game, src/puzzles (tools/import_pack.py)",
         "collections": collections,
+        "murals": murals,
         "puzzles": puzzles,
     }, indent=1) + "\n", encoding="utf-8")
-    print(f"{OUT.relative_to(ROOT)}: {len(puzzles)} puzzles in {len(collections)} collections")
+    print(f"{OUT.relative_to(ROOT)}: {len(puzzles)} puzzles in {len(collections)} "
+          f"collections, {len(murals)} murals")
 
 
 if __name__ == "__main__":

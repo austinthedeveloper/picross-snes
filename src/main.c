@@ -8,6 +8,8 @@
 
 u8 g_sel_collection;
 u8 g_sel_index;
+u8 g_sel_mural;
+u8 g_return_scene;
 u16 g_play_slot;
 u8 g_play_resume;
 u8 g_news_count;
@@ -53,6 +55,7 @@ static void enter(u8 scene)
     case SCENE_ACHIEVEMENTS: achievements_enter(); break;
     case SCENE_OPTIONS: options_enter(); break;
     case SCENE_HOW_TO: how_to_enter(); break;
+    case SCENE_MURALS: murals_enter(); break;
     }
 }
 
@@ -69,6 +72,7 @@ static void update(u8 scene)
     case SCENE_ACHIEVEMENTS: achievements_update(); break;
     case SCENE_OPTIONS: options_update(); break;
     case SCENE_HOW_TO: how_to_update(); break;
+    case SCENE_MURALS: murals_update(); break;
     }
 }
 
@@ -85,6 +89,9 @@ int main(void)
     g_title_sel = 0;
     g_sel_collection = 0;
     g_sel_index = 0;
+    g_sel_mural = 0;
+    g_return_scene = SCENE_PUZZLES;
+    murals_init();
     g_play_slot = 0;
     g_play_resume = 0;
     g_news_count = 0;

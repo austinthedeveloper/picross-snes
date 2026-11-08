@@ -10,6 +10,8 @@ ROM_DECLARE(pack_names);
 ROM_DECLARE(pack_cinfo);
 ROM_DECLARE(pack_cslots);
 ROM_DECLARE(pack_cnames);
+/* pack_minfo: 8 bytes a mural: u16 first slot, across, down, u16 name. */
+ROM_DECLARE(pack_minfo);
 
 PuzzleHeader g_puzzle;
 u8 g_solution[MAX_CELLS];
@@ -54,6 +56,11 @@ u8 pack_passes(u16 slot)
 u8 pack_collection(u16 slot)
 {
     return info(slot)[7];
+}
+
+const u8 *pack_rows(u16 slot)
+{
+    return ROM_DATA(pack_bits) + read16(info(slot));
 }
 
 const u8 *pack_name(u16 slot)
@@ -115,6 +122,47 @@ const u8 *collection_name(u8 c)
 u16 collection_emblem(u8 c)
 {
     return read16(cinfo(c) + 6);
+}
+
+static const u8 *minfo(u8 m)
+{
+    return ROM_DATA(pack_minfo) + ((u16)m << 3);
+}
+
+u8 mural_across(u8 m)
+{
+    return minfo(m)[2];
+}
+
+u8 mural_down(u8 m)
+{
+    return minfo(m)[3];
+}
+
+u16 mural_first_slot(u8 m)
+{
+    return read16(minfo(m));
+}
+
+const u8 *mural_name(u8 m)
+{
+    return ROM_DATA(pack_cnames) + read16(minfo(m) + 4);
+}
+
+u8 mural_of(u16 slot, u8 *tile)
+{
+    u8 m;
+    u16 first;
+
+    for (m = 0; m < MURAL_COUNT; m++) {
+        first = mural_first_slot(m);
+        if (slot >= first && slot < first + mural_across(m) * mural_down(m)) {
+            *tile = (u8)(slot - first);
+            return m;
+        }
+    }
+    *tile = 0;
+    return 0;
 }
 
 /* Appends one line's runs as clues; returns the count. */

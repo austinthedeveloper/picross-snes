@@ -1,0 +1,6 @@
+# The Blue Whale's first three tiles (slots 523-525) solved: the preview
+# shows them drawn and the fourth outlined.
+repeat 3 4
+95 g_save+2268 2 100
+repeat 3 4
+95 g_save+2270 1 1

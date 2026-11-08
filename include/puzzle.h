@@ -21,6 +21,8 @@ u8 pack_width(u16 slot);
 u8 pack_height(u16 slot);
 u8 pack_passes(u16 slot);
 u8 pack_collection(u16 slot);
+/* The slot's rows in ROM: MSB first, each row padded to whole bytes. */
+const u8 *pack_rows(u16 slot);
 /* NUL-terminated upper-case name in ROM. */
 const u8 *pack_name(u16 slot);
 /* Rank points a solve of this slot is worth (by side, as the web game). */
@@ -33,6 +35,16 @@ u8 collection_size(u8 c);
 u16 collection_slot(u8 c, u8 i);
 const u8 *collection_name(u8 c);
 u16 collection_emblem(u8 c);
+
+/* Murals: big pictures of tiles (15x15 pack puzzles with consecutive
+ * slots, row by row, collection MURAL_COLLECTION). */
+u8 mural_across(u8 m);
+u8 mural_down(u8 m);
+u16 mural_first_slot(u8 m);
+const u8 *mural_name(u8 m);
+/* The mural a tile slot belongs to, and its tile number (0-based). */
+u8 mural_of(u16 slot, u8 *tile);
+#define MURAL_TILE 15
 
 /* The puzzle in play, decoded into RAM. */
 typedef struct {

@@ -95,9 +95,17 @@ void title_update(void)
             g_play_resume = 1;
             /* Back out to the puzzle's own list afterwards. */
             g_sel_collection = pack_collection(g_play_slot);
-            for (i = 0; i < collection_size(g_sel_collection); i++)
-                if (collection_slot(g_sel_collection, i) == g_play_slot)
-                    g_sel_index = i;
+            if (g_sel_collection == MURAL_COLLECTION) {
+                g_sel_mural = mural_of(g_play_slot, &i);
+                murals_select_tile(i);
+                g_sel_collection = COLLECTION_COUNT;
+                g_return_scene = SCENE_MURALS;
+            } else {
+                for (i = 0; i < collection_size(g_sel_collection); i++)
+                    if (collection_slot(g_sel_collection, i) == g_play_slot)
+                        g_sel_index = i;
+                g_return_scene = SCENE_PUZZLES;
+            }
         }
         scene_goto(s_scenes[s_sel]);
     }

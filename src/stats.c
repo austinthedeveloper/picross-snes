@@ -88,11 +88,16 @@ void stats_compute(Stats *s)
         s_hearts[c] = 0;
         s_perfect[c] = 0;
     }
+    s->tiles_solved = 0;
     for (slot = 0; slot < PUZZLE_COUNT; slot++) {
         flags = rec->flags;
-        if (flags & REC_SOLVED) {
+        c = info[PACK_INFO_COLLECTION];
+        if ((flags & REC_SOLVED) && c == MURAL_COLLECTION) {
+            /* A mural tile: rank points (the web game's 3) and the murals. */
+            s->tiles_solved++;
+            s->points += 3;
+        } else if (flags & REC_SOLVED) {
             side = info[PACK_INFO_WIDTH];
-            c = info[PACK_INFO_COLLECTION];
             s->solved++;
             s->collection_solved[c]++;
             if (side <= 5) {
@@ -141,6 +146,22 @@ void stats_compute(Stats *s)
         if (s->tiers[c] == TIER_GOLD)
             s->golds++;
     }
+    s->murals_done = 0;
+    for (c = 0; c < MURAL_COUNT; c++) {
+        u16 first = mural_first_slot(c);
+        u8 count = (u8)(mural_across(c) * mural_down(c));
+        u8 got = 0;
+
+        rec = g_save.records + first;
+        for (n = 0; n < count; n++) {
+            if (rec->flags & REC_SOLVED)
+                got++;
+            rec++;
+        }
+        s->mural_solved[c] = got;
+        if (got == count)
+            s->murals_done++;
+    }
     s->rank = rank_for(s->points);
     s->hours = progress_hours();
 }
@@ -149,7 +170,8 @@ void stats_compute(Stats *s)
 
 enum {
     ACH_SOLVED, ACH_SIZE20, ACH_ALL_SIZES, ACH_PERFECT, ACH_HEARTS,
-    ACH_NOHINT_BIG, ACH_FAST_BIG, ACH_HOURS, ACH_BADGES, ACH_GOLDS, ACH_RANK
+    ACH_NOHINT_BIG, ACH_FAST_BIG, ACH_HOURS, ACH_BADGES, ACH_GOLDS, ACH_RANK,
+    ACH_MURALS
 };
 
 static const char *const s_ach_names[ACHIEVEMENT_COUNT] = {
@@ -157,7 +179,8 @@ static const char *const s_ach_names[ACHIEVEMENT_COUNT] = {
     "SKETCHBOOK", "THE WHOLE PACK", "BIG BOARD", "ALL SIZES",
     "CLEAN SHEET", "FLAWLESS TEN", "HEARTS AND MINDS", "NO PEEKING",
     "QUICK STUDY", "NIGHT SHIFT", "FIRST MEDAL", "SHOWCASE",
-    "GOLD STANDARD", "LOCAL LEGEND", "NO JOB TOO STRANGE"
+    "GOLD STANDARD", "LOCAL LEGEND", "NO JOB TOO STRANGE", "MURALIST",
+    "THE GALLERY"
 };
 static const char *const s_ach_text[ACHIEVEMENT_COUNT] = {
     "SOLVE YOUR FIRST PUZZLE.",
@@ -178,17 +201,19 @@ static const char *const s_ach_text[ACHIEVEMENT_COUNT] = {
     "EARN 10 COLLECTION BADGES.",
     "EARN A GOLD BADGE.",
     "REACH THE RANK OF\nLOCAL LEGEND.",
-    "REACH THE TOP RANK."
+    "REACH THE TOP RANK.",
+    "FINISH A MURAL.",
+    "FINISH EVERY MURAL."
 };
 static const u8 s_ach_kind[ACHIEVEMENT_COUNT] = {
     ACH_SOLVED, ACH_SOLVED, ACH_SOLVED, ACH_SOLVED, ACH_SOLVED, ACH_SOLVED,
     ACH_SIZE20, ACH_ALL_SIZES, ACH_PERFECT, ACH_PERFECT, ACH_HEARTS,
     ACH_NOHINT_BIG, ACH_FAST_BIG, ACH_HOURS, ACH_BADGES, ACH_BADGES,
-    ACH_GOLDS, ACH_RANK, ACH_RANK
+    ACH_GOLDS, ACH_RANK, ACH_RANK, ACH_MURALS, ACH_MURALS
 };
 static const u16 s_ach_target[ACHIEVEMENT_COUNT] = {
     1, 10, 50, 100, 250, PACK_LIVE_COUNT, 1, 4, 1, 10, 25, 1, 1, 10, 1, 10,
-    1, 7, 9
+    1, 7, 9, 1, MURAL_COUNT
 };
 
 const char *achievement_name(u8 id)
@@ -237,6 +262,8 @@ u16 achievement_value(u8 id, const Stats *s)
         return s->golds;
     case ACH_RANK:
         return s->rank;
+    case ACH_MURALS:
+        return s->murals_done;
     }
     return 0;
 }

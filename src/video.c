@@ -17,6 +17,12 @@ static u8 s_thumb_dirty;
 static u8 s_thumb_w;
 static u8 s_thumb_h;
 
+/* Palette writes waiting for VBlank (CGRAM is only writable then). */
+#define CGRAM_QUEUE 4
+static const u8 *s_cg_src[CGRAM_QUEUE];
+static u8 s_cg_pal[CGRAM_QUEUE];
+static u8 s_cg_count;
+
 extern void map_commit(void);
 
 /* src/asm/map_draw.asm's inputs and output. */
@@ -67,17 +73,38 @@ void video_init(void)
     g_bg1_dirty = 0;
     g_bg3_dirty = 0;
     s_thumb_dirty = 0;
+    s_cg_count = 0;
     s_thumb_w = 0;
     s_thumb_h = 0;
 }
 
+
+void video_queue_palette(const u8 *src, u8 pal)
+{
+    if (s_cg_count < CGRAM_QUEUE) {
+        s_cg_src[s_cg_count] = src;
+        s_cg_pal[s_cg_count] = pal;
+        s_cg_count++;
+    }
+}
+
+void video_restore_palette(void)
+{
+    dmaCopyCGram((u8 *)ROM_DATA(palette_pal), 0, 512);
+}
+
 void video_commit(void)
 {
+    u8 i;
+
     map_commit();
     if (s_thumb_dirty) {
         s_thumb_dirty = 0;
         dmaCopyVram(s_thumb, VRAM_BG3_TILES + THUMB_TILE * 8, sizeof s_thumb);
     }
+    for (i = 0; i < s_cg_count; i++)
+        dmaCopyCGram((u8 *)s_cg_src[i], (u16)s_cg_pal[i] << 4, 32);
+    s_cg_count = 0;
 }
 
 void thumb_reset(u8 width, u8 height)

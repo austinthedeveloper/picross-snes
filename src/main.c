@@ -3,7 +3,9 @@
 #include "board_view.h"
 #include "input.h"
 #include "save.h"
+#include "art.h"
 #include "scene.h"
+#include "story.h"
 #include "video.h"
 
 u8 g_sel_collection;
@@ -56,6 +58,7 @@ static void enter(u8 scene)
     case SCENE_OPTIONS: options_enter(); break;
     case SCENE_HOW_TO: how_to_enter(); break;
     case SCENE_MURALS: murals_enter(); break;
+    case SCENE_DIALOGUE: dialogue_enter(); break;
     }
 }
 
@@ -73,6 +76,7 @@ static void update(u8 scene)
     case SCENE_OPTIONS: options_update(); break;
     case SCENE_HOW_TO: how_to_update(); break;
     case SCENE_MURALS: murals_update(); break;
+    case SCENE_DIALOGUE: dialogue_update(); break;
     }
 }
 
@@ -92,6 +96,11 @@ int main(void)
     g_sel_mural = 0;
     g_return_scene = SCENE_PUZZLES;
     murals_init();
+    story_init();
+    art_init();
+    g_story_scene = 0;
+    g_story_flags = 0;
+    g_story_next = SCENE_TITLE;
     g_play_slot = 0;
     g_play_resume = 0;
     g_news_count = 0;
@@ -111,6 +120,8 @@ int main(void)
         audio_update();
         if (s_next != SCENE_NONE) {
             video_fade_out();
+            if (s_scene == SCENE_DIALOGUE)
+                dialogue_leave();
             s_scene = s_next;
             s_next = SCENE_NONE;
             cursor_hide();

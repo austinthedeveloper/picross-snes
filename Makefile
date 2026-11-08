@@ -7,11 +7,11 @@ BUILD_ID ?= $(shell id=$$(git rev-parse --short HEAD 2>/dev/null || echo dev); \
 ROMNAME := picross-$(VERSION_NAME)-$(CONFIG)-$(BUILD_ID)
 ROMTITLE := PICROSS 94
 
-# FastROM LoROM, 8 banks of 32 KiB (ADR-001); grow ROMBANKS and ROMSIZE
-# together (ROMSIZE is log2 of the size in KiB: $08 = 256 KiB).
+# FastROM LoROM, 16 banks of 32 KiB (ADR-001, ADR-010); grow ROMBANKS and ROMSIZE
+# together (ROMSIZE is log2 of the size in KiB: $09 = 512 KiB).
 FASTROM := 1
-ROMBANKS := 8
-ROMSIZE := 08
+ROMBANKS := 16
+ROMSIZE := 09
 
 # ROM + RAM + battery, 8 KiB SRAM: two save copies (ADR-003).
 CARTRIDGETYPE := 02
@@ -83,9 +83,9 @@ asset-check:
 
 # The core (no PPU, no pads) builds on the host for tests.
 HOST_CORE := src/puzzle.c src/board.c src/history.c src/play.c src/save.c \
-	src/progress.c src/stats.c src/battle.c src/fight_rules.c src/story.c \
+	src/progress.c src/stats.c src/battle.c src/fight_rules.c src/story.c src/dialogue.c src/story_run.c \
 	assets/generated/pack_data.c assets/generated/story_data.c test/host_sram.c
-HOST_TESTS := core save battle
+HOST_TESTS := core save battle story
 CC_HOST ?= cc
 
 host-check: assets

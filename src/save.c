@@ -13,21 +13,32 @@ u16 save_sum_len;
 u16 save_sum_acc;
 extern void save_sum(void);
 
+static u16 image_bytes(const SaveData *data)
+{
+    return data->version == 1 ? SAVE_BYTES_V1 : SAVE_BYTES;
+}
+
 u16 save_checksum(const SaveData *data)
 {
     save_sum_src = (u16)data;
-    save_sum_len = SAVE_BYTES;
+    save_sum_len = image_bytes(data);
     save_sum();
     return save_sum_acc;
 }
 #else
+static u16 image_bytes(const SaveData *data)
+{
+    return data->version == 1 ? SAVE_BYTES_V1 : SAVE_BYTES;
+}
+
 u16 save_checksum(const SaveData *data)
 {
     const u8 *p = (const u8 *)data;
     u16 sum = 0x1994;
     u16 i;
+    u16 n = image_bytes(data);
 
-    for (i = 0; i < SAVE_BYTES; i++) {
+    for (i = 0; i < n; i++) {
         /* The sum field itself (bytes 4 and 5) counts as zero. */
         if (i == 4 || i == 5)
             continue;
@@ -59,10 +70,18 @@ void save_blank(void)
     g_save.sound = 1;
 }
 
-/* Brings an older valid layout up to SAVE_VERSION. Version 1 is the only
- * layout so far; the next change freezes it as SaveV1 here (ADR-003). */
+/* Brings an older valid layout up to SAVE_VERSION (ADR-003).
+ * Version 1 (0.2.0) is version 2 without the story: its bytes are the
+ * first SAVE_BYTES_V1, so the story starts out empty. */
 static void migrate(void)
 {
+    u8 *p = (u8 *)&g_save;
+    u16 i;
+
+    if (g_save.version == 1) {
+        for (i = SAVE_BYTES_V1; i < SAVE_BYTES; i++)
+            p[i] = 0;
+    }
     g_save.version = SAVE_VERSION;
 }
 

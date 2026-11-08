@@ -439,6 +439,8 @@ static void test_turns(void)
 int main(void)
 {
     story_init();
+    /* The save keeps a BattleState byte for byte (save.h RunSave.battle). */
+    CHECK_EQ(sizeof(BattleState), 106);
     test_tables();
     test_gremlin_phases();
     test_armor();

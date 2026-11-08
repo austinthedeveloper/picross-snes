@@ -36,7 +36,8 @@ jobs:
           rom=$(ls build/release/picross-*.sfc)
           size=$(stat -c %s "$rom")
           echo "$rom: $size bytes"
-          test "$size" -eq 262144
+          banks=$(sed -n 's/^ROMBANKS := //p' Makefile)
+          test "$size" -eq $((banks * 32768))
           echo "name=$(basename "$rom" .sfc)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/upload-artifact@v7

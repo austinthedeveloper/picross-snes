@@ -13,7 +13,8 @@ story_tab.bin layout (all offsets are u16 within story_tab.bin, strings are
 u16 string ids, 0xFFFF for none; one-byte references use 0xFF for none):
 
   header      u16 count + u16 offset of the index for each of, in order:
-              chapters, runs, encounters, scenes, gadgets, backdrops
+              chapters, runs, encounters, scenes, gadgets, backdrops; then
+              u16 count + u16 offset of the scenes' save slots (a byte each)
   index       u16 record offset per item
   chapter     order, opening scene, u16 title, u16 blurb, n, job runs[n]
   run         slot, hp, order, requires, overtimeOf, bossOf, intro, outro,
@@ -119,7 +120,7 @@ def art_names(group):
 def build(pack, story_puzzle_base):
     story = json.loads(STORY.read_text(encoding="utf-8"))
     strings = Strings()
-    tab = bytearray(24)  # header, filled in at the end
+    tab = bytearray(28)  # header, filled in at the end
     lists = {}
 
     def add_list(ids):
@@ -291,6 +292,13 @@ def build(pack, story_puzzle_base):
     header.append(section(scenes, scene))
     header.append(section(gadgets, gadget))
     header.append(section(backdrops, backdrop))
+    # Scene save slots, one byte a scene, in table order.
+    slots_at = len(tab)
+    for s in scenes:
+        slot = story["sceneSlots"].index(s["id"])
+        assert slot < 128, "the save keeps 128 scene slots (save.h STORY_SCENE_CAP)"
+        tab.append(slot)
+    header.append((len(scenes), slots_at))
     for i, (count, at) in enumerate(header):
         tab[4 * i:4 * i + 4] = u16(count) + u16(at)
     assert len(tab) <= BANK, f"story_tab.bin is {len(tab)} bytes; split it"
@@ -306,6 +314,9 @@ def build(pack, story_puzzle_base):
                  "ENDLESS_HP", "ENDLESS_HEAL", "BREAK_EVERY", "LOOKAHEAD"):
         h.append(f"#define {name} {c[name]}")
     h.append(f"#define WARM_UP_DIV {div}")
+    # The web's --backdrop token (src/styles/tokens.css): scenery behind a scene.
+    r, g, b = 0xE2, 0xDE, 0xD3
+    h.append(f"#define COLOUR_BACKDROP 0x{(r >> 3) | ((g >> 3) << 5) | ((b >> 3) << 10):04X}")
     h += [f"#define STORY_CHAPTERS {len(story['chapters'])}",
           f"#define STORY_RUNS {len(runs)}",
           f"#define STORY_ENCOUNTERS {len(encs)}",
@@ -324,6 +335,9 @@ def build(pack, story_puzzle_base):
     for g in gadgets:
         h.append(f"#define GADGET_{g['id'].upper().replace('-', '_')} {gadget_ix[g['id']]}")
     h.append("#define SPRITE_UNKNOWN %d" % sprites.index("unknown"))
+    cname = lambda s: s.upper().replace("-", "_")
+    h += [f"#define SCENE_ID_{cname(s['id'])} {i}" for i, s in enumerate(scenes)]
+    h += [f"#define RUN_ID_{cname(r['id'])} {i}" for i, r in enumerate(runs)]
     h += ["#endif", ""]
 
     bins = {"story_tab": bytes(tab), "story_str": bytes(strings.index)}

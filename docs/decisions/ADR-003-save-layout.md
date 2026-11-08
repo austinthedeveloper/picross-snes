@@ -43,3 +43,9 @@ mode option, one suspended board (2 bits a cell), and 36 reserved bytes.
 ## Verification
 `test/test_save.c`: layout, round trip, torn write, flipped bit, sequence
 wrap, records, suspend and resume.
+- 2026-11-07: version 2 (ADR-010) appends the story (`StorySave`, 484
+  bytes: job results by job slot, seen scenes by scene slot, seen power
+  tips, the run in progress with its board and BattleState). Version 1's
+  bytes are version 2's first 2976, so migrating zeroes the rest; the
+  checksum covers the bytes of the image's own version.
+

@@ -199,3 +199,10 @@ const u8 *story_backdrop(u8 b)
 {
     return record(SEC_BACKDROPS, b);
 }
+
+u8 scene_slot(u8 s)
+{
+    const u8 *t = tab();
+
+    return t[read16(t + 26) + s];
+}

@@ -64,3 +64,24 @@ narrow digits). A line's whole clue band takes its palette, so the
 highlight runs from the board to the far clue. Odd lines' clue tiles use a
 slightly darker background (colour 7), so two-digit clues in neighbouring
 columns don't read as one number.
+
+## Story scenes (ADR-010)
+
+`src/scene_view.c`. BG2 is on only here: the backdrop, one 8x8 tile a
+cell, bottom-anchored and cropped like the web's `xMidYMax slice` (a 32x48
+backdrop shows its bottom 28 rows). Its map is at VRAM $5800 and it shares
+BG1's tiles: tile 1023 is solid (colour 1 of BG palette 4, the web's
+`--backdrop`), 1022 blank.
+
+BG1 has the cast's 64x64 portraits (8x8 tiles from tile 512, 64 a cast
+member, all of a scene's cast loaded on entry) on a stage of three at
+columns 2, 12 and 22, rows 10-17, over a card at rows 18-27. A stage place
+has its own palette (BG 5-7), written in VBlank when someone walks on
+(`video_queue_palette`). The speaker's name and the typed text (28 columns,
+up to 6 lines, word-wrapped at run time) are BG3. Leaving the scene turns
+BG2 off and puts the boot palette back.
+
+BG3 font tiles: ASCII 32-127 (with real lower case now), then the story
+glyphs at character codes 0x80-0x8E (`font.py STORY_GLYPHS`); the
+thumbnail moved to tile 112.
+

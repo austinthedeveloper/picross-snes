@@ -1,0 +1,66 @@
+name: Release
+
+# Pushing a tag vX.Y.Z on main builds that commit and publishes a GitHub
+# release with the ROM attached and docs/releases/vX.Y.Z.md as its notes
+# (ADR-009). The tag must match VERSION_NAME in the Makefile.
+#
+# If a run fails after the tag is pushed, fix main and run this workflow by
+# hand with the same tag: it builds the tagged commit, not main.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to (re)build and publish, e.g. v0.2.0
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.TAG }}
+
+      - uses: ./.github/actions/setup-pvsneslib
+
+      - name: The tag matches VERSION_NAME and has release notes
+        run: |
+          set -euo pipefail
+          version=$(sed -n 's/^VERSION_NAME := //p' Makefile)
+          test "$TAG" = "v$version" || { echo "::error::tag $TAG but VERSION_NAME is $version"; exit 1; }
+          test -f "docs/releases/$TAG.md" || { echo "::error::docs/releases/$TAG.md is missing"; exit 1; }
+
+      - name: make check
+        run: make check
+
+      - name: make release
+        run: make release
+
+      - name: Name the ROM
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cp build/release/picross-*.sfc "dist/picross-94-$TAG.sfc"
+          cp build/release/picross-*.sym "dist/picross-94-$TAG.sym"
+          (cd dist && sha256sum picross-94-$TAG.sfc > picross-94-$TAG.sfc.sha256)
+          test "$(stat -c %s dist/picross-94-$TAG.sfc)" -eq 262144
+          ls -l dist
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" dist/* --verify-tag \
+              --title "Picross '94 $TAG" --notes-file "docs/releases/$TAG.md"
+          fi

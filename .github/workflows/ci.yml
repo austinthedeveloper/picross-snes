@@ -1,0 +1,48 @@
+name: CI
+
+# Every PR and every push to main: the host tests and checks, then the
+# release ROM, uploaded as an artifact (ADR-009). Smoke runs need MesenCE
+# and stay local for now.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-pvsneslib
+
+      - name: make check (host tests, pack validation, 816-tcc lint)
+        run: make check
+
+      - name: make release
+        run: make release
+
+      - name: Check the ROM
+        id: rom
+        run: |
+          set -euo pipefail
+          rom=$(ls build/release/picross-*.sfc)
+          size=$(stat -c %s "$rom")
+          echo "$rom: $size bytes"
+          test "$size" -eq 262144
+          echo "name=$(basename "$rom" .sfc)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.rom.outputs.name }}
+          path: |
+            build/release/*.sfc
+            build/release/*.sym
+          if-no-files-found: error

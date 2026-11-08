@@ -1,0 +1,23 @@
+name: Set up PVSnesLib
+description: >
+  Installs the pinned PVSnesLib release (ADR-001) the way its install guide
+  says: unzip the release and point PVSNESLIB_HOME at it.
+inputs:
+  version:
+    description: PVSnesLib release tag
+    default: "4.6.0"
+runs:
+  using: composite
+  steps:
+    - name: Download and unzip PVSnesLib ${{ inputs.version }}
+      shell: bash
+      env:
+        PVSL_VERSION: ${{ inputs.version }}
+      run: |
+        set -euo pipefail
+        zip="pvsneslib_${PVSL_VERSION//./}_64b_linux_release.zip"
+        curl -fsSL -o "$RUNNER_TEMP/$zip" \
+          "https://github.com/alekmaul/pvsneslib/releases/download/$PVSL_VERSION/$zip"
+        unzip -q "$RUNNER_TEMP/$zip" -d "$RUNNER_TEMP"
+        test -f "$RUNNER_TEMP/pvsneslib/devkitsnes/snes_rules"
+        echo "PVSNESLIB_HOME=$RUNNER_TEMP/pvsneslib" >> "$GITHUB_ENV"

@@ -1,5 +1,7 @@
 # Picross '94
 
+[![CI](https://github.com/austinthedeveloper/picross-snes/actions/workflows/ci.yml/badge.svg)](https://github.com/austinthedeveloper/picross-snes/actions/workflows/ci.yml)
+
 A Super Nintendo demake of the [Picross web game](https://github.com/austinthedeveloper/picross), built in C
 and 65816 assembly with [PVSnesLib](https://github.com/alekmaul/pvsneslib)
 4.6.0. It is the free-play half of that game: all 523 handmade puzzles in
@@ -19,6 +21,13 @@ the daily) is cut from this first version (docs/decisions/ADR-002).
 - A badge per collection (bronze, silver, gold) and 21 achievements
 - Battery save: every record, plus one board to come back to
 - Synthesized sound effects (pencil taps, line chimes, a solve jingle)
+
+## Play
+
+Download the ROM from the
+[latest release](https://github.com/austinthedeveloper/picross-snes/releases/latest)
+and open it in an emulator (Mesen 2 or bsnes) or from a flash cart. Every
+CI run also uploads a ROM built from that commit.
 
 ## Build
 

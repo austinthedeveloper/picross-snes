@@ -11,7 +11,7 @@ here and in tools/font.py. Outputs (never committed):
   obj.pic          sprite tiles, 4bpp: the board cursor
   palette.pal      all of CGRAM (256 colours, BGR555)
   sfx.it, sfx.h    the sound effects (tools/sfx.py), for smconv
-  pack_*.bin       the puzzle pack (docs/PUZZLES.md has the layout)
+  pack_*.bin       the puzzle pack and murals (docs/PUZZLES.md has the layout)
   tiles.h          tile and palette numbers for the C code
   big_tiles.h      the 16-pixel cells' and clues' tile tables
   pack.h           pack counts and limits
@@ -36,7 +36,9 @@ PACK = ROOT / "data" / "pack.json"
 
 # Save capacity (include/save.h SAVE_SLOTS): the pack may grow to this many
 # puzzles before the save layout has to change (ADR-003).
-SAVE_SLOTS = 600
+SAVE_SLOTS = 700
+# pack_info's collection byte for a mural tile.
+MURAL_COLLECTION = 255
 MAX_SIDE = 20
 NAME_MAX = 20
 COLLECTION_NAME_MAX = 19
@@ -450,6 +452,11 @@ def validate(pack):
         bad = sorted({ch for ch in name if ch not in GLYPHS or ch in "{}~`|^[]"})
         if bad:
             problems.append(f"{pid}: name uses {bad}, which the font lacks")
+    for m in pack.get("murals", []):
+        if len(m["name"]) > COLLECTION_NAME_MAX:
+            problems.append(f"mural {m['name']}: name longer than {COLLECTION_NAME_MAX}")
+        if m["across"] * m["down"] > 9 or m["across"] > 3 or m["down"] > 3:
+            problems.append(f"mural {m['name']}: more than 3x3 tiles (the preview is 48x48)")
     for c in pack["collections"]:
         if len(c["name"]) > COLLECTION_NAME_MAX:
             problems.append(f"collection {c['name']}: name longer than {COLLECTION_NAME_MAX}")
@@ -473,8 +480,8 @@ def pack_bins(pack, by_id):
     for p in pack["puzzles"]:
         info += u16(len(bits)) + u16(len(names))
         info += bytes((p["width"], p["height"], min(p["passes"], 255),
-                       next(i for i, c in enumerate(pack["collections"])
-                            if c["name"] == p["collection"])))
+                       next((i for i, c in enumerate(pack["collections"])
+                             if c["name"] == p["collection"]), MURAL_COLLECTION)))
         for row in p["rows"]:
             v = 0
             nbytes = (p["width"] + 7) // 8
@@ -491,9 +498,18 @@ def pack_bins(pack, by_id):
         for pid in c["puzzles"]:
             cslots += u16(slot_of[pid])
         cnames += c["name"].upper().encode("ascii") + b"\0"
+    # pack_minfo, 8 bytes a mural: u16 first tile slot (a mural's tiles have
+    # consecutive slots), across, down, u16 name offset (in pack_cnames), 0, 0.
+    minfo = bytearray()
+    for m in pack["murals"]:
+        first = slot_of[m["tiles"][0]]
+        assert [slot_of[t] for t in m["tiles"]] == list(range(first, first + len(m["tiles"])))
+        minfo += u16(first) + bytes((m["across"], m["down"])) + u16(len(cnames)) + bytes(2)
+        cnames += m["name"].upper().encode("ascii") + b"\0"
     return {
         "pack_info": bytes(info), "pack_bits": bytes(bits), "pack_names": bytes(names),
         "pack_cinfo": bytes(cinfo), "pack_cslots": bytes(cslots), "pack_cnames": bytes(cnames),
+        "pack_minfo": bytes(minfo),
     }
 
 
@@ -571,7 +587,9 @@ def main():
          table("s_big_clues", tiles.big_clues), ""]
     write_if_changed(OUT / "big_tiles.h", "\n".join(h))
 
-    live = [p for p in pack["puzzles"] if not p.get("retired")]
+    live = [p for p in pack["puzzles"] if not p.get("retired") and p["collection"] != "Murals"]
+    mural_tiles = [p for p in pack["puzzles"]
+                   if not p.get("retired") and p["collection"] == "Murals"]
     by_size = {s: sum(1 for p in live if p["width"] == s) for s in CLUE_ROOM}
     logo = "PICROSS"
     logo_rows = [".".join(LOGO_FONT[ch][y] for ch in logo) for y in range(5)]
@@ -583,7 +601,10 @@ def main():
          f"#define PACK_LIVE_COUNT {len(live)}",
          f"#define PACK_COUNT_5 {by_size[5]}", f"#define PACK_COUNT_10 {by_size[10]}",
          f"#define PACK_COUNT_15 {by_size[15]}", f"#define PACK_COUNT_20 {by_size[20]}",
-         f"#define PACK_TOTAL_POINTS {sum(points(p['width']) for p in live)}",
+         f"#define MURAL_COUNT {len(pack['murals'])}",
+         f"#define PACK_TILE_COUNT {len(mural_tiles)}",
+         f"#define MURAL_COLLECTION {MURAL_COLLECTION}",
+         f"#define PACK_TOTAL_POINTS {sum(points(p['width']) for p in live + mural_tiles)}",
          f"#define LOGO_W {len(logo_rows[0])}", "#define LOGO_H 5",
          "#define LOGO_ROWS \\"]
     h += [f'    "{r}"' + (" \\" if i < 4 else "") for i, r in enumerate(logo_rows)]

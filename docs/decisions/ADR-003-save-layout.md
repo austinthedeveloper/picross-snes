@@ -2,11 +2,11 @@
 Status: Accepted (2026-11-07)
 
 ## Decision
-`SaveData` (include/save.h), 2,576 bytes, stored twice in SRAM (offsets
+`SaveData` (include/save.h), 2,976 bytes, stored twice in SRAM (offsets
 $0000 and $1000). Each copy has a magic ($5850), a version, a sequence
 byte and a checksum. A write goes to the older copy; a load takes the newest
 valid copy (sequence compared with wrap-around). Records are indexed by pack
-slot (docs/PUZZLES.md), with room for 600.
+slot (docs/PUZZLES.md), with room for 700.
 
 Per slot, 4 bytes: best time in seconds, flags (solved, in hearts mode,
 perfect, without hints), times solved (to 255). Plus totals (seconds as two
@@ -32,6 +32,10 @@ mode option, one suspended board (2 bits a cell), and 36 reserved bytes.
   bumps `SAVE_VERSION`, migrates in `save.c`'s `migrate`, and adds a host
   test loading a version 1 image. New fields should use the reserved bytes
   (0 meaning the default) and avoid a bump.
+
+## Amendments
+- 2026-11-07: 700 slots (2,976 bytes) for the mural tiles (ADR-008).
+  Unreleased, so version 1 changed in place.
 
 ## Rejected
 - Storing earned badges and achievements: they are derived (ADR-004).

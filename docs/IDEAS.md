@@ -4,8 +4,8 @@ Unplanned; not to be built by accident.
 
 - **Music**: a quiet title tune; SNESMOD can play a module under the
   effects (Pickleball '94's ambience does).
-- **Murals**: the web game's tiled pictures (16 of them), each tile a
-  puzzle; the mural fills in as you solve its tiles.
+- **Mural reveal**: after a mural's last tile, show the whole picture big
+  (45x45 at 4 pixels a cell doesn't fit; 2 pixels does, on BG1).
 - **A vertical 4-pixel scroll** on 20x20 boards, so row 0 isn't needed.
 - **Clue-by-clue dimming**: dim each finished run's number, not only whole
   lines (the web game's `clues.ts`).

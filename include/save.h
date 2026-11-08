@@ -10,7 +10,7 @@
  * changes (tools/import_pack.py). */
 #define SAVE_MAGIC 0x5850
 #define SAVE_VERSION 1
-#define SAVE_SLOTS 600
+#define SAVE_SLOTS 700
 #define SAVE_COPY_B 0x1000
 #define SAVE_SRAM_BYTES 0x2000
 
@@ -72,7 +72,7 @@ typedef struct {
     Record records[SAVE_SLOTS];
 } SaveData;
 
-#define SAVE_BYTES 2576
+#define SAVE_BYTES 2976
 
 extern SaveData g_save;
 

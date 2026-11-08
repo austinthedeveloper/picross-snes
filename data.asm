@@ -36,4 +36,6 @@ pack_cslots_bin:
 .incbin "assets/generated/pack_cslots.bin"
 pack_cnames_bin:
 .incbin "assets/generated/pack_cnames.bin"
+pack_minfo_bin:
+.incbin "assets/generated/pack_minfo.bin"
 .ends

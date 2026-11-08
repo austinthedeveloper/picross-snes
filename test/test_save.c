@@ -5,6 +5,7 @@
 #include "board.h"
 #include "play.h"
 #include "progress.h"
+#include "puzzle.h"
 #include "stats.h"
 
 extern u8 g_host_sram[SAVE_SRAM_BYTES];
@@ -183,6 +184,33 @@ static void test_stats(void)
     CHECK(achievement_done(8, &s));
 }
 
+static void test_mural_stats(void)
+{
+    Stats s;
+    u8 t;
+    u16 first = mural_first_slot(0);
+    u8 n = (u8)(mural_across(0) * mural_down(0));
+
+    memset(g_host_sram, 0, sizeof g_host_sram);
+    save_load();
+    solve_slot(first, MODE_RELAXED, 100, 0);
+    stats_compute(&s);
+    /* A tile is worth 3 points but isn't a pack puzzle. */
+    CHECK_EQ(s.solved, 0);
+    CHECK_EQ(s.tiles_solved, 1);
+    CHECK_EQ(s.points, 3);
+    CHECK_EQ(s.mural_solved[0], 1);
+    CHECK_EQ(s.murals_done, 0);
+    CHECK(!achievement_done(0, &s));
+    for (t = 1; t < n; t++)
+        solve_slot((u16)(first + t), MODE_RELAXED, 100, 0);
+    stats_compute(&s);
+    CHECK_EQ(s.murals_done, 1);
+    CHECK(achievement_done(19, &s));
+    CHECK(!achievement_done(20, &s));
+    CHECK_EQ(s.badges, 0);
+}
+
 static void test_ranks_and_hours(void)
 {
     CHECK_EQ(rank_for(0), 0);
@@ -208,6 +236,7 @@ int main(void)
     test_records();
     test_suspend();
     test_stats();
+    test_mural_stats();
     test_ranks_and_hours();
     TEST_END("save");
 }

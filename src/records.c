@@ -68,7 +68,11 @@ void records_enter(void)
         bg3_number(22, y, s_size_counts[i], 3, 0, TEXT_DIM);
         y++;
     }
-    y++;
+    bg3_text(5, y, "MURAL TILES", TEXT_DIM);
+    bg3_number(18, y, g_stats.tiles_solved, 3, 0, TEXT_INK);
+    bg3_text(21, y, "/", TEXT_DIM);
+    bg3_number(22, y, PACK_TILE_COUNT, 3, 0, TEXT_DIM);
+    y += 2;
     row(y++, "TIMES SOLVED", g_save.solves);
     row(y++, "IN HEARTS MODE", g_save.hearts_solves);
     row(y++, "PERFECT", g_save.perfect_solves);

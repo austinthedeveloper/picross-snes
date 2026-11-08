@@ -12,7 +12,7 @@ u16 g_bg3_map[1024];
 u8 g_bg1_dirty;
 u8 g_bg3_dirty;
 /* 2bpp tiles of the thumbnail: plane 0 is ink, plane 1 the empty cells. */
-static u8 s_thumb[9 * 16];
+static u8 s_thumb[THUMB_COLS * THUMB_COLS * 16];
 static u8 s_thumb_dirty;
 static u8 s_thumb_w;
 static u8 s_thumb_h;
@@ -80,38 +80,66 @@ void video_commit(void)
     }
 }
 
-void thumb_clear(u8 width, u8 height)
+void thumb_reset(u8 width, u8 height)
 {
-    u8 i;
-    u8 x;
-    u8 y;
+    u16 i;
 
     for (i = 0; i < sizeof s_thumb; i++)
         s_thumb[i] = 0;
     s_thumb_w = width;
     s_thumb_h = height;
+    s_thumb_dirty = 1;
+}
+
+void thumb_clear(u8 width, u8 height)
+{
+    u8 x;
+    u8 y;
+
+    thumb_reset(width, height);
     for (y = 0; y < height; y++)
         for (x = 0; x < width; x++)
-            thumb_set(x, y, 0);
+            thumb_pixel(x, y, 2);
+}
+
+void thumb_pixel(u8 x, u8 y, u8 colour)
+{
+    /* Tile (y / 8) * 6 + x / 8, row y % 8, bit 7 - x % 8. */
+    u8 ty = (u8)(y >> 3);
+    u8 tile = (u8)((ty << 2) + (ty << 1) + (x >> 3));
+    u8 *row = s_thumb + ((u16)tile << 4) + ((y & 7) << 1);
+    u8 bit = (u8)(0x80 >> (x & 7));
+
+    if (colour & 1)
+        row[0] |= bit;
+    else
+        row[0] &= (u8)~bit;
+    if (colour & 2)
+        row[1] |= bit;
+    else
+        row[1] &= (u8)~bit;
     s_thumb_dirty = 1;
 }
 
 void thumb_set(u8 x, u8 y, u8 filled)
 {
-    /* Tile (y / 8) * 3 + x / 8, row y % 8, bit 7 - x % 8. */
-    u8 ty = (u8)(y >> 3);
-    u8 tile = (u8)(ty + ty + ty + (x >> 3));
-    u8 *row = s_thumb + (tile << 4) + ((y & 7) << 1);
-    u8 bit = (u8)(0x80 >> (x & 7));
+    thumb_pixel(x, y, filled ? 1 : 2);
+}
 
-    if (filled) {
-        row[0] |= bit;
-        row[1] &= (u8)~bit;
-    } else {
-        row[0] &= (u8)~bit;
-        row[1] |= bit;
+void thumb_tile_bits(u8 x0, u8 y0, const u8 *bits)
+{
+    u8 r;
+    u8 c;
+    u16 row;
+
+    for (r = 0; r < 15; r++) {
+        row = ((u16)bits[0] << 8) | bits[1];
+        bits += 2;
+        for (c = 0; c < 15; c++) {
+            thumb_pixel((u8)(x0 + c), (u8)(y0 + r), (row & 0x8000) ? 1 : 2);
+            row <<= 1;
+        }
     }
-    s_thumb_dirty = 1;
 }
 
 void thumb_place(u8 x, u8 y)
@@ -124,7 +152,7 @@ void thumb_place(u8 x, u8 y)
     for (j = 0; j < th; j++)
         for (i = 0; i < tw; i++)
             bg3_put((u8)(x + i), (u8)(y + j),
-                (u16)(THUMB_TILE + j * 3 + i) | ((u16)TEXT_INK << 10) | BG_PRIO);
+                (u16)(THUMB_TILE + j * THUMB_COLS + i) | ((u16)TEXT_INK << 10) | BG_PRIO);
 }
 
 void video_frame(void)

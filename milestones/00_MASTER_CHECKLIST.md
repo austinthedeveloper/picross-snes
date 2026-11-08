@@ -42,4 +42,7 @@
   - Accept: 5x5 and 10x10 boards, their clues, cursor, solved picture and
     result picture at double size
   - Verified: ADR-007, `solve_heart.timeline`, `medium.timeline`
-- [ ] `M2-MURAL-01` Murals
+- [x] `M2-MURAL-01` Murals
+  - Accept: the 16 murals' 90 tiles playable, the picture fills in, rank
+    points and two achievements, CONTINUE on a tile
+  - Verified: ADR-008, `test_murals`, `test_mural_stats`, `murals.timeline`

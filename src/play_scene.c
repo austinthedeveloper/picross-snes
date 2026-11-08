@@ -126,7 +126,7 @@ static void quit_to_list(void)
             progress_suspend();
         save_write();
     }
-    scene_goto(SCENE_PUZZLES);
+    scene_goto(g_return_scene);
 }
 
 static void open_hint(void)
@@ -334,7 +334,7 @@ void play_scene_update(void)
             if (g_save.suspend.slot1 == g_puzzle.slot + 1)
                 progress_clear_suspend();
             save_write();
-            scene_goto(SCENE_PUZZLES);
+            scene_goto(g_return_scene);
         }
         break;
     case PS_SOLVED:

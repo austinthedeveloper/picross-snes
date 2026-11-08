@@ -52,8 +52,9 @@
 - [x] `M3-CI-01` CI: `make check` and the release ROM on every PR and push
   to `main`, the ROM as an artifact
   - Verified: ADR-009, the CI run on its PR
-- [ ] `M3-REL-01` A tagged release with the ROM attached
+- [x] `M3-REL-01` A tagged release with the ROM attached
   - Accept: `release.yml` publishes `picross-94-vX.Y.Z.sfc` from a tag
+  - Verified: v0.2.0 (`docs/releases/v0.2.0.md`), its ROM smoke-run
 - [ ] `M3-PLAY-01` Played through by hand (#19)
 - [ ] `M3-HW-01` Tried on real hardware from a flash cart (#20)
 

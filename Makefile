@@ -1,6 +1,6 @@
 PVSNESLIB_HOME ?= ../pvsneslib
 CONFIG ?= debug
-VERSION_NAME := 0.1.0
+VERSION_NAME := 0.2.0
 BUILD_ID ?= $(shell id=$$(git rev-parse --short HEAD 2>/dev/null || echo dev); \
 	if test -n "$$(git status --porcelain 2>/dev/null)"; then \
 		echo "$$id-dirty"; else echo "$$id"; fi)

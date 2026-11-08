@@ -73,9 +73,16 @@ and the engine helpers line for line, with host tests.
   - Verified: `--check` passes on a re-run; `--preview` looked at
 - [x] `M4-SYNC-01` Daily sync workflow: PR when it imports, issue when it
   needs porting (`sync-web.yml`, `tools/sync_summary.py`)
-- [ ] `M4-ENGINE-01` Run and battle rules in C: chip, finisher, phases,
-  armor, fog, scramble, fakes and call-outs, charge, ink, swaps, turns,
-  gadgets (blast, shield, wash), hits; host tests mirroring the web's
+- [x] `M4-DATA-01` Story ROM tables (`tools/gen_story.py`, `src/story.c`):
+  chapters, runs, encounters, enemies with phases, scenes, gadgets,
+  backdrops; strings in 32 KiB banks; story puzzles from ROM index 700
+- [x] `M4-ENGINE-01` Battle rules in C (`src/battle.c`,
+  `src/fight_rules.c`): chip, finisher, phases, armor and its hit-back,
+  fog, scramble, fakes and call-outs, charge and warm-up, ink, swaps, turns,
+  gadgets, shields; the web's line-complete rule (`line_satisfied`)
+  - Verified: `test/test_battle.c` against the real story (Gremlin phases,
+    Beetle armor, Forger call-outs, Eel charge, Mimic swaps, Weathervane
+    turns, fake clues, ink, live line, bombs)
 - [ ] `M4-DIALOGUE-01` Scene runner (flags, choices, conditions) and the
   scene player: backdrop, portraits on a stage of three, typed text, choices
 - [ ] `M4-SAVE-01` Save version 2: job results, seen scenes and tips, the

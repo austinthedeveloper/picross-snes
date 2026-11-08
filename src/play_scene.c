@@ -1,3 +1,4 @@
+#include "audio.h"
 #include "board.h"
 #include "board_view.h"
 #include "input.h"
@@ -93,6 +94,7 @@ static void draw_menu(const char *const *items, u8 count, u8 x, u8 y)
 
 static void open_pause(void)
 {
+    audio_play(SFX_CONFIRM, 9);
     s_state = PS_PAUSE;
     s_sel = PAUSE_RESUME;
     bgSetDisable(0);
@@ -131,6 +133,7 @@ static void open_hint(void)
 {
     if (g_play.hints_used >= MAX_HINTS)
         return;
+    audio_play(SFX_CONFIRM, 9);
     s_state = PS_HINT;
     s_sel = 0;
     bg3_text(1, HUD_MENU_ROW, "HINT:", TEXT_SELECTED);
@@ -146,6 +149,7 @@ static void close_hint(void)
 static void show_failed(void)
 {
     s_state = PS_FAILED;
+    audio_play(SFX_BACK, 12);
     view_cursor(0);
     bg3_text(1, HUD_MENU_ROW, "NO HEARTS", TEXT_SELECTED);
     bg3_text(1, HUD_MENU_ROW + 1, "A RETRY", TEXT_INK);
@@ -161,6 +165,8 @@ static void show_solved(void)
     view_draw_picture();
     view_clear_corner(0, g_view_by);
     bg3_text(1, 1, "SOLVED!", TEXT_SELECTED);
+    audio_play(SFX_SOLVE, 13);
+    audio_update();
     /* Show the picture before the bookkeeping (about 7 frames). */
     video_frame();
     video_frame();
@@ -189,8 +195,31 @@ static void move_cursor(void)
         play_stroke_continue();
 }
 
+/* The sound for what this frame did to the board. */
+static void board_sounds(u8 changes, u8 lines, u8 moved)
+{
+    if (g_play.solved)
+        return;
+    if (changes != g_board_changes) {
+        switch (g_board_last_value) {
+        case CELL_FILLED: audio_play(SFX_FILL, 11); break;
+        case CELL_MARKED: audio_play(SFX_MARK, 9); break;
+        case CELL_MISTAKE: audio_play(SFX_MISTAKE, 13); break;
+        default: audio_play(SFX_ERASE, 9); break;
+        }
+    } else if (moved) {
+        audio_play(SFX_MOVE, 5);
+    }
+    if (lines != g_view_lines_done && g_board_last_value != CELL_MISTAKE)
+        audio_play(SFX_LINE, 10);
+}
+
 static void update_play(void)
 {
+    u8 changes = g_board_changes;
+    u8 lines = g_view_lines_done;
+    u8 cur = (u8)(g_play.cur_x ^ (g_play.cur_y << 3));
+
     if (g_pressed & KEY_START) {
         play_stroke_end();
         s_stroke_button = 0;
@@ -221,6 +250,8 @@ static void update_play(void)
     move_cursor();
     play_tick();
     view_update();
+    board_sounds(changes, lines,
+        (u8)(cur != (u8)(g_play.cur_x ^ (g_play.cur_y << 3))));
     if (g_play.solved)
         show_solved();
     else if (g_play.failed)
@@ -248,11 +279,15 @@ void play_scene_update(void)
         update_play();
         break;
     case PS_PAUSE:
-        if (menu_move(&s_sel, PAUSE_COUNT))
+        if (menu_move(&s_sel, PAUSE_COUNT)) {
+            audio_play(SFX_BLIP, 7);
             draw_menu(s_pause_items, PAUSE_COUNT, 13, 13);
+        }
         if (g_pressed & (KEY_B | KEY_START)) {
+            audio_play(SFX_BACK, 9);
             close_pause();
         } else if (g_pressed & KEY_A) {
+            audio_play(SFX_CONFIRM, 9);
             if (s_sel == PAUSE_RESUME) {
                 close_pause();
             } else if (s_sel == PAUSE_RESTART) {
@@ -267,12 +302,18 @@ void play_scene_update(void)
         }
         break;
     case PS_HINT:
-        if (menu_move(&s_sel, 3))
+        if (menu_move(&s_sel, 3)) {
+            audio_play(SFX_BLIP, 7);
             draw_menu(s_hint_items, 3, 3, HUD_MENU_ROW + 1);
+        }
         if (g_pressed & (KEY_B | KEY_X)) {
+            audio_play(SFX_BACK, 9);
             close_hint();
         } else if (g_pressed & KEY_A) {
-            play_hint(s_sel);
+            if (play_hint(s_sel))
+                audio_play(SFX_HINT, 11);
+            else
+                audio_play(SFX_BACK, 9);
             close_hint();
             input_swallow();
             view_update();

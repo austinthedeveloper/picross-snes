@@ -2,9 +2,8 @@
 
 Unplanned; not to be built by accident.
 
-- **Sound** (planned for 0.2): SNESMOD effects for fill, mark, erase, line
-  done, mistake, solve, menu moves; synthesized in Python like Pickleball
-  '94's `tools/assetgen`.
+- **Music**: a quiet title tune; SNESMOD can play a module under the
+  effects (Pickleball '94's ambience does).
 - **Live thumbnail** in the HUD corner: the board so far, one pixel a cell
   (a 20x20 is 3x3 tiles), updated per changed cell.
 - **16-pixel cells** for 5x5 and 10x10 boards (2x2 tiles a cell).

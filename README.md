@@ -15,6 +15,7 @@ from this first version (docs/decisions/ADR-002).
   play time
 - A badge per collection (bronze, silver, gold) and 19 achievements
 - Battery save: every record, plus one board to come back to
+- Synthesized sound effects (pencil taps, line chimes, a solve jingle)
 
 ## Build
 
@@ -29,7 +30,7 @@ make check      # host tests, pack validation, 816-tcc lint
 make smoke SMOKE=solve_heart SMOKE_FRAMES=560   # headless run + screenshots
 ```
 
-Open the `.sfc` in an emulator (Mesen 2 or bsnes). It's a 128 KiB FastROM
+Open the `.sfc` in an emulator (Mesen 2 or bsnes). It's a 256 KiB FastROM
 LoROM with 8 KiB of battery SRAM.
 
 ## Controls

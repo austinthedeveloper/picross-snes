@@ -30,6 +30,7 @@ In:
   it, silver for solving all of it in hearts mode, gold for solving all of
   it perfectly (hearts mode, no mistakes, no hints).
 - **Achievements.** 19 milestones (ADR-004).
+- **Sound effects** (ADR-006), synthesized; an option turns them off.
 
 Out of version 1 (ADR-002):
 
@@ -38,7 +39,6 @@ Out of version 1 (ADR-002):
 - The daily puzzle: a cartridge has no clock to know the date.
 - Murals (tiled pictures): a candidate for version 2 (docs/IDEAS.md).
 - The editor, pinch zoom, haptics, the high-contrast theme.
-- Sound: planned for version 2 (milestones).
 
 ## Feel
 
@@ -48,6 +48,6 @@ palette). A 5x7 pixel font with a soft drop shadow.
 
 ## Hardware
 
-FastROM LoROM, 128 KiB, 8 KiB battery SRAM (two save copies). Mode 1: BG1
+FastROM LoROM, 256 KiB, 8 KiB battery SRAM (two save copies). Mode 1: BG1
 (16 colours) for the board, clues, cards and medals; BG3 (4 colours, high
 priority) for text; one sprite for the cursor.

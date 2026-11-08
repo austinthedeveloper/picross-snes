@@ -16,6 +16,7 @@ text, one sprite.
 - 8 KiB of SRAM holds two copies of the 2.5 KiB save (ADR-003).
 
 ## Details
+- Amended 2026-11-07: 256 KiB, for the soundbank's bank (ADR-006).
 - The ROM is 98 KiB used at version 0.1.0 (29 KiB of it the pack). Grow
   `ROMBANKS` and `ROMSIZE` together.
 - `map_commit.asm` uploads dirty 8-row bands of the shadow maps after

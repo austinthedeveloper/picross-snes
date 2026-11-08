@@ -9,6 +9,9 @@
 extern u8 g_view_bx;
 extern u8 g_view_by;
 
+/* Lines that turned finished in view_update (for the line chime). */
+extern u8 g_view_lines_done;
+
 /* Draws the whole board, its clues and the HUD into the shadow maps. */
 void view_draw_all(void);
 /* After play changes: redraws dirty cells, finished clues, a moved cursor,

@@ -58,3 +58,41 @@
 - [ ] `M3-PLAY-01` Played through by hand (#19)
 - [ ] `M3-HW-01` Tried on real hardware from a flash cart (#20)
 
+## M4: Story mode (ADR-010, ADR-011)
+
+The web game is the source of truth; everything comes in through
+`make import`. Rules mirror `src/game/battle.ts`, `run.ts`, `dialogue.ts`
+and the engine helpers line for line, with host tests.
+
+- [x] `M4-IMPORT-01` Story importer and compatibility gate
+  (`tools/import_story.py`, `data/story.json`)
+  - Verified: ADR-010, a planted unsupported field, effect and emoji fail it
+- [x] `M4-ART-01` Art import: portraits (64x64), enemy sprites (48x48),
+  gadget and node icons (16x16), power glyphs (8x8), 15 colours each
+  (`tools/import_art.py`, `data/art/`)
+  - Verified: `--check` passes on a re-run; `--preview` looked at
+- [x] `M4-SYNC-01` Daily sync workflow: PR when it imports, issue when it
+  needs porting (`sync-web.yml`, `tools/sync_summary.py`)
+- [ ] `M4-ENGINE-01` Run and battle rules in C: chip, finisher, phases,
+  armor, fog, scramble, fakes and call-outs, charge, ink, swaps, turns,
+  gadgets (blast, shield, wash), hits; host tests mirroring the web's
+- [ ] `M4-DIALOGUE-01` Scene runner (flags, choices, conditions) and the
+  scene player: backdrop, portraits on a stage of three, typed text, choices
+- [ ] `M4-SAVE-01` Save version 2: job results, seen scenes and tips, the
+  current run with its board and battle; migration from version 1
+- [ ] `M4-JOBS-01` Jobs board by chapter (unlocks, chapter openings) and
+  the path map (nodes, HP, gadgets)
+- [ ] `M4-FIGHT-01` The fight screen: battle bar (enemy, HP, meters,
+  gadgets), clue overlays (fog, scramble, weak points, suspects, wipes, the
+  live line), ink, call-outs, phase banners, announcements
+- [ ] `M4-DIG-01` Digs and rest stops
+- [ ] `M4-RESULT-01` Results with the outro, job stats
+
+## M5: Story extras
+
+- [ ] `M5-OVERTIME-01` Overtime runs
+- [ ] `M5-BOSS-01` Standalone boss fights
+- [ ] `M5-ENDLESS-01` Endless
+- [ ] `M5-BADGE-01` The web game's story badges
+- [ ] `M5-TIPS-01` Power tips the first time each power appears
+

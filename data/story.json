@@ -1,0 +1,8823 @@
+{
+ "source": "picross web game, src/puzzles (tools/import_story.py)",
+ "jobSlots": [
+  "closing-time",
+  "deep-end",
+  "deep-end-overtime",
+  "first-job",
+  "first-job-overtime",
+  "glasshouse",
+  "glasshouse-overtime",
+  "midway",
+  "midway-overtime",
+  "night-mail",
+  "night-mail-overtime",
+  "night-shift",
+  "night-shift-overtime",
+  "summit-station",
+  "summit-station-overtime",
+  "the-annex",
+  "the-annex-overtime",
+  "undercroft",
+  "undercroft-overtime",
+  "weathervane-boss"
+ ],
+ "sceneSlots": [
+  "after-hours-opening",
+  "below-stairs-opening",
+  "bramble-reveal",
+  "closing-time-intro",
+  "closing-time-outro",
+  "cold-snap-opening",
+  "curator-return",
+  "deep-end-intro",
+  "deep-end-outro",
+  "deep-water-opening",
+  "end-of-the-line-opening",
+  "first-job-intro",
+  "first-job-outro",
+  "forger-intro",
+  "glasshouse-intro",
+  "glasshouse-outro",
+  "green-thumbs-opening",
+  "gremlin-intro",
+  "midway-intro",
+  "midway-outro",
+  "night-mail-intro",
+  "night-mail-outro",
+  "night-shift-intro",
+  "night-shift-outro",
+  "old-wyrm-reveal",
+  "ostrander-reveal",
+  "peer-review-opening",
+  "rex-reveal",
+  "ringmaster-reveal",
+  "step-right-up-opening",
+  "summit-station-intro",
+  "summit-station-outro",
+  "tess-reveal",
+  "the-1159-reveal",
+  "the-annex-intro",
+  "the-annex-outro",
+  "undercroft-intro",
+  "undercroft-outro",
+  "wound-up-opening",
+  "yeti-reveal"
+ ],
+ "flags": [
+  "won"
+ ],
+ "constants": {
+  "CHIP_DAMAGE": 1,
+  "WEAK_POINT_DAMAGE": 3,
+  "ARMOR_HIT_LINES": 5,
+  "ARMOR_HIT_DAMAGE": 2,
+  "CALL_OUT_DAMAGE": 5,
+  "FALSE_ACCUSATION_HEAL": 3,
+  "ZAP_DAMAGE": 2,
+  "WARM_UP_SHARE": 0.25,
+  "REST_LATE_HEAL": 1,
+  "ENDLESS_HP": 14,
+  "ENDLESS_HEAL": 2,
+  "ENDLESS_GADGETS": [
+   "patch-kit"
+  ],
+  "BREAK_EVERY": 4,
+  "LOOKAHEAD": 3,
+  "MAX_HEARTS": 3,
+  "MAX_HINTS": 3
+ },
+ "gadgets": [
+  {
+   "id": "bomb",
+   "name": "Bomb",
+   "description": "Throw it in a fight for 2 damage. The blast reveals part of the board.",
+   "effect": {
+    "kind": "blast",
+    "damage": 2
+   }
+  },
+  {
+   "id": "patch-kit",
+   "name": "Patch kit",
+   "description": "Use in a fight to block the next hit.",
+   "effect": {
+    "kind": "shield",
+    "hits": 1
+   }
+  },
+  {
+   "id": "sponge",
+   "name": "Sponge",
+   "description": "Use in a fight to wipe all the ink off the board.",
+   "effect": {
+    "kind": "wash"
+   }
+  }
+ ],
+ "tips": {
+  "fog": {
+   "name": "Fog",
+   "tip": "Some clues are hidden. Work those lines out from the ones crossing them; finishing a line reveals its clue."
+  },
+  "scramble": {
+   "name": "Scrambled clues",
+   "tip": "The <gear> clues have the right numbers in the wrong order. Finishing the line puts them back."
+  },
+  "armor": {
+   "name": "Armor",
+   "tip": "Only <target> lines hurt it, for triple damage. Every 5 other lines you finish, the armor hits back. Solve the <target> lines to break it."
+  },
+  "fakes": {
+   "name": "Forged clues",
+   "tip": "Some <mask> clues are fakes, but not all. Don't trust them: solve those lines from the ones crossing them. Honest ones light up; a fake stays dark. Then <search> Call out the fake."
+  },
+  "charge": {
+   "name": "Charge",
+   "tip": "After a warm-up, each line you finish charges the <bolt> meter, and when it's full you get zapped. Finish the yellow live line first to ground it. Take as long as you like: only finished lines count."
+  },
+  "ink": {
+   "name": "Ink",
+   "tip": "Ink hides your marks, but you can still play there. Finishing a line through it washes it off."
+  },
+  "swap": {
+   "name": "Swaps",
+   "tip": "Two lines get wiped clean and boxed with <lips>. Fill them in again."
+  },
+  "rotate": {
+   "name": "Turns",
+   "tip": "Every few lines you finish, the <turn> meter fills and the whole board turns a quarter clockwise. Your marks, clues and everything on them turn too: rows become columns. Only finished lines count."
+  }
+ },
+ "chapters": [
+  {
+   "id": "odd-jobs",
+   "title": "Odd Jobs",
+   "order": 1,
+   "blurb": "Rook and Dee hang out a sign: no job too strange.",
+   "jobs": [
+    "first-job"
+   ]
+  },
+  {
+   "id": "after-hours",
+   "title": "After Hours",
+   "order": 2,
+   "blurb": "Word gets around. Mostly to people with haunted things.",
+   "jobs": [
+    "night-shift"
+   ],
+   "opening": "after-hours-opening"
+  },
+  {
+   "id": "deep-water",
+   "title": "Deep Water",
+   "order": 3,
+   "blurb": "The jobs get wetter. Rook still hasn't learned to swim.",
+   "jobs": [
+    "deep-end"
+   ],
+   "opening": "deep-water-opening"
+  },
+  {
+   "id": "green-thumbs",
+   "title": "Green Thumbs",
+   "order": 4,
+   "blurb": "Everything in here wants to eat you. Politely, at first.",
+   "jobs": [
+    "glasshouse"
+   ],
+   "opening": "green-thumbs-opening"
+  },
+  {
+   "id": "step-right-up",
+   "title": "Step Right Up",
+   "order": 5,
+   "blurb": "The show must go on. Nobody can remember why.",
+   "jobs": [
+    "midway"
+   ],
+   "opening": "step-right-up-opening"
+  },
+  {
+   "id": "cold-snap",
+   "title": "Cold Snap",
+   "order": 6,
+   "blurb": "The air gets thin. The bill does not.",
+   "jobs": [
+    "summit-station"
+   ],
+   "opening": "cold-snap-opening"
+  },
+  {
+   "id": "end-of-the-line",
+   "title": "End of the Line",
+   "order": 7,
+   "blurb": "Forty years late, and still apologizing.",
+   "jobs": [
+    "night-mail"
+   ],
+   "opening": "end-of-the-line-opening"
+  },
+  {
+   "id": "below-stairs",
+   "title": "Below Stairs",
+   "order": 8,
+   "blurb": "Tours daily. Gift shop. Do not go past the gift shop.",
+   "jobs": [
+    "undercroft"
+   ],
+   "opening": "below-stairs-opening"
+  },
+  {
+   "id": "peer-review",
+   "title": "Peer Review",
+   "order": 9,
+   "blurb": "The results are in. Nobody will say whose they are.",
+   "jobs": [
+    "the-annex"
+   ],
+   "opening": "peer-review-opening"
+  },
+  {
+   "id": "wound-up",
+   "title": "Wound Up",
+   "order": 10,
+   "blurb": "The jar is ticking.",
+   "jobs": [
+    "closing-time"
+   ],
+   "opening": "wound-up-opening"
+  }
+ ],
+ "runs": [
+  {
+   "id": "closing-time",
+   "name": "Closing Time",
+   "hp": 18,
+   "encounters": [
+    "tin-soldier",
+    "dusty-exhibit",
+    "break-room",
+    "curator"
+   ],
+   "order": 10,
+   "requires": "the-annex",
+   "gadgets": [
+    "bomb"
+   ],
+   "blurb": "A private viewing at the museum, by invitation only. Bring the keys.",
+   "intro": "closing-time-intro",
+   "outro": "closing-time-outro"
+  },
+  {
+   "id": "deep-end",
+   "name": "The Deep End",
+   "hp": 16,
+   "encounters": [
+    "electric-eel",
+    "anglerfish",
+    "gift-shop",
+    "cuttlefish",
+    "lifeguard-chair",
+    "old-tess"
+   ],
+   "order": 3,
+   "requires": "night-shift",
+   "gadgets": [
+    "patch-kit"
+   ],
+   "blurb": "The aquarium's tanks are acting up. Bring a towel.",
+   "intro": "deep-end-intro",
+   "outro": "deep-end-outro"
+  },
+  {
+   "id": "deep-end-overtime",
+   "name": "The Deep End: Overtime",
+   "hp": 16,
+   "encounters": [
+    "overtime-electric-eel",
+    "overtime-anglerfish",
+    "gift-shop",
+    "overtime-cuttlefish",
+    "lifeguard-chair",
+    "overtime-old-tess"
+   ],
+   "overtimeOf": "deep-end",
+   "requires": "deep-end",
+   "blurb": "Same aquarium, after feeding time. Hits on, no patch kit, and nobody fed them enough."
+  },
+  {
+   "id": "first-job",
+   "name": "First Job",
+   "hp": 12,
+   "encounters": [
+    "goblin",
+    "dig-site",
+    "fog-bat",
+    "tea-break",
+    "gremlin"
+   ],
+   "gadgets": [
+    "patch-kit"
+   ],
+   "intro": "first-job-intro",
+   "outro": "first-job-outro",
+   "order": 1,
+   "blurb": "Mrs. Pell's generator needs a part by sundown. Something lives in it."
+  },
+  {
+   "id": "first-job-overtime",
+   "name": "First Job: Overtime",
+   "hp": 12,
+   "encounters": [
+    "overtime-goblin",
+    "dig-site",
+    "overtime-fog-bat",
+    "tea-break",
+    "overtime-gremlin"
+   ],
+   "overtimeOf": "first-job",
+   "requires": "first-job",
+   "blurb": "Same workshop, later shift. Hits on, no patch kit, and the locals have been practicing."
+  },
+  {
+   "id": "glasshouse",
+   "name": "The Glasshouse",
+   "hp": 16,
+   "encounters": [
+    "snapjaw",
+    "spore-puff",
+    "potting-shed",
+    "ironbark",
+    "garden-bench",
+    "mother-bramble"
+   ],
+   "order": 4,
+   "requires": "deep-end",
+   "gadgets": [
+    "patch-kit"
+   ],
+   "blurb": "The botanical garden's plants have stopped taking direction. One of them bit a school group.",
+   "intro": "glasshouse-intro",
+   "outro": "glasshouse-outro"
+  },
+  {
+   "id": "glasshouse-overtime",
+   "name": "The Glasshouse: Overtime",
+   "hp": 16,
+   "encounters": [
+    "overtime-snapjaw",
+    "overtime-spore-puff",
+    "potting-shed",
+    "overtime-ironbark",
+    "garden-bench",
+    "overtime-mother-bramble"
+   ],
+   "overtimeOf": "glasshouse",
+   "requires": "glasshouse",
+   "blurb": "Same greenhouse, warmer night. Hits on, no patch kit, and everything has grown."
+  },
+  {
+   "id": "midway",
+   "name": "The Midway",
+   "hp": 18,
+   "encounters": [
+    "funhouse-mirror",
+    "madame-vesper",
+    "prop-wagon",
+    "great-bruno",
+    "popcorn-stand",
+    "ringmaster"
+   ],
+   "order": 5,
+   "requires": "glasshouse",
+   "gadgets": [
+    "patch-kit"
+   ],
+   "blurb": "A carnival that runs all night with nobody aboard. The flyer says SEND HELP.",
+   "intro": "midway-intro",
+   "outro": "midway-outro"
+  },
+  {
+   "id": "midway-overtime",
+   "name": "The Midway: Overtime",
+   "hp": 18,
+   "encounters": [
+    "overtime-funhouse-mirror",
+    "overtime-madame-vesper",
+    "prop-wagon",
+    "overtime-great-bruno",
+    "popcorn-stand",
+    "overtime-ringmaster"
+   ],
+   "overtimeOf": "midway",
+   "requires": "midway",
+   "blurb": "Same carnival, last show of the night. Hits on, no patch kit, and the acts have new tricks."
+  },
+  {
+   "id": "night-mail",
+   "name": "The Night Mail",
+   "hp": 18,
+   "encounters": [
+    "signal-box",
+    "ticket-inspector",
+    "lost-property",
+    "coal-heap",
+    "station-buffet",
+    "the-1159"
+   ],
+   "order": 7,
+   "requires": "summit-station",
+   "gadgets": [
+    "bomb"
+   ],
+   "blurb": "A closed railway with a very late train. Mind the gap. Mind the signals.",
+   "intro": "night-mail-intro",
+   "outro": "night-mail-outro"
+  },
+  {
+   "id": "night-mail-overtime",
+   "name": "The Night Mail: Overtime",
+   "hp": 18,
+   "encounters": [
+    "overtime-signal-box",
+    "overtime-ticket-inspector",
+    "lost-property",
+    "overtime-coal-heap",
+    "station-buffet",
+    "overtime-the-1159"
+   ],
+   "overtimeOf": "night-mail",
+   "requires": "night-mail",
+   "blurb": "Same line, the last train after the last train. Hits on, no bomb, and the timetable has changed."
+  },
+  {
+   "id": "night-shift",
+   "name": "The Night Shift",
+   "hp": 14,
+   "encounters": [
+    "mimic",
+    "clockwork-owl",
+    "forger",
+    "dusty-exhibit",
+    "armored-beetle",
+    "break-room",
+    "museum-rex"
+   ],
+   "order": 2,
+   "requires": "first-job",
+   "gadgets": [
+    "bomb"
+   ],
+   "blurb": "The museum's exhibits come alive after closing. Double rates.",
+   "intro": "night-shift-intro",
+   "outro": "night-shift-outro"
+  },
+  {
+   "id": "night-shift-overtime",
+   "name": "The Night Shift: Overtime",
+   "hp": 14,
+   "encounters": [
+    "overtime-mimic",
+    "overtime-clockwork-owl",
+    "overtime-forger",
+    "dusty-exhibit",
+    "overtime-armored-beetle",
+    "break-room",
+    "overtime-museum-rex"
+   ],
+   "overtimeOf": "night-shift",
+   "requires": "night-shift",
+   "blurb": "Same museum, longer night. Hits on, no bomb, and everything has learned new tricks."
+  },
+  {
+   "id": "summit-station",
+   "name": "Summit Station",
+   "hp": 18,
+   "encounters": [
+    "whiteout",
+    "falling-star",
+    "supply-cache",
+    "ice-mammoth",
+    "cocoa-break",
+    "yeti"
+   ],
+   "order": 6,
+   "requires": "midway",
+   "gadgets": [
+    "bomb"
+   ],
+   "blurb": "A mountaintop observatory that's stopped answering its radio. Bring a coat.",
+   "intro": "summit-station-intro",
+   "outro": "summit-station-outro"
+  },
+  {
+   "id": "summit-station-overtime",
+   "name": "Summit Station: Overtime",
+   "hp": 18,
+   "encounters": [
+    "overtime-whiteout",
+    "overtime-falling-star",
+    "supply-cache",
+    "overtime-ice-mammoth",
+    "cocoa-break",
+    "overtime-yeti"
+   ],
+   "overtimeOf": "summit-station",
+   "requires": "summit-station",
+   "blurb": "Same mountain, worse weather. Hits on, no bomb, and the snow has been busy."
+  },
+  {
+   "id": "the-annex",
+   "name": "The Annex",
+   "hp": 18,
+   "encounters": [
+    "spark-hound",
+    "failed-clone",
+    "supply-closet",
+    "reviewer-two",
+    "faculty-lounge",
+    "ostrander"
+   ],
+   "order": 9,
+   "requires": "undercroft",
+   "gadgets": [
+    "patch-kit"
+   ],
+   "blurb": "A research building that isn't on any plan but still gets a power bill.",
+   "intro": "the-annex-intro",
+   "outro": "the-annex-outro"
+  },
+  {
+   "id": "the-annex-overtime",
+   "name": "The Annex: Overtime",
+   "hp": 18,
+   "encounters": [
+    "overtime-spark-hound",
+    "overtime-failed-clone",
+    "supply-closet",
+    "overtime-reviewer-two",
+    "faculty-lounge",
+    "overtime-ostrander"
+   ],
+   "overtimeOf": "the-annex",
+   "requires": "the-annex",
+   "blurb": "Same lab, the all-nighter. Hits on, no patch kit, and every experiment has been repeated."
+  },
+  {
+   "id": "undercroft",
+   "name": "The Undercroft",
+   "hp": 18,
+   "encounters": [
+    "rusted-sentry",
+    "cellar-ooze",
+    "wine-cellar",
+    "rat-king",
+    "guard-room",
+    "old-wyrm"
+   ],
+   "order": 8,
+   "requires": "night-mail",
+   "gadgets": [
+    "patch-kit"
+   ],
+   "blurb": "A castle tour that used to go down one flight of stairs. Today it goes down nine.",
+   "intro": "undercroft-intro",
+   "outro": "undercroft-outro"
+  },
+  {
+   "id": "undercroft-overtime",
+   "name": "The Undercroft: Overtime",
+   "hp": 18,
+   "encounters": [
+    "overtime-rusted-sentry",
+    "overtime-cellar-ooze",
+    "wine-cellar",
+    "overtime-rat-king",
+    "guard-room",
+    "overtime-old-wyrm"
+   ],
+   "overtimeOf": "undercroft",
+   "requires": "undercroft",
+   "blurb": "Same cellars, one flight deeper. Hits on, no patch kit, and the dark has been rearranging things."
+  },
+  {
+   "id": "weathervane-boss",
+   "name": "The Weathervane",
+   "hp": 10,
+   "encounters": [
+    "weathervane"
+   ],
+   "bossOf": "summit-station",
+   "requires": "summit-station",
+   "blurb": "Something on the observatory roof is still spinning after the storm. One fight, and the board won't sit still."
+  }
+ ],
+ "encounters": [
+  {
+   "id": "anglerfish",
+   "name": "Anglerfish",
+   "kind": "fight",
+   "puzzle": "anglerfish",
+   "blurb": "The deep-sea tank. Pitch black, except for one friendly little light.",
+   "enemy": {
+    "name": "Anglerfish",
+    "sprite": "anglerfish",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      6,
+      7,
+      10,
+      11,
+      13
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "name": "Hungry Anglerfish",
+      "attack": 3,
+      "taunt": "Come closer. Look at the pretty light.",
+      "fog": {
+       "rows": [],
+       "cols": [
+        14,
+        1,
+        8
+       ]
+      },
+      "fogCount": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "armored-beetle",
+   "name": "Armored Beetle",
+   "kind": "fight",
+   "puzzle": "beetle",
+   "blurb": "A museum beetle the size of a hatchback. Look for the cracks.",
+   "enemy": {
+    "name": "Armored Beetle",
+    "sprite": "armored-beetle",
+    "hp": 45,
+    "attack": 2,
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       8,
+       11
+      ],
+      "cols": [
+       2
+      ]
+     },
+     "attack": 4
+    }
+   }
+  },
+  {
+   "id": "break-room",
+   "name": "Break room",
+   "kind": "rest",
+   "puzzle": "coffee",
+   "blurb": "The guards' coffee. Strong enough to wake an exhibit.",
+   "rest": {
+    "seconds": 90,
+    "heal": 4
+   }
+  },
+  {
+   "id": "cellar-ooze",
+   "name": "Cellar Ooze",
+   "kind": "fight",
+   "puzzle": "ooze-cube",
+   "blurb": "It ate the tour map. It kept the skull. It is very nearly cube-shaped.",
+   "enemy": {
+    "name": "Cellar Ooze",
+    "sprite": "cellar-ooze",
+    "hp": 45,
+    "attack": 2,
+    "scramble": {
+     "rows": [],
+     "cols": [
+      4,
+      5
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Blorp.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        8,
+        9
+       ]
+      },
+      "scrambleCount": 2
+     },
+     {
+      "at": 0.65,
+      "taunt": "It slops across your work.",
+      "ink": 4
+     },
+     {
+      "at": 0.45,
+      "name": "Overflowing Ooze",
+      "attack": 3,
+      "taunt": "BLORP.",
+      "ink": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "clockwork-owl",
+   "name": "Clockwork Owl",
+   "kind": "fight",
+   "puzzle": "owl",
+   "blurb": "Its gears whir. Your clues start spinning.",
+   "enemy": {
+    "name": "Clockwork Owl",
+    "sprite": "clockwork-owl",
+    "hp": 45,
+    "attack": 2,
+    "scramble": {
+     "rows": [
+      5,
+      7,
+      9,
+      11
+     ],
+     "cols": [
+      3,
+      6,
+      9
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "name": "Wound-up Owl",
+      "attack": 3,
+      "taunt": "Tick-tock, tinkerer!",
+      "scramble": {
+       "rows": [
+        4,
+        8,
+        12
+       ],
+       "cols": [
+        4,
+        10,
+        12
+       ]
+      },
+      "scrambleCount": 3
+     }
+    ]
+   }
+  },
+  {
+   "id": "coal-heap",
+   "name": "Coal Heap",
+   "kind": "fight",
+   "puzzle": "coal-golem",
+   "blurb": "The stationmaster calls it Gerald. Aim for the cracks, and mind your clean work.",
+   "enemy": {
+    "name": "Gerald",
+    "sprite": "coal-heap",
+    "hp": 45,
+    "attack": 2,
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       7
+      ],
+      "cols": [
+       5,
+       11
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.75,
+      "taunt": "Soot gets on everything.",
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "name": "Stoked Gerald",
+      "attack": 3,
+      "taunt": "Gerald would like a word. The word is coal.",
+      "ink": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "cocoa-break",
+   "name": "Cocoa break",
+   "kind": "rest",
+   "puzzle": "cocoa",
+   "blurb": "Dr. Lund insists. Drink it before it freezes.",
+   "rest": {
+    "seconds": 90,
+    "heal": 4
+   }
+  },
+  {
+   "id": "curator",
+   "name": "The Curator",
+   "kind": "fight",
+   "puzzle": "pocket-watch",
+   "blurb": "The curator's office. It's ticking.",
+   "boss": true,
+   "scene": "curator-return",
+   "enemy": {
+    "name": "Curator Ambrose",
+    "sprite": "curator",
+    "hp": 60,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      3,
+      9
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.92,
+      "name": "Clockwork Curator",
+      "sprite": "clockwork-curator",
+      "attack": 3,
+      "taunt": "Exhibit hours are over.",
+      "fog": {
+       "rows": [
+        7,
+        19
+       ],
+       "cols": []
+      },
+      "fogCount": 2
+     },
+     {
+      "at": 0.85,
+      "taunt": "Allow me to re-label that for you.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        8,
+        9,
+        11,
+        14
+       ]
+      },
+      "scrambleCount": 3
+     },
+     {
+      "at": 0.78,
+      "name": "Overwound Curator",
+      "sprite": "overwound-curator",
+      "attack": 4,
+      "taunt": "Rearranging the collection!",
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "cuttlefish",
+   "name": "Cuttlefish",
+   "kind": "fight",
+   "puzzle": "cuttlefish",
+   "blurb": "It changes color when it's upset. It's very upset.",
+   "enemy": {
+    "name": "Cuttlefish",
+    "sprite": "cuttlefish",
+    "hp": 45,
+    "attack": 2,
+    "phases": [
+     {
+      "at": 0.9,
+      "taunt": "Pfft!",
+      "ink": 4
+     },
+     {
+      "at": 0.75,
+      "taunt": "Pfft! Pfft!",
+      "ink": 4
+     },
+     {
+      "at": 0.6,
+      "name": "Inky Cuttlefish",
+      "attack": 3,
+      "taunt": "Lights out, little painter.",
+      "ink": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "dig-site",
+   "name": "Dig site",
+   "kind": "dig",
+   "puzzle": "bomb-casing",
+   "blurb": "Something mechanical is buried out here. Dig it up; nothing here bites."
+  },
+  {
+   "id": "dusty-exhibit",
+   "name": "Dusty Exhibit",
+   "kind": "dig",
+   "puzzle": "medic-kit",
+   "blurb": "A display case nobody has dusted since 1952. Something useful is under there."
+  },
+  {
+   "id": "electric-eel",
+   "name": "Electric Eel",
+   "kind": "fight",
+   "puzzle": "eel",
+   "blurb": "The touch tank hums. Don't touch the tank.",
+   "enemy": {
+    "name": "Electric Eel",
+    "sprite": "electric-eel",
+    "hp": 45,
+    "attack": 2,
+    "charge": 5,
+    "phases": [
+     {
+      "at": 0.6,
+      "name": "Overcharged Eel",
+      "attack": 3,
+      "charge": 4,
+      "taunt": "Bzzzzt!"
+     }
+    ]
+   }
+  },
+  {
+   "id": "faculty-lounge",
+   "name": "Faculty lounge",
+   "kind": "rest",
+   "puzzle": "noodle-cup",
+   "blurb": "The kettle works. The noodles have a best-before date. Don't read it.",
+   "rest": {
+    "seconds": 90,
+    "heal": 4
+   }
+  },
+  {
+   "id": "failed-clone",
+   "name": "Failed Clone",
+   "kind": "fight",
+   "puzzle": "failed-clone",
+   "blurb": "Attempt 41 copied everything except the instructions. It would like to help.",
+   "enemy": {
+    "name": "Failed Clone",
+    "sprite": "failed-clone",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      6,
+      11
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "It copies your work. Into the wrong place.",
+      "swap": true
+     },
+     {
+      "at": 0.5,
+      "name": "Attempt 42",
+      "attack": 3,
+      "taunt": "Hello. I am also you.",
+      "fog": {
+       "rows": [],
+       "cols": [
+        14
+       ]
+      },
+      "fogCount": 1,
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "falling-star",
+   "name": "Falling Star",
+   "kind": "fight",
+   "puzzle": "comet",
+   "blurb": "The charts say it's coming. Then they say it isn't. One of them is lying.",
+   "enemy": {
+    "name": "Falling Star",
+    "sprite": "falling-star",
+    "hp": 45,
+    "attack": 2,
+    "scramble": {
+     "rows": [],
+     "cols": [
+      5,
+      11
+     ]
+    },
+    "fakes": {
+     "rows": [
+      0,
+      12
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      0,
+      10,
+      11,
+      12
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.5,
+      "name": "Blazing Star",
+      "attack": 3,
+      "taunt": "Make a wish. Make it quick."
+     }
+    ]
+   }
+  },
+  {
+   "id": "fog-bat",
+   "name": "Fog bat",
+   "kind": "fight",
+   "puzzle": "bat",
+   "blurb": "A bat that breathes fog over your clues. Gross, and also a problem.",
+   "enemy": {
+    "name": "Fog bat",
+    "sprite": "fog-bat",
+    "hp": 30,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      3,
+      5,
+      6,
+      9
+     ],
+     "cols": []
+    }
+   }
+  },
+  {
+   "id": "forger",
+   "name": "The Forger",
+   "kind": "fight",
+   "puzzle": "palette",
+   "blurb": "The gallery's paintings look... slightly off.",
+   "scene": "forger-intro",
+   "enemy": {
+    "name": "The Forger",
+    "sprite": "forger",
+    "hp": 45,
+    "attack": 2,
+    "fakes": {
+     "rows": [
+      3,
+      7,
+      13
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      2,
+      3,
+      6,
+      7,
+      13
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.5,
+      "name": "Master Forger",
+      "sprite": "master-forger",
+      "attack": 3,
+      "taunt": "Every clue's a masterpiece. Some are even real."
+     }
+    ]
+   }
+  },
+  {
+   "id": "funhouse-mirror",
+   "name": "Funhouse Mirror",
+   "kind": "fight",
+   "puzzle": "funhouse-mirror",
+   "blurb": "It makes you look taller. It also makes your clues look wrong.",
+   "enemy": {
+    "name": "Funhouse Mirror",
+    "sprite": "funhouse-mirror",
+    "hp": 45,
+    "attack": 2,
+    "scramble": {
+     "rows": [
+      4,
+      6
+     ],
+     "cols": [
+      4
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Is that really how you left it?",
+      "swap": true
+     },
+     {
+      "at": 0.6,
+      "name": "Warped Mirror",
+      "attack": 3,
+      "taunt": "Everything is fine. Look closer.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        10
+       ]
+      },
+      "scrambleCount": 1,
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "garden-bench",
+   "name": "Garden bench",
+   "kind": "rest",
+   "puzzle": "garden-can",
+   "blurb": "A bench, a watering can, and the only plants in here that behave.",
+   "rest": {
+    "seconds": 90,
+    "heal": 4
+   }
+  },
+  {
+   "id": "gift-shop",
+   "name": "Gift Shop",
+   "kind": "dig",
+   "puzzle": "starfish",
+   "blurb": "Plush sharks, snow globes, and one suspiciously absorbent souvenir."
+  },
+  {
+   "id": "goblin",
+   "name": "Goblin",
+   "kind": "fight",
+   "puzzle": "sword",
+   "blurb": "A goblin is guarding the workshop's back door. It wants your lunch.",
+   "enemy": {
+    "name": "Goblin",
+    "sprite": "goblin",
+    "hp": 30,
+    "attack": 2
+   }
+  },
+  {
+   "id": "great-bruno",
+   "name": "The Great Bruno",
+   "kind": "fight",
+   "puzzle": "kettlebell",
+   "blurb": "He can lift a horse. Nobody asked the horse. Aim for the cracks in the iron.",
+   "enemy": {
+    "name": "The Great Bruno",
+    "sprite": "great-bruno",
+    "hp": 45,
+    "attack": 2,
+    "charge": 7,
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       2,
+       8
+      ],
+      "cols": [
+       7
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.5,
+      "name": "Greater Bruno",
+      "attack": 3,
+      "charge": 6,
+      "taunt": "BRUNO LIFTS. YOU WATCH."
+     }
+    ]
+   }
+  },
+  {
+   "id": "gremlin",
+   "name": "Generator Gremlin",
+   "kind": "fight",
+   "puzzle": "wrench",
+   "blurb": "The generator isn't broken. Something lives in it, and it likes the dark.",
+   "boss": true,
+   "scene": "gremlin-intro",
+   "enemy": {
+    "name": "Generator Gremlin",
+    "sprite": "gremlin",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      3,
+      8,
+      10
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.9,
+      "name": "Overcharged Gremlin",
+      "sprite": "overcharged-gremlin",
+      "attack": 3,
+      "taunt": "Lights out, tinkerer!",
+      "fog": {
+       "rows": [
+        1,
+        7,
+        14,
+        4,
+        9
+       ],
+       "cols": []
+      },
+      "fogCount": 3
+     },
+     {
+      "at": 0.84,
+      "name": "Blackout Gremlin",
+      "sprite": "blackout-gremlin",
+      "attack": 4,
+      "taunt": "Who needs clues? Not you!",
+      "fog": {
+       "rows": [
+        1,
+        7,
+        14,
+        4,
+        9
+       ],
+       "cols": []
+      },
+      "fogCount": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "guard-room",
+   "name": "Guard room",
+   "kind": "rest",
+   "puzzle": "mead-horn",
+   "blurb": "Whoever was on watch left in a hurry. They also left the mead.",
+   "rest": {
+    "seconds": 90,
+    "heal": 4
+   }
+  },
+  {
+   "id": "ice-mammoth",
+   "name": "Ice Mammoth",
+   "kind": "fight",
+   "puzzle": "ice-mammoth",
+   "blurb": "It thawed out and it's sitting on the generator. Find the gaps in the ice.",
+   "enemy": {
+    "name": "Ice Mammoth",
+    "sprite": "ice-mammoth",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      4,
+      8,
+      9
+     ]
+    },
+    "charge": 6,
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       5,
+       8
+      ],
+      "cols": [
+       10
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.6,
+      "name": "Thawed Mammoth",
+      "attack": 3,
+      "charge": 5,
+      "taunt": "HRROOOM.",
+      "fog": {
+       "rows": [],
+       "cols": [
+        10,
+        14
+       ]
+      },
+      "fogCount": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "ironbark",
+   "name": "Ironbark",
+   "kind": "fight",
+   "puzzle": "stump",
+   "blurb": "An old stump with a bad attitude. Count the rings, then hit it there.",
+   "enemy": {
+    "name": "Ironbark",
+    "sprite": "ironbark",
+    "hp": 45,
+    "attack": 2,
+    "scramble": {
+     "rows": [],
+     "cols": [
+      0,
+      2,
+      5
+     ]
+    },
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       2,
+       11
+      ],
+      "cols": [
+       7
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.6,
+      "name": "Riled Ironbark",
+      "attack": 3,
+      "taunt": "A hundred years of growth, and you bring a pencil?",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        10,
+        12
+       ]
+      },
+      "scrambleCount": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "lifeguard-chair",
+   "name": "Lifeguard chair",
+   "kind": "rest",
+   "puzzle": "life-ring",
+   "blurb": "Sit down. Dry off. Don't look at the big tank.",
+   "rest": {
+    "seconds": 90,
+    "heal": 4
+   }
+  },
+  {
+   "id": "lost-property",
+   "name": "Lost Property",
+   "kind": "dig",
+   "puzzle": "lost-suitcase",
+   "blurb": "Forty years of forgotten umbrellas, and one suitcase that smells of soap."
+  },
+  {
+   "id": "madame-vesper",
+   "name": "Madame Vesper",
+   "kind": "fight",
+   "puzzle": "vesper-ball",
+   "blurb": "She sees all, she knows all, and at least some of it is true.",
+   "enemy": {
+    "name": "Madame Vesper",
+    "sprite": "madame-vesper",
+    "hp": 45,
+    "attack": 2,
+    "fakes": {
+     "rows": [
+      4,
+      10
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      4,
+      10,
+      13
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.7,
+      "taunt": "The mists are clouding over.",
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "name": "Vesper Unveiled",
+      "attack": 3,
+      "taunt": "I foresaw that you would say that.",
+      "ink": 4
+     }
+    ]
+   }
+  },
+  {
+   "id": "mimic",
+   "name": "Mimic",
+   "kind": "fight",
+   "puzzle": "mimic-chest",
+   "blurb": "A treasure chest in the gift shop. It's breathing.",
+   "enemy": {
+    "name": "Mimic",
+    "sprite": "mimic",
+    "hp": 45,
+    "attack": 2,
+    "phases": [
+     {
+      "at": 0.85,
+      "taunt": "Shell game!",
+      "swap": true
+     },
+     {
+      "at": 0.7,
+      "taunt": "Now you see it...",
+      "swap": true
+     },
+     {
+      "at": 0.55,
+      "name": "Hungry Mimic",
+      "sprite": "hungry-mimic",
+      "attack": 3,
+      "taunt": "Which row was it again?",
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "mother-bramble",
+   "name": "Mother Bramble",
+   "kind": "fight",
+   "puzzle": "bramble-rose",
+   "blurb": "The center dome. Nobody has seen the door since Thursday.",
+   "boss": true,
+   "scene": "bramble-reveal",
+   "enemy": {
+    "name": "Mother Bramble",
+    "sprite": "mother-bramble",
+    "hp": 60,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      2,
+      6
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.9,
+      "taunt": "Hold still, little gardeners.",
+      "ink": 4
+     },
+     {
+      "at": 0.82,
+      "name": "Thorned Bramble",
+      "attack": 3,
+      "taunt": "Every spring you prune me. Every spring I remember.",
+      "fog": {
+       "rows": [
+        8,
+        10
+       ],
+       "cols": []
+      },
+      "fogCount": 2
+     },
+     {
+      "at": 0.7,
+      "taunt": "Let me rearrange your beds.",
+      "swap": true
+     },
+     {
+      "at": 0.5,
+      "name": "Mother Bramble in Bloom",
+      "sprite": "mother-bramble-in-bloom",
+      "attack": 4,
+      "taunt": "Snip, snip, snip.",
+      "ink": 5,
+      "inkCount": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "museum-rex",
+   "name": "Museum Rex",
+   "kind": "fight",
+   "puzzle": "rex-skull",
+   "blurb": "The main hall's centerpiece. It has not moved in ninety years. It's moving.",
+   "boss": true,
+   "scene": "rex-reveal",
+   "enemy": {
+    "name": "Museum Rex",
+    "sprite": "museum-rex",
+    "hp": 60,
+    "attack": 2,
+    "scramble": {
+     "rows": [],
+     "cols": [
+      0,
+      1
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.9,
+      "name": "Wound-up Rex",
+      "sprite": "wound-up-rex",
+      "attack": 3,
+      "taunt": "CREEEAK.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        4,
+        5,
+        15
+       ]
+      },
+      "scrambleCount": 3
+     },
+     {
+      "at": 0.75,
+      "taunt": "A rib flies off and rearranges your work.",
+      "swap": true
+     },
+     {
+      "at": 0.5,
+      "name": "Rampaging Rex",
+      "attack": 4,
+      "taunt": "ROAR. (It is mostly squeaking.)",
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "old-tess",
+   "name": "Old Tess",
+   "kind": "fight",
+   "puzzle": "octopus",
+   "blurb": "The big tank in the middle. Something in there is watching the door.",
+   "boss": true,
+   "scene": "tess-reveal",
+   "enemy": {
+    "name": "Old Tess",
+    "sprite": "old-tess",
+    "hp": 70,
+    "attack": 2,
+    "phases": [
+     {
+      "at": 0.92,
+      "taunt": "You're in my tank now.",
+      "ink": 5
+     },
+     {
+      "at": 0.85,
+      "name": "Eight-Armed Tess",
+      "attack": 3,
+      "taunt": "I have eight arms and you have two.",
+      "ink": 4,
+      "inkCount": 2
+     },
+     {
+      "at": 0.75,
+      "taunt": "Sparky! Visitors!",
+      "charge": 5
+     },
+     {
+      "at": 0.6,
+      "name": "Furious Tess",
+      "sprite": "furious-tess",
+      "attack": 4,
+      "taunt": "NOBODY CLEANS MY TANK.",
+      "ink": 5,
+      "inkCount": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "old-wyrm",
+   "name": "The Old Wyrm",
+   "kind": "fight",
+   "puzzle": "cave-wyrm",
+   "blurb": "The ninth flight down. The hoard is breathing. Aim between the scales, and don't trust all the gold.",
+   "boss": true,
+   "scene": "old-wyrm-reveal",
+   "enemy": {
+    "name": "The Old Wyrm",
+    "sprite": "old-wyrm",
+    "hp": 60,
+    "attack": 2,
+    "scramble": {
+     "rows": [],
+     "cols": [
+      6
+     ]
+    },
+    "fakes": {
+     "rows": [
+      6,
+      18
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      6,
+      11,
+      18
+     ],
+     "cols": []
+    },
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       17
+      ],
+      "cols": [
+       2,
+       14
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.9,
+      "taunt": "Its coils shift across the hoard.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        8,
+        11
+       ]
+      },
+      "scrambleCount": 2
+     },
+     {
+      "at": 0.8,
+      "name": "Waking Wyrm",
+      "attack": 3,
+      "taunt": "Mine.",
+      "charge": 6
+     },
+     {
+      "at": 0.6,
+      "taunt": "A snort of black smoke rolls over everything.",
+      "ink": 4
+     },
+     {
+      "at": 0.4,
+      "name": "Wrathful Wyrm",
+      "sprite": "wrathful-wyrm",
+      "attack": 4,
+      "taunt": "ALL OF IT. MINE.",
+      "charge": 5,
+      "ink": 5,
+      "inkCount": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "ostrander",
+   "name": "Professor Ostrander",
+   "kind": "fight",
+   "puzzle": "mortarboard",
+   "blurb": "Top floor. Every wall is charts, and every chart has been corrected.",
+   "boss": true,
+   "scene": "ostrander-reveal",
+   "enemy": {
+    "name": "Professor Ostrander",
+    "sprite": "ostrander",
+    "hp": 60,
+    "attack": 2,
+    "scramble": {
+     "rows": [],
+     "cols": [
+      6
+     ]
+    },
+    "fakes": {
+     "rows": [
+      10,
+      17
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      4,
+      10,
+      17
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.92,
+      "name": "Professor Emerita",
+      "attack": 3,
+      "taunt": "Your figures do not add up.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        10,
+        16
+       ]
+      },
+      "scrambleCount": 2
+     },
+     {
+      "at": 0.85,
+      "taunt": "I think you will find these belong the other way round.",
+      "swap": true
+     },
+     {
+      "at": 0.7,
+      "taunt": "Retracted.",
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "name": "Reviewer One",
+      "sprite": "reviewer-one",
+      "attack": 4,
+      "taunt": "Rejected. Rejected. Rejected.",
+      "swap": true,
+      "ink": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-anglerfish",
+   "name": "Anglerfish",
+   "kind": "fight",
+   "puzzle": "anglerfish",
+   "blurb": "The little light is brighter now. The rest of the tank is darker.",
+   "enemy": {
+    "name": "Anglerfish",
+    "sprite": "anglerfish",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      6,
+      7,
+      10,
+      11,
+      13
+     ]
+    },
+    "scramble": {
+     "rows": [
+      8
+     ],
+     "cols": [
+      4
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "name": "Hungry Anglerfish",
+      "attack": 3,
+      "taunt": "Come closer. Look at the pretty light.",
+      "fog": {
+       "rows": [],
+       "cols": [
+        14,
+        1,
+        8
+       ]
+      },
+      "fogCount": 2,
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "taunt": "The pretty light starts to hum.",
+      "charge": 6
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-armored-beetle",
+   "name": "Armored Beetle",
+   "kind": "fight",
+   "puzzle": "beetle",
+   "blurb": "It's still mostly large. It has also found the carpet.",
+   "enemy": {
+    "name": "Armored Beetle",
+    "sprite": "armored-beetle",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      0,
+      3,
+      4
+     ]
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      1,
+      5,
+      10
+     ]
+    },
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       8,
+       11
+      ],
+      "cols": [
+       14
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "It has been rubbing its legs on the carpet.",
+      "charge": 6
+     },
+     {
+      "at": 0.6,
+      "taunt": "It is leaking something. Probably fine.",
+      "ink": 4
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-cellar-ooze",
+   "name": "Cellar Ooze",
+   "kind": "fight",
+   "puzzle": "ooze-cube",
+   "blurb": "It ate the other tour map. It is now very nearly a larger cube.",
+   "enemy": {
+    "name": "Cellar Ooze",
+    "sprite": "cellar-ooze",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      13
+     ]
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      4,
+      5
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Blorp.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        8,
+        9
+       ]
+      },
+      "scrambleCount": 2,
+      "swap": true
+     },
+     {
+      "at": 0.65,
+      "taunt": "It slops across your work.",
+      "ink": 4
+     },
+     {
+      "at": 0.55,
+      "taunt": "It has swallowed a lantern. The lantern is still on.",
+      "charge": 6
+     },
+     {
+      "at": 0.45,
+      "name": "Overflowing Ooze",
+      "attack": 3,
+      "taunt": "BLORP.",
+      "ink": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-clockwork-owl",
+   "name": "Clockwork Owl",
+   "kind": "fight",
+   "puzzle": "owl",
+   "blurb": "Someone wound it tighter. It has started keeping its own time.",
+   "enemy": {
+    "name": "Clockwork Owl",
+    "sprite": "clockwork-owl",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      7
+     ]
+    },
+    "scramble": {
+     "rows": [
+      5,
+      6,
+      7,
+      9,
+      11
+     ],
+     "cols": [
+      3,
+      6,
+      9
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "name": "Wound-up Owl",
+      "attack": 3,
+      "taunt": "Tick-tock, tinkerer!",
+      "scramble": {
+       "rows": [
+        4,
+        8,
+        12
+       ],
+       "cols": [
+        4,
+        10,
+        12
+       ]
+      },
+      "scrambleCount": 3
+     },
+     {
+      "at": 0.6,
+      "taunt": "Tick. Tock. Tick. Zap.",
+      "charge": 6
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-coal-heap",
+   "name": "Coal Heap",
+   "kind": "fight",
+   "puzzle": "coal-golem",
+   "blurb": "Gerald has been stoked. Gerald is warm. Gerald is sparking slightly.",
+   "enemy": {
+    "name": "Gerald",
+    "sprite": "coal-heap",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      0,
+      14,
+      1
+     ]
+    },
+    "scramble": {
+     "rows": [
+      2,
+      9,
+      10
+     ],
+     "cols": []
+    },
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       7
+      ],
+      "cols": [
+       5,
+       11
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "taunt": "Gerald crackles.",
+      "charge": 6
+     },
+     {
+      "at": 0.75,
+      "taunt": "Soot gets on everything.",
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "name": "Stoked Gerald",
+      "attack": 3,
+      "taunt": "Gerald would like a word. The word is coal.",
+      "ink": 5,
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-cuttlefish",
+   "name": "Cuttlefish",
+   "kind": "fight",
+   "puzzle": "cuttlefish",
+   "blurb": "It's still upset. It has also worked out how to hide.",
+   "enemy": {
+    "name": "Cuttlefish",
+    "sprite": "cuttlefish",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      9
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      3,
+      11
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.9,
+      "taunt": "Pfft!",
+      "ink": 4
+     },
+     {
+      "at": 0.75,
+      "taunt": "Pfft! Now where did it go?",
+      "ink": 4,
+      "swap": true
+     },
+     {
+      "at": 0.6,
+      "name": "Inky Cuttlefish",
+      "attack": 3,
+      "taunt": "Lights out, little painter.",
+      "ink": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-electric-eel",
+   "name": "Electric Eel",
+   "kind": "fight",
+   "puzzle": "eel",
+   "blurb": "Someone replaced the tank heater with a car battery. The eel approves.",
+   "enemy": {
+    "name": "Electric Eel",
+    "sprite": "electric-eel",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      14,
+      2
+     ]
+    },
+    "scramble": {
+     "rows": [
+      12
+     ],
+     "cols": [
+      8
+     ]
+    },
+    "charge": 5,
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "The water fizzes.",
+      "ink": 4
+     },
+     {
+      "at": 0.6,
+      "name": "Overcharged Eel",
+      "attack": 3,
+      "charge": 4,
+      "taunt": "Bzzzzt!"
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-failed-clone",
+   "name": "Failed Clone",
+   "kind": "fight",
+   "puzzle": "failed-clone",
+   "blurb": "Attempt 43 copied the instructions too. It did not read them.",
+   "enemy": {
+    "name": "Failed Clone",
+    "sprite": "failed-clone",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      6,
+      11
+     ]
+    },
+    "scramble": {
+     "rows": [
+      2,
+      11
+     ],
+     "cols": [
+      8
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "taunt": "It copies your work. Into the wrong place.",
+      "swap": true
+     },
+     {
+      "at": 0.7,
+      "taunt": "It copies the spill on the floor. Onto your work.",
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "name": "Attempt 42",
+      "attack": 3,
+      "taunt": "Hello. I am also you.",
+      "fog": {
+       "rows": [],
+       "cols": [
+        14
+       ]
+      },
+      "fogCount": 1,
+      "swap": true,
+      "charge": 6
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-falling-star",
+   "name": "Falling Star",
+   "kind": "fight",
+   "puzzle": "comet",
+   "blurb": "It came down after all. The charts still disagree about where.",
+   "enemy": {
+    "name": "Falling Star",
+    "sprite": "falling-star",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      5
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [
+      7
+     ],
+     "cols": []
+    },
+    "fakes": {
+     "rows": [
+      0,
+      12
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      0,
+      10,
+      11,
+      12
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.75,
+      "taunt": "Sparks shower off the tail.",
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "name": "Blazing Star",
+      "attack": 3,
+      "taunt": "Make a wish. Make it quick.",
+      "charge": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-fog-bat",
+   "name": "Fog bat",
+   "kind": "fight",
+   "puzzle": "bat",
+   "blurb": "The bat has a cold. The fog is thicker, and it sneezes.",
+   "enemy": {
+    "name": "Fog bat",
+    "sprite": "fog-bat",
+    "hp": 30,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      3,
+      5,
+      6,
+      9
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [
+      2,
+      4
+     ],
+     "cols": [
+      1,
+      8
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.6,
+      "taunt": "Ah... ah... CHOO.",
+      "ink": 3
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-forger",
+   "name": "The Forger",
+   "kind": "fight",
+   "puzzle": "palette",
+   "blurb": "The Forger has had time to practice, and the paint is still wet.",
+   "enemy": {
+    "name": "The Forger",
+    "sprite": "forger",
+    "hp": 45,
+    "attack": 2,
+    "scramble": {
+     "rows": [],
+     "cols": [
+      1,
+      5,
+      7
+     ]
+    },
+    "fakes": {
+     "rows": [
+      3,
+      7,
+      13
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      2,
+      3,
+      6,
+      7,
+      13
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Oops. Wet paint.",
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "name": "Master Forger",
+      "sprite": "master-forger",
+      "attack": 3,
+      "taunt": "Every clue's a masterpiece. Some are even real."
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-funhouse-mirror",
+   "name": "Funhouse Mirror",
+   "kind": "fight",
+   "puzzle": "funhouse-mirror",
+   "blurb": "Someone polished it. Now it makes your clues look wrong from further away.",
+   "enemy": {
+    "name": "Funhouse Mirror",
+    "sprite": "funhouse-mirror",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      7
+     ]
+    },
+    "scramble": {
+     "rows": [
+      4,
+      6
+     ],
+     "cols": [
+      4,
+      3,
+      12
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Is that really how you left it?",
+      "swap": true,
+      "ink": 4
+     },
+     {
+      "at": 0.6,
+      "name": "Warped Mirror",
+      "attack": 3,
+      "taunt": "Everything is fine. Look closer.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        10
+       ]
+      },
+      "scrambleCount": 1,
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-goblin",
+   "name": "Goblin",
+   "kind": "fight",
+   "puzzle": "sword",
+   "blurb": "The goblin is back for your lunch. It has learned to read your clues upside down.",
+   "enemy": {
+    "name": "Goblin",
+    "sprite": "goblin",
+    "hp": 30,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      5
+     ]
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      4,
+      6
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.6,
+      "taunt": "It throws your lunch at the board.",
+      "ink": 3
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-great-bruno",
+   "name": "The Great Bruno",
+   "kind": "fight",
+   "puzzle": "kettlebell",
+   "blurb": "He has added a second horse. Still nobody asked the horses.",
+   "enemy": {
+    "name": "The Great Bruno",
+    "sprite": "great-bruno",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      6
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      4
+     ]
+    },
+    "charge": 7,
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       2,
+       8
+      ],
+      "cols": [
+       7
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.75,
+      "taunt": "BRUNO JUGGLES. YOUR LINES ARE THE BALLS.",
+      "swap": true
+     },
+     {
+      "at": 0.5,
+      "name": "Greater Bruno",
+      "attack": 3,
+      "charge": 6,
+      "taunt": "BRUNO LIFTS. YOU WATCH.",
+      "ink": 4
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-gremlin",
+   "name": "Generator Gremlin",
+   "kind": "fight",
+   "puzzle": "wrench",
+   "blurb": "The generator's been fixed. The thing living in it hasn't.",
+   "boss": true,
+   "enemy": {
+    "name": "Generator Gremlin",
+    "sprite": "gremlin",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      3,
+      8,
+      10
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      3,
+      11
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.9,
+      "name": "Overcharged Gremlin",
+      "sprite": "overcharged-gremlin",
+      "attack": 3,
+      "taunt": "Lights out, tinkerer!",
+      "fog": {
+       "rows": [
+        1,
+        7,
+        14,
+        4,
+        9
+       ],
+       "cols": []
+      },
+      "fogCount": 3
+     },
+     {
+      "at": 0.84,
+      "name": "Blackout Gremlin",
+      "sprite": "blackout-gremlin",
+      "attack": 4,
+      "taunt": "Who needs clues? Not you!",
+      "fog": {
+       "rows": [
+        1,
+        7,
+        14,
+        4,
+        9
+       ],
+       "cols": []
+      },
+      "fogCount": 2,
+      "ink": 4
+     },
+     {
+      "at": 0.6,
+      "taunt": "It plugs itself into the mains.",
+      "charge": 6,
+      "scramble": {
+       "rows": [],
+       "cols": [
+        4
+       ]
+      },
+      "scrambleCount": 1
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-ice-mammoth",
+   "name": "Ice Mammoth",
+   "kind": "fight",
+   "puzzle": "ice-mammoth",
+   "blurb": "Back on the generator, and it brought the rest of the glacier.",
+   "enemy": {
+    "name": "Ice Mammoth",
+    "sprite": "ice-mammoth",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      4,
+      8,
+      9
+     ]
+    },
+    "scramble": {
+     "rows": [
+      3,
+      9
+     ],
+     "cols": [
+      1
+     ]
+    },
+    "charge": 6,
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       5,
+       8
+      ],
+      "cols": [
+       10
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "It shakes. Ice flies everywhere.",
+      "ink": 4
+     },
+     {
+      "at": 0.6,
+      "name": "Thawed Mammoth",
+      "attack": 3,
+      "charge": 5,
+      "taunt": "HRROOOM.",
+      "fog": {
+       "rows": [],
+       "cols": [
+        10,
+        14
+       ]
+      },
+      "fogCount": 2,
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-ironbark",
+   "name": "Ironbark",
+   "kind": "fight",
+   "puzzle": "stump",
+   "blurb": "Another ring since you were here. It counted every one of them.",
+   "enemy": {
+    "name": "Ironbark",
+    "sprite": "ironbark",
+    "hp": 45,
+    "attack": 2,
+    "scramble": {
+     "rows": [],
+     "cols": [
+      0,
+      2,
+      5
+     ]
+    },
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       2,
+       11
+      ],
+      "cols": [
+       7
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Sap seeps over your work.",
+      "ink": 4,
+      "fog": {
+       "rows": [
+        9
+       ],
+       "cols": []
+      },
+      "fogCount": 1
+     },
+     {
+      "at": 0.6,
+      "name": "Riled Ironbark",
+      "attack": 3,
+      "taunt": "A hundred years of growth, and you bring a pencil?",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        10,
+        12
+       ]
+      },
+      "scrambleCount": 2,
+      "charge": 6
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-madame-vesper",
+   "name": "Madame Vesper",
+   "kind": "fight",
+   "puzzle": "vesper-ball",
+   "blurb": "She foresaw your return. She has prepared more of the truth than usual.",
+   "enemy": {
+    "name": "Madame Vesper",
+    "sprite": "madame-vesper",
+    "hp": 45,
+    "attack": 2,
+    "scramble": {
+     "rows": [],
+     "cols": [
+      5,
+      9
+     ]
+    },
+    "fakes": {
+     "rows": [
+      4,
+      10
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      4,
+      10,
+      13
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "taunt": "I see a spark in your future.",
+      "charge": 6
+     },
+     {
+      "at": 0.7,
+      "taunt": "The mists are clouding over.",
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "name": "Vesper Unveiled",
+      "attack": 3,
+      "taunt": "I foresaw that you would say that.",
+      "ink": 4
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-mimic",
+   "name": "Mimic",
+   "kind": "fight",
+   "puzzle": "mimic-chest",
+   "blurb": "The chest learned a new trick while you were gone. It still bites.",
+   "enemy": {
+    "name": "Mimic",
+    "sprite": "mimic",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      0,
+      1,
+      2
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      3,
+      5,
+      6,
+      7
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "taunt": "Shell game!",
+      "swap": true
+     },
+     {
+      "at": 0.7,
+      "taunt": "Now you see it...",
+      "swap": true,
+      "ink": 4
+     },
+     {
+      "at": 0.55,
+      "name": "Hungry Mimic",
+      "sprite": "hungry-mimic",
+      "attack": 3,
+      "taunt": "Which row was it again?",
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-mother-bramble",
+   "name": "Mother Bramble",
+   "kind": "fight",
+   "puzzle": "bramble-rose",
+   "blurb": "The center dome again. She's been pruned, and she's been planning.",
+   "boss": true,
+   "enemy": {
+    "name": "Mother Bramble",
+    "sprite": "mother-bramble",
+    "hp": 60,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      2,
+      6
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      12,
+      5
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.9,
+      "taunt": "Hold still, little gardeners.",
+      "ink": 4
+     },
+     {
+      "at": 0.82,
+      "name": "Thorned Bramble",
+      "attack": 3,
+      "taunt": "Every spring you prune me. Every spring I remember.",
+      "fog": {
+       "rows": [
+        8,
+        10
+       ],
+       "cols": []
+      },
+      "fogCount": 2
+     },
+     {
+      "at": 0.7,
+      "taunt": "Let me rearrange your beds.",
+      "swap": true
+     },
+     {
+      "at": 0.6,
+      "taunt": "The roots find the sprinkler wiring.",
+      "charge": 6,
+      "scramble": {
+       "rows": [],
+       "cols": [
+        10
+       ]
+      },
+      "scrambleCount": 1
+     },
+     {
+      "at": 0.5,
+      "name": "Mother Bramble in Bloom",
+      "sprite": "mother-bramble-in-bloom",
+      "attack": 4,
+      "taunt": "Snip, snip, snip.",
+      "ink": 5,
+      "inkCount": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-museum-rex",
+   "name": "Museum Rex",
+   "kind": "fight",
+   "puzzle": "rex-skull",
+   "blurb": "Back on its feet, and missing fewer pieces than you'd hope.",
+   "boss": true,
+   "enemy": {
+    "name": "Museum Rex",
+    "sprite": "museum-rex",
+    "hp": 60,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      0,
+      6
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      0,
+      1,
+      2,
+      7,
+      8,
+      11
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.9,
+      "name": "Wound-up Rex",
+      "sprite": "wound-up-rex",
+      "attack": 3,
+      "taunt": "CREEEAK.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        4,
+        5,
+        15
+       ]
+      },
+      "scrambleCount": 3
+     },
+     {
+      "at": 0.75,
+      "taunt": "A rib flies off and rearranges your work.",
+      "swap": true,
+      "ink": 5
+     },
+     {
+      "at": 0.6,
+      "taunt": "Somebody left the fuse box in its ribcage.",
+      "charge": 6
+     },
+     {
+      "at": 0.5,
+      "name": "Rampaging Rex",
+      "attack": 4,
+      "taunt": "ROAR. (It is mostly squeaking.)",
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-old-tess",
+   "name": "Old Tess",
+   "kind": "fight",
+   "puzzle": "octopus",
+   "blurb": "Somebody cleaned her tank. She has not forgiven anyone.",
+   "boss": true,
+   "enemy": {
+    "name": "Old Tess",
+    "sprite": "old-tess",
+    "hp": 70,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      12
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [
+      15
+     ],
+     "cols": [
+      3,
+      14
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.92,
+      "taunt": "You're in my tank now.",
+      "ink": 5
+     },
+     {
+      "at": 0.85,
+      "name": "Eight-Armed Tess",
+      "attack": 3,
+      "taunt": "I have eight arms and you have two.",
+      "ink": 4,
+      "inkCount": 2,
+      "fog": {
+       "rows": [
+        3
+       ],
+       "cols": []
+      },
+      "fogCount": 1
+     },
+     {
+      "at": 0.75,
+      "taunt": "Sparky! Visitors!",
+      "charge": 5
+     },
+     {
+      "at": 0.6,
+      "name": "Furious Tess",
+      "sprite": "furious-tess",
+      "attack": 4,
+      "taunt": "NOBODY CLEANS MY TANK.",
+      "ink": 5,
+      "inkCount": 2,
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-old-wyrm",
+   "name": "The Old Wyrm",
+   "kind": "fight",
+   "puzzle": "cave-wyrm",
+   "blurb": "The ninth flight down, again. The hoard is bigger. So is the Wyrm.",
+   "boss": true,
+   "enemy": {
+    "name": "The Old Wyrm",
+    "sprite": "old-wyrm",
+    "hp": 60,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      10
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      6
+     ]
+    },
+    "fakes": {
+     "rows": [
+      6,
+      18
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      6,
+      11,
+      18
+     ],
+     "cols": []
+    },
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       17
+      ],
+      "cols": [
+       2,
+       14
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.9,
+      "taunt": "Its coils shift across the hoard.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        8,
+        11
+       ]
+      },
+      "scrambleCount": 2,
+      "swap": true
+     },
+     {
+      "at": 0.8,
+      "name": "Waking Wyrm",
+      "attack": 3,
+      "taunt": "Mine.",
+      "charge": 6
+     },
+     {
+      "at": 0.6,
+      "taunt": "A snort of black smoke rolls over everything.",
+      "ink": 4,
+      "fog": {
+       "rows": [
+        13
+       ],
+       "cols": []
+      },
+      "fogCount": 1
+     },
+     {
+      "at": 0.5,
+      "taunt": "It rolls over in its sleep. The hoard rolls with it.",
+      "swap": true
+     },
+     {
+      "at": 0.4,
+      "name": "Wrathful Wyrm",
+      "sprite": "wrathful-wyrm",
+      "attack": 4,
+      "taunt": "ALL OF IT. MINE.",
+      "charge": 5,
+      "ink": 5,
+      "inkCount": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-ostrander",
+   "name": "Professor Ostrander",
+   "kind": "fight",
+   "puzzle": "mortarboard",
+   "blurb": "Top floor, after hours. The charts have been corrected again, in pen.",
+   "boss": true,
+   "enemy": {
+    "name": "Professor Ostrander",
+    "sprite": "ostrander",
+    "hp": 60,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      2
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [
+      11
+     ],
+     "cols": [
+      6,
+      18
+     ]
+    },
+    "fakes": {
+     "rows": [
+      10,
+      17
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      4,
+      10,
+      17
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.92,
+      "name": "Professor Emerita",
+      "attack": 3,
+      "taunt": "Your figures do not add up.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        10,
+        16
+       ]
+      },
+      "scrambleCount": 2
+     },
+     {
+      "at": 0.85,
+      "taunt": "I think you will find these belong the other way round.",
+      "swap": true
+     },
+     {
+      "at": 0.78,
+      "taunt": "Office hours are over. The lights are on a timer.",
+      "charge": 6
+     },
+     {
+      "at": 0.7,
+      "taunt": "Retracted.",
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "name": "Reviewer One",
+      "sprite": "reviewer-one",
+      "attack": 4,
+      "taunt": "Rejected. Rejected. Rejected.",
+      "swap": true,
+      "ink": 5,
+      "charge": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-rat-king",
+   "name": "The Rat King",
+   "kind": "fight",
+   "puzzle": "rat-crown",
+   "blurb": "He has a sceptre now. He has also forged the receipt for that.",
+   "enemy": {
+    "name": "The Rat King",
+    "sprite": "rat-king",
+    "hp": 45,
+    "attack": 2,
+    "scramble": {
+     "rows": [
+      4,
+      12
+     ],
+     "cols": [
+      3
+     ]
+    },
+    "fakes": {
+     "rows": [],
+     "cols": [
+      4,
+      5
+     ]
+    },
+    "suspects": {
+     "rows": [],
+     "cols": [
+      4,
+      5,
+      6
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "taunt": "The court spills the royal ink.",
+      "ink": 4
+     },
+     {
+      "at": 0.75,
+      "taunt": "The court rearranges itself around you.",
+      "swap": true
+     },
+     {
+      "at": 0.6,
+      "taunt": "A rat chews through a cable. It looks pleased.",
+      "charge": 6
+     },
+     {
+      "at": 0.45,
+      "name": "His Royal Ratness",
+      "attack": 3,
+      "taunt": "Bow, or be nibbled.",
+      "swap": true,
+      "ink": 4
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-reviewer-two",
+   "name": "Reviewer Two",
+   "kind": "fight",
+   "puzzle": "marked-manuscript",
+   "blurb": "Reviewer Two has read your revisions. Reviewer Two has more comments.",
+   "enemy": {
+    "name": "Reviewer Two",
+    "sprite": "reviewer-two",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      13
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [
+      5,
+      7
+     ],
+     "cols": []
+    },
+    "fakes": {
+     "rows": [
+      2,
+      11
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      1,
+      2,
+      11
+     ],
+     "cols": []
+    },
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       3
+      ],
+      "cols": [
+       10
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Red pen bleeds through the page.",
+      "ink": 4
+     },
+     {
+      "at": 0.65,
+      "taunt": "Please move section three to section five.",
+      "swap": true
+     },
+     {
+      "at": 0.5,
+      "name": "Reviewer Two, Revised",
+      "attack": 3,
+      "taunt": "A few minor changes. Start again.",
+      "charge": 6
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-ringmaster",
+   "name": "The Ringmaster",
+   "kind": "fight",
+   "puzzle": "ringmaster",
+   "blurb": "The big top, for the encore. Two spotlights now, and the moustache has been waxed.",
+   "boss": true,
+   "enemy": {
+    "name": "The Ringmaster",
+    "sprite": "ringmaster",
+    "hp": 60,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      1,
+      15
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      5
+     ]
+    },
+    "fakes": {
+     "rows": [
+      0,
+      7
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      0,
+      7,
+      17
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.9,
+      "taunt": "Ladies and gentlemen! Tonight only!",
+      "charge": 6
+     },
+     {
+      "at": 0.8,
+      "name": "Grand Ringmaster",
+      "attack": 3,
+      "taunt": "Keep your eye on the numbers!",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        11,
+        16
+       ]
+      },
+      "scrambleCount": 2
+     },
+     {
+      "at": 0.7,
+      "taunt": "A little confetti for the front row!",
+      "ink": 4
+     },
+     {
+      "at": 0.6,
+      "taunt": "And now they switch places!",
+      "swap": true
+     },
+     {
+      "at": 0.45,
+      "name": "Showstopper",
+      "sprite": "showstopper",
+      "attack": 4,
+      "charge": 5,
+      "taunt": "No refunds!",
+      "ink": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-rusted-sentry",
+   "name": "Rusted Sentry",
+   "kind": "fight",
+   "puzzle": "sentry-halberd",
+   "blurb": "It has oiled its neck. It turns its head a lot more now.",
+   "enemy": {
+    "name": "Rusted Sentry",
+    "sprite": "rusted-sentry",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      8
+     ]
+    },
+    "scramble": {
+     "rows": [
+      2
+     ],
+     "cols": [
+      3
+     ]
+    },
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       8
+      ],
+      "cols": [
+       1,
+       11
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Its halberd clips your work and sends two lines flying.",
+      "swap": true
+     },
+     {
+      "at": 0.65,
+      "taunt": "Rust flakes off in a cloud.",
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "name": "Furious Sentry",
+      "attack": 3,
+      "taunt": "NONE. SHALL. Squeak.",
+      "swap": true,
+      "charge": 6
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-signal-box",
+   "name": "Signal Box",
+   "kind": "fight",
+   "puzzle": "signal-lamp",
+   "blurb": "Still showing red. It has found some new colors since you left.",
+   "enemy": {
+    "name": "Signal Box",
+    "sprite": "signal-box",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      1,
+      13,
+      2
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [
+      3
+     ],
+     "cols": [
+      6,
+      7,
+      4
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.75,
+      "name": "Crossed Signals",
+      "attack": 3,
+      "taunt": "The lamp goes from red to something else.",
+      "fog": {
+       "rows": [
+        8,
+        9
+       ],
+       "cols": []
+      },
+      "fogCount": 2,
+      "scramble": {
+       "rows": [],
+       "cols": [
+        10,
+        8
+       ]
+      },
+      "scrambleCount": 2
+     },
+     {
+      "at": 0.55,
+      "taunt": "The points clunk over. Sparks fly.",
+      "charge": 6,
+      "ink": 4
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-snapjaw",
+   "name": "Snapjaw",
+   "kind": "fight",
+   "puzzle": "flytrap",
+   "blurb": "Someone has been feeding it. It has stopped counting and started guessing.",
+   "enemy": {
+    "name": "Snapjaw",
+    "sprite": "snapjaw",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      9,
+      1
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      1,
+      12
+     ]
+    },
+    "charge": 5,
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Snap!",
+      "swap": true,
+      "ink": 4
+     },
+     {
+      "at": 0.55,
+      "name": "Ravenous Snapjaw",
+      "attack": 3,
+      "charge": 4,
+      "taunt": "Snap snap snap!",
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-spark-hound",
+   "name": "Spark Hound",
+   "kind": "fight",
+   "puzzle": "spark-hound",
+   "blurb": "Still not to be petted. The signs have been updated, and so has the dog.",
+   "enemy": {
+    "name": "Spark Hound",
+    "sprite": "spark-hound",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      6
+     ]
+    },
+    "scramble": {
+     "rows": [
+      1,
+      3,
+      2
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "taunt": "Its fur stands on end. Then so does yours.",
+      "charge": 6
+     },
+     {
+      "at": 0.7,
+      "taunt": "It shakes. Something wet goes everywhere.",
+      "ink": 4
+     },
+     {
+      "at": 0.6,
+      "name": "Good Boy, Overcharged",
+      "attack": 3,
+      "taunt": "Woof. Bzzt.",
+      "charge": 5,
+      "scramble": {
+       "rows": [
+        4,
+        5
+       ],
+       "cols": []
+      },
+      "scrambleCount": 2,
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-spore-puff",
+   "name": "Spore Puff",
+   "kind": "fight",
+   "puzzle": "puffball",
+   "blurb": "It has been to seed. The seeds have been to seed.",
+   "enemy": {
+    "name": "Spore Puff",
+    "sprite": "spore-puff",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      3,
+      5,
+      6
+     ]
+    },
+    "scramble": {
+     "rows": [
+      2
+     ],
+     "cols": [
+      4,
+      9
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "taunt": "Pfff.",
+      "ink": 4
+     },
+     {
+      "at": 0.65,
+      "name": "Bursting Puff",
+      "attack": 3,
+      "taunt": "PFFFFFF.",
+      "fog": {
+       "rows": [],
+       "cols": [
+        13,
+        14
+       ]
+      },
+      "fogCount": 2,
+      "ink": 4
+     },
+     {
+      "at": 0.45,
+      "taunt": "Static crackles through the spores.",
+      "charge": 6
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-the-1159",
+   "name": "The 11:59",
+   "kind": "fight",
+   "puzzle": "ghost-engine",
+   "blurb": "Platform one again. It made up the forty years, and now it is early.",
+   "boss": true,
+   "enemy": {
+    "name": "The 11:59",
+    "sprite": "the-1159",
+    "hp": 60,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      4,
+      5,
+      0
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [
+      9
+     ],
+     "cols": [
+      8,
+      9
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.92,
+      "name": "Running Late",
+      "attack": 3,
+      "taunt": "We apologise for the delay.",
+      "fog": {
+       "rows": [
+        8
+       ],
+       "cols": []
+      },
+      "fogCount": 1
+     },
+     {
+      "at": 0.85,
+      "taunt": "This service has been rescheduled.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        13,
+        18
+       ]
+      },
+      "scrambleCount": 2
+     },
+     {
+      "at": 0.78,
+      "taunt": "Smoke pours out of the funnel.",
+      "ink": 4
+     },
+     {
+      "at": 0.7,
+      "taunt": "The carriages uncouple and change places.",
+      "swap": true
+     },
+     {
+      "at": 0.5,
+      "name": "Express, Not Stopping",
+      "sprite": "express-not-stopping",
+      "attack": 4,
+      "charge": 5,
+      "taunt": "Stand clear of the platform edge.",
+      "ink": 5,
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-ticket-inspector",
+   "name": "Ticket Inspector",
+   "kind": "fight",
+   "puzzle": "inspector",
+   "blurb": "Still checking the same carriage. He has started making up the timetable too.",
+   "enemy": {
+    "name": "Ticket Inspector",
+    "sprite": "ticket-inspector",
+    "hp": 45,
+    "attack": 2,
+    "scramble": {
+     "rows": [],
+     "cols": [
+      6
+     ]
+    },
+    "fakes": {
+     "rows": [
+      2,
+      4
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      2,
+      3,
+      4
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Tickets, please.",
+      "charge": 6
+     },
+     {
+      "at": 0.65,
+      "taunt": "These seats have been reallocated.",
+      "swap": true,
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "name": "Chief Inspector",
+      "attack": 3,
+      "taunt": "That'll be a penalty fare.",
+      "charge": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-whiteout",
+   "name": "Whiteout",
+   "kind": "fight",
+   "puzzle": "whiteout-snowman",
+   "blurb": "Someone rebuilt the snowman. It looks a lot like the last person who tried.",
+   "enemy": {
+    "name": "Whiteout",
+    "sprite": "whiteout",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      1,
+      3
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      4,
+      10
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "name": "Howling Whiteout",
+      "attack": 3,
+      "taunt": "The wind picks up.",
+      "fog": {
+       "rows": [
+        13
+       ],
+       "cols": []
+      },
+      "fogCount": 1
+     },
+     {
+      "at": 0.7,
+      "taunt": "Snow drifts across your work.",
+      "ink": 4
+     },
+     {
+      "at": 0.6,
+      "taunt": "Static crackles through the snow.",
+      "charge": 6
+     },
+     {
+      "at": 0.5,
+      "taunt": "Snow drifts across everything.",
+      "ink": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "overtime-yeti",
+   "name": "The Yeti",
+   "kind": "fight",
+   "puzzle": "yeti",
+   "blurb": "The ridge again. There are more footprints this time, and they are bigger.",
+   "boss": true,
+   "enemy": {
+    "name": "The Yeti",
+    "sprite": "yeti",
+    "hp": 60,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      3,
+      16
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [
+      6
+     ],
+     "cols": [
+      0,
+      2,
+      4
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.92,
+      "name": "Angry Yeti",
+      "attack": 3,
+      "taunt": "HRRRM.",
+      "fog": {
+       "rows": [
+        8
+       ],
+       "cols": []
+      },
+      "fogCount": 1
+     },
+     {
+      "at": 0.85,
+      "taunt": "It shakes off a snowdrift.",
+      "ink": 4
+     },
+     {
+      "at": 0.78,
+      "taunt": "HRRRRRM?",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        6,
+        8
+       ]
+      },
+      "scrambleCount": 2,
+      "swap": true
+     },
+     {
+      "at": 0.65,
+      "name": "Avalanche Yeti",
+      "sprite": "avalanche-yeti",
+      "attack": 4,
+      "charge": 5,
+      "taunt": "The whole ridge is moving."
+     },
+     {
+      "at": 0.45,
+      "taunt": "HRRRRRRRRRM!",
+      "ink": 5,
+      "inkCount": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "popcorn-stand",
+   "name": "Popcorn stand",
+   "kind": "rest",
+   "puzzle": "popcorn",
+   "blurb": "Nobody is minding it. Nobody is charging for it. Eat fast.",
+   "rest": {
+    "seconds": 90,
+    "heal": 4
+   }
+  },
+  {
+   "id": "potting-shed",
+   "name": "Potting Shed",
+   "kind": "dig",
+   "puzzle": "loofah",
+   "blurb": "Bags of soil, a broken rake, and a gourd that is suspiciously absorbent."
+  },
+  {
+   "id": "prop-wagon",
+   "name": "Prop Wagon",
+   "kind": "dig",
+   "puzzle": "circus-cannon",
+   "blurb": "Costumes, a unicycle, and something under a tarp labeled DO NOT LIGHT."
+  },
+  {
+   "id": "rat-king",
+   "name": "The Rat King",
+   "kind": "fight",
+   "puzzle": "rat-crown",
+   "blurb": "He got the crown from the gift shop. He's forged the receipt.",
+   "enemy": {
+    "name": "The Rat King",
+    "sprite": "rat-king",
+    "hp": 45,
+    "attack": 2,
+    "fakes": {
+     "rows": [],
+     "cols": [
+      4,
+      5
+     ]
+    },
+    "suspects": {
+     "rows": [],
+     "cols": [
+      4,
+      5,
+      6
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.75,
+      "taunt": "The court rearranges itself around you.",
+      "swap": true
+     },
+     {
+      "at": 0.45,
+      "name": "His Royal Ratness",
+      "attack": 3,
+      "taunt": "Bow, or be nibbled.",
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "reviewer-two",
+   "name": "Reviewer Two",
+   "kind": "fight",
+   "puzzle": "marked-manuscript",
+   "blurb": "Nobody knows who Reviewer Two is. Everybody has met Reviewer Two. Find the weak arguments.",
+   "enemy": {
+    "name": "Reviewer Two",
+    "sprite": "reviewer-two",
+    "hp": 45,
+    "attack": 2,
+    "fakes": {
+     "rows": [
+      2,
+      11
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      1,
+      2,
+      11
+     ],
+     "cols": []
+    },
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       3
+      ],
+      "cols": [
+       10
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.5,
+      "name": "Reviewer Two, Revised",
+      "attack": 3,
+      "taunt": "A few minor changes. Start again."
+     }
+    ]
+   }
+  },
+  {
+   "id": "ringmaster",
+   "name": "The Ringmaster",
+   "kind": "fight",
+   "puzzle": "ringmaster",
+   "blurb": "The big top. One spotlight, one top hat, and a very long moustache.",
+   "boss": true,
+   "scene": "ringmaster-reveal",
+   "enemy": {
+    "name": "The Ringmaster",
+    "sprite": "ringmaster",
+    "hp": 60,
+    "attack": 2,
+    "scramble": {
+     "rows": [],
+     "cols": [
+      5
+     ]
+    },
+    "fakes": {
+     "rows": [
+      0,
+      7
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      0,
+      7,
+      17
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.9,
+      "taunt": "Ladies and gentlemen! Tonight only!",
+      "charge": 6
+     },
+     {
+      "at": 0.8,
+      "name": "Grand Ringmaster",
+      "attack": 3,
+      "taunt": "Keep your eye on the numbers!",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        11,
+        16
+       ]
+      },
+      "scrambleCount": 2
+     },
+     {
+      "at": 0.65,
+      "taunt": "And now they switch places!",
+      "swap": true
+     },
+     {
+      "at": 0.45,
+      "name": "Showstopper",
+      "sprite": "showstopper",
+      "attack": 4,
+      "charge": 5,
+      "taunt": "No refunds!"
+     }
+    ]
+   }
+  },
+  {
+   "id": "rusted-sentry",
+   "name": "Rusted Sentry",
+   "kind": "fight",
+   "puzzle": "sentry-halberd",
+   "blurb": "Not one of the castle's. The castle's ones don't turn their heads.",
+   "enemy": {
+    "name": "Rusted Sentry",
+    "sprite": "rusted-sentry",
+    "hp": 45,
+    "attack": 2,
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       8
+      ],
+      "cols": [
+       1,
+       11
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Its halberd clips your work and sends two lines flying.",
+      "swap": true
+     },
+     {
+      "at": 0.5,
+      "name": "Furious Sentry",
+      "attack": 3,
+      "taunt": "NONE. SHALL. Squeak.",
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "signal-box",
+   "name": "Signal Box",
+   "kind": "fight",
+   "puzzle": "signal-lamp",
+   "blurb": "It's been showing red since before the line closed. It has opinions now.",
+   "enemy": {
+    "name": "Signal Box",
+    "sprite": "signal-box",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      1,
+      13
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      6,
+      7
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.75,
+      "name": "Crossed Signals",
+      "attack": 3,
+      "taunt": "The lamp goes from red to something else.",
+      "fog": {
+       "rows": [
+        8
+       ],
+       "cols": []
+      },
+      "fogCount": 1,
+      "scramble": {
+       "rows": [],
+       "cols": [
+        10
+       ]
+      },
+      "scrambleCount": 1
+     }
+    ]
+   }
+  },
+  {
+   "id": "snapjaw",
+   "name": "Snapjaw",
+   "kind": "fight",
+   "puzzle": "flytrap",
+   "blurb": "A flytrap the size of a wheelbarrow. It has started counting.",
+   "enemy": {
+    "name": "Snapjaw",
+    "sprite": "snapjaw",
+    "hp": 45,
+    "attack": 2,
+    "charge": 5,
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Snap!",
+      "swap": true
+     },
+     {
+      "at": 0.55,
+      "name": "Ravenous Snapjaw",
+      "attack": 3,
+      "charge": 4,
+      "taunt": "Snap snap snap!",
+      "swap": true
+     }
+    ]
+   }
+  },
+  {
+   "id": "spark-hound",
+   "name": "Spark Hound",
+   "kind": "fight",
+   "puzzle": "spark-hound",
+   "blurb": "Don't pet the dog. It's on the sign, and on the other sign.",
+   "enemy": {
+    "name": "Spark Hound",
+    "sprite": "spark-hound",
+    "hp": 45,
+    "attack": 2,
+    "scramble": {
+     "rows": [
+      1,
+      3
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "taunt": "Its fur stands on end. Then so does yours.",
+      "charge": 6
+     },
+     {
+      "at": 0.6,
+      "name": "Good Boy, Overcharged",
+      "attack": 3,
+      "taunt": "Woof. Bzzt.",
+      "charge": 5,
+      "scramble": {
+       "rows": [
+        4,
+        5
+       ],
+       "cols": []
+      },
+      "scrambleCount": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "spore-puff",
+   "name": "Spore Puff",
+   "kind": "fight",
+   "puzzle": "puffball",
+   "blurb": "Do not breathe in. Do not breathe out. Honestly, just leave.",
+   "enemy": {
+    "name": "Spore Puff",
+    "sprite": "spore-puff",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [],
+     "cols": [
+      3,
+      5,
+      6
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "taunt": "Pfff.",
+      "ink": 4
+     },
+     {
+      "at": 0.65,
+      "name": "Bursting Puff",
+      "attack": 3,
+      "taunt": "PFFFFFF.",
+      "fog": {
+       "rows": [],
+       "cols": [
+        13,
+        14
+       ]
+      },
+      "fogCount": 2,
+      "ink": 4
+     }
+    ]
+   }
+  },
+  {
+   "id": "station-buffet",
+   "name": "Station buffet",
+   "kind": "rest",
+   "puzzle": "tea-urn",
+   "blurb": "The urn is still hot. Nobody's sure who has been filling it. Drink up.",
+   "rest": {
+    "seconds": 90,
+    "heal": 4
+   }
+  },
+  {
+   "id": "supply-cache",
+   "name": "Supply Cache",
+   "kind": "dig",
+   "puzzle": "hot-water-bottle",
+   "blurb": "Tinned soup, spare socks, and the warmest thing on this mountain."
+  },
+  {
+   "id": "supply-closet",
+   "name": "Supply Closet",
+   "kind": "dig",
+   "puzzle": "spill-sponge",
+   "blurb": "Labeled SPILLS ONLY. Considering the state of this building, that covers it."
+  },
+  {
+   "id": "tea-break",
+   "name": "Tea break",
+   "kind": "rest",
+   "puzzle": "thermos",
+   "blurb": "Mrs. Pell left a thermos on the steps. It's still warm.",
+   "rest": {
+    "seconds": 120,
+    "heal": 4
+   }
+  },
+  {
+   "id": "the-1159",
+   "name": "The 11:59",
+   "kind": "fight",
+   "puzzle": "ghost-engine",
+   "blurb": "Platform one. Forty years late, and picking up speed.",
+   "boss": true,
+   "scene": "the-1159-reveal",
+   "enemy": {
+    "name": "The 11:59",
+    "sprite": "the-1159",
+    "hp": 60,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      4,
+      5
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      8,
+      9
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.92,
+      "name": "Running Late",
+      "attack": 3,
+      "taunt": "We apologise for the delay.",
+      "fog": {
+       "rows": [
+        8
+       ],
+       "cols": []
+      },
+      "fogCount": 1
+     },
+     {
+      "at": 0.85,
+      "taunt": "This service has been rescheduled.",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        13,
+        18
+       ]
+      },
+      "scrambleCount": 2
+     },
+     {
+      "at": 0.7,
+      "taunt": "The carriages uncouple and change places.",
+      "swap": true
+     },
+     {
+      "at": 0.5,
+      "name": "Express, Not Stopping",
+      "sprite": "express-not-stopping",
+      "attack": 4,
+      "charge": 6,
+      "taunt": "Stand clear of the platform edge."
+     }
+    ]
+   }
+  },
+  {
+   "id": "ticket-inspector",
+   "name": "Ticket Inspector",
+   "kind": "fight",
+   "puzzle": "inspector",
+   "blurb": "He has been checking the same empty carriage since 1986. Some of his paperwork is made up.",
+   "enemy": {
+    "name": "Ticket Inspector",
+    "sprite": "ticket-inspector",
+    "hp": 45,
+    "attack": 2,
+    "fakes": {
+     "rows": [
+      2,
+      4
+     ],
+     "cols": []
+    },
+    "suspects": {
+     "rows": [
+      2,
+      3,
+      4
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.8,
+      "taunt": "Tickets, please.",
+      "charge": 6
+     },
+     {
+      "at": 0.5,
+      "name": "Chief Inspector",
+      "attack": 3,
+      "taunt": "That'll be a penalty fare.",
+      "charge": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "tin-soldier",
+   "name": "Tin Soldier",
+   "kind": "fight",
+   "puzzle": "tin-soldier",
+   "blurb": "Exhibit 12: Toy Soldier, c. 1890. Life-size as of this evening.",
+   "enemy": {
+    "name": "Tin Soldier",
+    "sprite": "tin-soldier",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      2,
+      3
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      4,
+      5,
+      6
+     ]
+    },
+    "armor": {
+     "weakPoints": {
+      "rows": [
+       8,
+       10
+      ],
+      "cols": [
+       7
+      ]
+     },
+     "attack": 4
+    },
+    "phases": [
+     {
+      "at": 0.7,
+      "name": "Overwound Soldier",
+      "attack": 3,
+      "taunt": "Halt! Who goes there? Halt!",
+      "fog": {
+       "rows": [
+        10,
+        11
+       ],
+       "cols": []
+      },
+      "fogCount": 2,
+      "scramble": {
+       "rows": [],
+       "cols": [
+        8,
+        9
+       ]
+      },
+      "scrambleCount": 2
+     }
+    ]
+   }
+  },
+  {
+   "id": "weathervane",
+   "name": "Weathervane",
+   "kind": "fight",
+   "puzzle": "weathervane",
+   "blurb": "It points wherever the wind says. Today the wind says you.",
+   "boss": true,
+   "enemy": {
+    "name": "Weathervane",
+    "sprite": "unknown",
+    "hp": 45,
+    "attack": 2,
+    "rotate": 6,
+    "phases": [
+     {
+      "at": 0.6,
+      "name": "Whirling Weathervane",
+      "attack": 3,
+      "rotate": 4,
+      "taunt": "Which way's north? Every way!"
+     }
+    ]
+   }
+  },
+  {
+   "id": "whiteout",
+   "name": "Whiteout",
+   "kind": "fight",
+   "puzzle": "whiteout-snowman",
+   "blurb": "Whoever built this snowman isn't up here anymore.",
+   "enemy": {
+    "name": "Whiteout",
+    "sprite": "whiteout",
+    "hp": 45,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      1,
+      3
+     ],
+     "cols": []
+    },
+    "phases": [
+     {
+      "at": 0.85,
+      "name": "Howling Whiteout",
+      "attack": 3,
+      "taunt": "The wind picks up.",
+      "fog": {
+       "rows": [
+        13
+       ],
+       "cols": []
+      },
+      "fogCount": 1
+     },
+     {
+      "at": 0.7,
+      "taunt": "Snow drifts across your work.",
+      "ink": 4
+     },
+     {
+      "at": 0.5,
+      "taunt": "Snow drifts across everything.",
+      "ink": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "wine-cellar",
+   "name": "Wine Cellar",
+   "kind": "dig",
+   "puzzle": "powder-keg",
+   "blurb": "Most of these barrels are wine. Check the label on this one twice."
+  },
+  {
+   "id": "yeti",
+   "name": "The Yeti",
+   "kind": "fight",
+   "puzzle": "yeti",
+   "blurb": "The ridge above the station. There are footprints going up. None come back.",
+   "boss": true,
+   "scene": "yeti-reveal",
+   "enemy": {
+    "name": "The Yeti",
+    "sprite": "yeti",
+    "hp": 60,
+    "attack": 2,
+    "fog": {
+     "rows": [
+      3,
+      16
+     ],
+     "cols": []
+    },
+    "scramble": {
+     "rows": [],
+     "cols": [
+      0,
+      2
+     ]
+    },
+    "phases": [
+     {
+      "at": 0.92,
+      "name": "Angry Yeti",
+      "attack": 3,
+      "taunt": "HRRRM.",
+      "fog": {
+       "rows": [
+        8
+       ],
+       "cols": []
+      },
+      "fogCount": 1
+     },
+     {
+      "at": 0.85,
+      "taunt": "It shakes off a snowdrift.",
+      "ink": 4
+     },
+     {
+      "at": 0.78,
+      "taunt": "HRRRRRM?",
+      "scramble": {
+       "rows": [],
+       "cols": [
+        6,
+        8
+       ]
+      },
+      "scrambleCount": 2
+     },
+     {
+      "at": 0.65,
+      "name": "Avalanche Yeti",
+      "sprite": "avalanche-yeti",
+      "attack": 4,
+      "charge": 6,
+      "taunt": "The whole ridge is moving."
+     },
+     {
+      "at": 0.45,
+      "taunt": "HRRRRRRRRRM!",
+      "ink": 5,
+      "inkCount": 2
+     }
+    ]
+   }
+  }
+ ],
+ "puzzles": [
+  {
+   "id": "anglerfish",
+   "name": "Anglerfish",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    ".##............",
+    "####...........",
+    ".##............",
+    "...##..........",
+    "....#..........",
+    ".....######....",
+    "...##########.#",
+    "..####.######.#",
+    ".#####.########",
+    ".##############",
+    "##.#.#.#.######",
+    "#.#.#.#.#######",
+    "#############.#",
+    ".###########...",
+    "...######......"
+   ]
+  },
+  {
+   "id": "bat",
+   "name": "Bat",
+   "width": 10,
+   "height": 10,
+   "rows": [
+    "..#....#..",
+    "..##..##..",
+    "#.######.#",
+    "##########",
+    "###.##.###",
+    "##########",
+    ".########.",
+    "..##..##..",
+    "..#....#..",
+    ".##....##."
+   ]
+  },
+  {
+   "id": "beetle",
+   "name": "Armored Beetle",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "..###.....###..",
+    "...##.....##...",
+    ".....#####.....",
+    "....#######....",
+    "##.##.###.##.##",
+    "...#########...",
+    "..###########..",
+    ".#####.#.#####.",
+    "##.###.#.###.##",
+    "..####.#.####..",
+    ".#####.#.#####.",
+    "##.###.#.###.##",
+    "..####.#.####..",
+    "...###.#.###...",
+    "....##...##...."
+   ]
+  },
+  {
+   "id": "bomb-casing",
+   "name": "Bomb Casing",
+   "width": 10,
+   "height": 10,
+   "rows": [
+    ".......##.",
+    "......#...",
+    "....###...",
+    "..#######.",
+    ".#########",
+    "##.#######",
+    "#.########",
+    "##########",
+    ".########.",
+    "..######.."
+   ],
+   "gadget": "bomb"
+  },
+  {
+   "id": "bramble-rose",
+   "name": "Bramble Rose",
+   "width": 20,
+   "height": 20,
+   "rows": [
+    ".......######.......",
+    ".....##########.....",
+    "....####....####....",
+    "...###..####..###...",
+    "..###..######..###..",
+    "..###.##....##.###..",
+    "..###.##.##.##.###..",
+    "..###.##.##.##.###..",
+    "..####.##..##.####..",
+    "...####.####.####...",
+    "....####....####....",
+    ".....##########.....",
+    ".......######.......",
+    ".........##.........",
+    ".####....##.........",
+    "########.##...####..",
+    ".#######.##.#######.",
+    "...#####.##.########",
+    "........####..####..",
+    ".........##........."
+   ]
+  },
+  {
+   "id": "cave-wyrm",
+   "name": "Cave Wyrm",
+   "width": 20,
+   "height": 20,
+   "rows": [
+    "...##....##.........",
+    "...###..###.........",
+    "....#######.........",
+    "...#########........",
+    "..##.########.......",
+    ".#############......",
+    "#######..#####......",
+    "###.#....######.....",
+    ".##.#.....#####.....",
+    "..........######....",
+    "..........######....",
+    ".........#######....",
+    ".......########..##.",
+    "....#########...###.",
+    "..##########...####.",
+    ".#########..######..",
+    "###..###...######...",
+    "###..###....####....",
+    ".#########.#########",
+    "..##################"
+   ]
+  },
+  {
+   "id": "circus-cannon",
+   "name": "Circus Cannon",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "...........####",
+    "........#######",
+    ".....#########.",
+    "...##########..",
+    ".###########...",
+    "###########....",
+    "##########.....",
+    ".########......",
+    "...#######.....",
+    "..###...###....",
+    "..##.###.##....",
+    "..##.###.##....",
+    "..###...###....",
+    "...#######.....",
+    "#############.."
+   ],
+   "gadget": "bomb"
+  },
+  {
+   "id": "coal-golem",
+   "name": "Coal Golem",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    ".....#####.....",
+    "....#######....",
+    "....#.###.#....",
+    "....#######....",
+    "..##..###..##..",
+    ".####.###.####.",
+    "###.#######.###",
+    "###.#######.###",
+    "##..#######..##",
+    "##..###.###..##",
+    "###.##...##.###",
+    "....##...##....",
+    "...###...###...",
+    "...###...###...",
+    "..####...####.."
+   ]
+  },
+  {
+   "id": "cocoa",
+   "name": "Cocoa",
+   "width": 10,
+   "height": 10,
+   "rows": [
+    ".##..##...",
+    "..##..##..",
+    "...##..##.",
+    "########..",
+    "#########.",
+    "########.#",
+    "########.#",
+    "#########.",
+    ".#######..",
+    "..#####..."
+   ]
+  },
+  {
+   "id": "coffee",
+   "name": "Coffee",
+   "width": 10,
+   "height": 10,
+   "rows": [
+    "...#..#...",
+    "..#..#....",
+    "...#..#...",
+    "..........",
+    "#########.",
+    "#.......##",
+    "#.......#.",
+    "#.......##",
+    ".#######..",
+    "##########"
+   ]
+  },
+  {
+   "id": "comet",
+   "name": "Comet",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "............###",
+    "..........#####",
+    "........######.",
+    "......########.",
+    ".....#######.##",
+    "....#######..#.",
+    "..#########....",
+    ".#######.###...",
+    "########.##....",
+    "####..###.#....",
+    "###....###.....",
+    "###....###.....",
+    "####..####.....",
+    ".########......",
+    "..#####........"
+   ]
+  },
+  {
+   "id": "cuttlefish",
+   "name": "Cuttlefish",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    ".....#####.....",
+    "...#########...",
+    "..###########..",
+    ".#############.",
+    "##.#########.##",
+    ".#############.",
+    "##.#########.##",
+    ".#############.",
+    "..##.#####.##..",
+    "..##.##.##.##..",
+    "...#########...",
+    ".##.#.#.#.#.##.",
+    ".#..#.#.#.#..#.",
+    ".#.#..#.#..#.#.",
+    "#..#..#.#..#..#"
+   ]
+  },
+  {
+   "id": "eel",
+   "name": "Electric Eel",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "..........###..",
+    "....#####.#.##.",
+    "..########.###.",
+    ".####....#####.",
+    ".###.......##..",
+    ".###...........",
+    ".####..........",
+    "..##########...",
+    "...###########.",
+    "..........####.",
+    "...........###.",
+    "..#.......####.",
+    ".###..#######..",
+    ".###########...",
+    "..#######......"
+   ]
+  },
+  {
+   "id": "failed-clone",
+   "name": "Failed Clone",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "...#########...",
+    "..###########..",
+    ".##..#####..##.",
+    ".#.##.###.##.#.",
+    ".##..#####..##.",
+    ".#####.#.#####.",
+    "..###########..",
+    "...##.#.#.##...",
+    "...#########...",
+    "..###########..",
+    ".#####.#.#####.",
+    "##.###.#.###.##",
+    "##.###.#.###.##",
+    "...###...###...",
+    "...###...###..."
+   ]
+  },
+  {
+   "id": "flytrap",
+   "name": "Snapjaw Flytrap",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "#.#.#.....#.#.#",
+    "#.#.#.....#.#.#",
+    "#####.....#####",
+    "######...######",
+    ".######.######.",
+    ".#############.",
+    "..###########..",
+    "...#########...",
+    ".....#####.....",
+    "......###......",
+    "###...###...###",
+    "#####.###.#####",
+    ".#############.",
+    "...#########...",
+    "......###......"
+   ]
+  },
+  {
+   "id": "funhouse-mirror",
+   "name": "Funhouse Mirror",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "..###########..",
+    ".####.....####.",
+    ".###..###..###.",
+    "..###.###.###..",
+    "...##..#..##...",
+    "...###...###...",
+    "...##..#..##...",
+    "..###.###.###..",
+    ".###..###..###.",
+    ".####.....####.",
+    "..###########..",
+    "......###......",
+    "......###......",
+    "...#########...",
+    "..###########.."
+   ]
+  },
+  {
+   "id": "garden-can",
+   "name": "Watering Can",
+   "width": 10,
+   "height": 10,
+   "rows": [
+    "....####..",
+    "...##..##.",
+    "#..##..##.",
+    "##.#######",
+    ".#########",
+    "..########",
+    "...#######",
+    "...#######",
+    "...#######",
+    "...#######"
+   ]
+  },
+  {
+   "id": "ghost-engine",
+   "name": "Ghost Engine",
+   "width": 20,
+   "height": 20,
+   "rows": [
+    ".......#####........",
+    "......##...##.......",
+    ".......##.###.......",
+    ".........##.........",
+    ".......######.......",
+    ".......#....#.......",
+    ".......######.......",
+    "..################..",
+    ".###............###.",
+    ".##...########...##.",
+    ".##..##......##..##.",
+    ".##.##..####..##.##.",
+    ".##.##.##..##.##.##.",
+    ".##.##.##..##.##.##.",
+    ".##.##..####..##.##.",
+    ".##..##......##..##.",
+    ".##...########...##.",
+    ".###............###.",
+    "..##.###.##.###.##..",
+    ".#..###..##..###..#."
+   ]
+  },
+  {
+   "id": "hot-water-bottle",
+   "name": "Hot Water Bottle",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "......###......",
+    "......###......",
+    ".....#####.....",
+    "....#######....",
+    "..###########..",
+    ".#############.",
+    ".##.........##.",
+    ".##.#######.##.",
+    ".##.........##.",
+    ".##.#######.##.",
+    ".##.........##.",
+    ".##.#######.##.",
+    ".##.........##.",
+    ".#############.",
+    "..###########.."
+   ],
+   "gadget": "patch-kit"
+  },
+  {
+   "id": "ice-mammoth",
+   "name": "Woolly Mammoth",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "....#########..",
+    "..############.",
+    ".####.#.#.#.###",
+    ".##.##.#.#.#.##",
+    "#######.#.#.###",
+    "###.###########",
+    "##..###.#.#.###",
+    "##.#.##########",
+    "##.##.###.#.###",
+    "#....#.########",
+    "#...##.###.####",
+    "#..##..###.####",
+    "####...###..###",
+    ".##....###..###",
+    "......####.####"
+   ]
+  },
+  {
+   "id": "inspector",
+   "name": "Inspector",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "....#######....",
+    "..###.....###..",
+    ".##...###...##.",
+    ".#...#####...#.",
+    ".#############.",
+    "###############",
+    "...#.......#...",
+    "...#.##.##.#...",
+    "...#.......#...",
+    "...#...#...#...",
+    "...#.#####.#...",
+    "....#.....#....",
+    ".....#####.....",
+    "..###.###.###..",
+    ".##..#...#..##."
+   ]
+  },
+  {
+   "id": "kettlebell",
+   "name": "Kettlebell",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "....#######....",
+    "...###...###...",
+    "...##.....##...",
+    "...###...###...",
+    "..###########..",
+    ".#############.",
+    "#####.....#####",
+    "####..###..####",
+    "####.#####.####",
+    "####.#####.####",
+    "####..###..####",
+    "#####.....#####",
+    ".#############.",
+    "..###########..",
+    "....#######...."
+   ]
+  },
+  {
+   "id": "life-ring",
+   "name": "Life Ring",
+   "width": 10,
+   "height": 10,
+   "rows": [
+    "...####...",
+    ".########.",
+    ".###..###.",
+    "###....###",
+    "##......##",
+    "##......##",
+    "###....###",
+    ".###..###.",
+    ".########.",
+    "...####..."
+   ]
+  },
+  {
+   "id": "loofah",
+   "name": "Giant Loofah",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "......##.......",
+    "......###.####.",
+    ".......#######.",
+    ".....######....",
+    "....########...",
+    "...###.##.###..",
+    "...###.##.###..",
+    "..####.##.####.",
+    "..####.##.####.",
+    "..####.##.####.",
+    "..####.##.####.",
+    "...###.##.###..",
+    "...###.##.###..",
+    "....########...",
+    ".....######...."
+   ],
+   "gadget": "sponge"
+  },
+  {
+   "id": "lost-suitcase",
+   "name": "Lost Suitcase",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    ".....#####.....",
+    ".....##.##.....",
+    ".....#...#.....",
+    "###############",
+    "###############",
+    "##..#######..##",
+    "##..#######..##",
+    "###############",
+    "###.#######.###",
+    "###.#######.###",
+    "###.###.###.###",
+    "###.##...##.###",
+    "###.###.###.###",
+    "###############",
+    ".##.........##."
+   ],
+   "gadget": "sponge"
+  },
+  {
+   "id": "marked-manuscript",
+   "name": "Marked Manuscript",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "###########..##",
+    "#.........#..##",
+    "#.###.###.#..##",
+    "#.........#..##",
+    "#..#####..#..##",
+    "#..#...##.#..##",
+    "#......##.#..##",
+    "#.....##..#..##",
+    "#....##...#..##",
+    "#....##...#...#",
+    "#.........#...#",
+    "#....##...#....",
+    "#.####.##.#....",
+    "#.........#....",
+    "###########...."
+   ]
+  },
+  {
+   "id": "mead-horn",
+   "name": "Mead Horn",
+   "width": 10,
+   "height": 10,
+   "rows": [
+    "##........",
+    "###.......",
+    "####......",
+    ".####.....",
+    ".#####....",
+    "..######.#",
+    "..########",
+    "...#######",
+    "....######",
+    ".....####."
+   ]
+  },
+  {
+   "id": "medic-kit",
+   "name": "Antique Medic Kit",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    ".....#####.....",
+    "....##...##....",
+    "....##...##....",
+    ".#############.",
+    "##############.",
+    "###.###.###.##.",
+    "#######.######.",
+    "######...#####.",
+    "####.......###.",
+    "######...#####.",
+    "#######.######.",
+    "###.###.###.##.",
+    "##############.",
+    ".#############.",
+    "..##.......##.."
+   ],
+   "gadget": "patch-kit"
+  },
+  {
+   "id": "mimic-chest",
+   "name": "Mimic Chest",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "...#########...",
+    "..###########..",
+    ".####.###.####.",
+    ".#############.",
+    ".##.#######.##.",
+    ".#############.",
+    ".#.#.#.#.#.#.#.",
+    ".#...........#.",
+    ".#.#.#.#.#.#.#.",
+    ".#############.",
+    ".#####...#####.",
+    ".####.###.####.",
+    ".#####...#####.",
+    ".#############.",
+    "..###########.."
+   ]
+  },
+  {
+   "id": "mortarboard",
+   "name": "Mortarboard",
+   "width": 20,
+   "height": 20,
+   "rows": [
+    ".........##.........",
+    "......########......",
+    "...##############...",
+    "####################",
+    "...##############.#.",
+    ".....#........#...#.",
+    ".....##########...#.",
+    "....##........##..##",
+    "....#.###..###.#..##",
+    "....#.#.#..#.#.#....",
+    "....####.##.####....",
+    "....#..###.##..#....",
+    "....#....##....#....",
+    "........#####.#.....",
+    ".....#.#....#.#.....",
+    "......#.####.#......",
+    ".......######.......",
+    "...####..##..####...",
+    ".###...##..##...###.",
+    "##..###..##..###..##"
+   ]
+  },
+  {
+   "id": "noodle-cup",
+   "name": "Noodle Cup",
+   "width": 10,
+   "height": 10,
+   "rows": [
+    "..##.##.#.",
+    ".#.##.##..",
+    "..##.##.#.",
+    "##########",
+    "##########",
+    ".########.",
+    ".##.##.##.",
+    ".########.",
+    "..######..",
+    "..######.."
+   ]
+  },
+  {
+   "id": "octopus",
+   "name": "Old Tess",
+   "width": 20,
+   "height": 20,
+   "rows": [
+    "......########......",
+    "....############....",
+    "...##############...",
+    "..################..",
+    "..################..",
+    ".##################.",
+    ".###...######...###.",
+    ".###.#.######.#.###.",
+    ".###...######...###.",
+    ".##################.",
+    "..#######..#######..",
+    "...##############...",
+    "..##.##.####.##.##..",
+    ".##..##.####.##..##.",
+    "##..##..####..##..##",
+    "#..##..##..##..##..#",
+    "#.##..##....##..##.#",
+    "##...##......##...##",
+    ".#..##........##..#.",
+    "...##..........##..."
+   ]
+  },
+  {
+   "id": "ooze-cube",
+   "name": "Ooze Cube",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "....###########",
+    "..##.........##",
+    "..#.........#.#",
+    ".#.........#..#",
+    "############..#",
+    "#..........#..#",
+    "#..###.....#..#",
+    "#.#####....#..#",
+    "#.#.#.#.##.#..#",
+    "#.#####.##.#.##",
+    "#..###.....#.#.",
+    "#..#.#..##.##..",
+    "#.......##.#...",
+    "#..........##..",
+    "############..."
+   ]
+  },
+  {
+   "id": "owl",
+   "name": "Clockwork Owl",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "..##.......##..",
+    "..###.....###..",
+    "..###########..",
+    ".#############.",
+    ".##...###...##.",
+    "##..#..#..#..##",
+    "##.###.#.###.##",
+    "##..#..#..#..##",
+    ".##...###...##.",
+    ".#####.#.#####.",
+    ".##.#######.##.",
+    ".#.#########.#.",
+    ".##.#######.##.",
+    "..#.##...##.#..",
+    "...##.....##..."
+   ]
+  },
+  {
+   "id": "palette",
+   "name": "Forger's Palette",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "....######.....",
+    "..##########...",
+    ".####..#######.",
+    ".###.##.#######",
+    "####.##.####..#",
+    "#####..####.##.",
+    "###########.##.",
+    "##..#########..",
+    "#.##.#######...",
+    "#.##.######....",
+    "##..######.#...",
+    ".#########.##..",
+    "..#######..###.",
+    "....###.....###",
+    "............###"
+   ]
+  },
+  {
+   "id": "pocket-watch",
+   "name": "Curator's Pocket Watch",
+   "width": 20,
+   "height": 20,
+   "rows": [
+    "........####........",
+    "........#..#........",
+    ".......######.......",
+    ".....##########.....",
+    "...######..######...",
+    "..####...##...####..",
+    "..###....##....###..",
+    ".###.....##.....###.",
+    ".###.....##.....###.",
+    ".##......##......##.",
+    ".##......######..##.",
+    ".##..............##.",
+    ".###............###.",
+    ".###............###.",
+    "..###....##....###..",
+    "..####...##...####..",
+    "...######..######...",
+    ".....##########.....",
+    ".......######.......",
+    "........#.##.#......"
+   ]
+  },
+  {
+   "id": "popcorn",
+   "name": "Popcorn",
+   "width": 10,
+   "height": 10,
+   "rows": [
+    "..##.##...",
+    ".#######..",
+    ".########.",
+    "##########",
+    ".##.##.##.",
+    ".##.##.##.",
+    ".##.##.##.",
+    "..#.##.#..",
+    "..#.##.#..",
+    "..######.."
+   ]
+  },
+  {
+   "id": "powder-keg",
+   "name": "Powder Keg",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    ".......#.#.....",
+    "........#......",
+    ".......##......",
+    "...#########...",
+    "..###########..",
+    "..##.......##..",
+    ".#############.",
+    ".####.....####.",
+    ".###..###..###.",
+    ".###.#####.###.",
+    ".###..###..###.",
+    ".####.....####.",
+    ".#############.",
+    "..###########..",
+    "...#########..."
+   ],
+   "gadget": "bomb"
+  },
+  {
+   "id": "puffball",
+   "name": "Puffball",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    ".....#####.....",
+    "...#########...",
+    "..###..######..",
+    ".###....##..##.",
+    ".####..###..##.",
+    "###############",
+    "######..#######",
+    "#####....######",
+    "###############",
+    ".#############.",
+    "....#######....",
+    "....#######....",
+    "...#########...",
+    "...##.###.##...",
+    "..###########.."
+   ]
+  },
+  {
+   "id": "rat-crown",
+   "name": "Rat Crown",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "...#.#.#.......",
+    "...#####.......",
+    "...#####.......",
+    "..#######......",
+    ".##.######.....",
+    "###########....",
+    "#############..",
+    ".#############.",
+    "...############",
+    "...###########.",
+    "....#########.#",
+    ".....###.###.##",
+    "....###...##..#",
+    "...####..###..#",
+    ".........###.##"
+   ]
+  },
+  {
+   "id": "rex-skull",
+   "name": "Museum Rex",
+   "width": 20,
+   "height": 20,
+   "rows": [
+    ".....###########....",
+    "...####.....######..",
+    "..###..###....#####.",
+    ".###..#####....#####",
+    ".##..##..###.....###",
+    "###.##....###....###",
+    "##...####.####..####",
+    "####....###.########",
+    "#.#.#.#.#####..#####",
+    "#.#.#.#.####....####",
+    "........###.....####",
+    "........###.....####",
+    "................####",
+    ".#.#...#........####",
+    "##############.#####",
+    "###...........####..",
+    ".####.......#####...",
+    "...##############...",
+    "......#########.....",
+    ".........###........"
+   ]
+  },
+  {
+   "id": "ringmaster",
+   "name": "The Ringmaster",
+   "width": 20,
+   "height": 20,
+   "rows": [
+    ".....##########.....",
+    ".....##########.....",
+    ".....##########.....",
+    ".....#........#.....",
+    ".....##########.....",
+    ".....##########.....",
+    "..################..",
+    "....##........##....",
+    "....##.##..##.##....",
+    "....##.##..##.##....",
+    "....##........##....",
+    ".##.##...##...##.##.",
+    "#..###..####..###..#",
+    "#...####....####...#",
+    ".##...########...##.",
+    ".....##......##.....",
+    "......########......",
+    "...######..######...",
+    "..#######..#######..",
+    ".########..########."
+   ]
+  },
+  {
+   "id": "sentry-halberd",
+   "name": "Sentry Halberd",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    ".....###.....#.",
+    "....#####...###",
+    "....#.#.#...###",
+    "....#####....#.",
+    ".....###.....#.",
+    "...#######...#.",
+    "..##.....##.##.",
+    "..#.#####.#####",
+    "..#.##.##.#.##.",
+    "..#.#####.#..#.",
+    "..#.......#..#.",
+    ".....###.....#.",
+    "....##.##....#.",
+    "....#...#....#.",
+    "...##...##...#."
+   ]
+  },
+  {
+   "id": "signal-lamp",
+   "name": "Signal Lamp",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "....#######....",
+    "...#########...",
+    "...##.....##...",
+    "...#..###..#...",
+    "...#.#####.#...",
+    "...#..###..#...",
+    "...##.....##...",
+    "...#########...",
+    "...##.....##...",
+    "...#..###..#...",
+    "...#.#####.#...",
+    "...#..###..#...",
+    "...##.....##...",
+    "...#########...",
+    ".....#####....."
+   ]
+  },
+  {
+   "id": "spark-hound",
+   "name": "Spark Hound",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "..##...........",
+    ".####.......#..",
+    ".#####.....##..",
+    "#######....##..",
+    "###.####..##...",
+    "#########.##...",
+    ".###########...",
+    "...##########..",
+    "....##########.",
+    "....##########.",
+    "....###....###.",
+    "....##.....###.",
+    "....##.....##..",
+    "...###....###..",
+    "...###....###.."
+   ]
+  },
+  {
+   "id": "spill-sponge",
+   "name": "Spill Sponge",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "....###########",
+    "...############",
+    "..###.#####.###",
+    ".#####.##.#####",
+    "###.#####.##.##",
+    "#.###.####.####",
+    "####.###.#####.",
+    "##.#####.####.#",
+    "####.##.###.###",
+    ".######.#.#####",
+    "###.#####.###..",
+    "####.##.#####..",
+    "#.#####.####...",
+    "##.##.#####....",
+    "###########...."
+   ],
+   "gadget": "sponge"
+  },
+  {
+   "id": "starfish",
+   "name": "Starfish",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    ".......#.......",
+    "......###......",
+    "......#.#......",
+    ".....#####.....",
+    "###############",
+    ".####.###.####.",
+    "..###########..",
+    "...####.####...",
+    "...#########...",
+    "..#####.#####..",
+    "..####...####..",
+    ".####.....####.",
+    ".###.......###.",
+    "###.........###",
+    "#.............#"
+   ],
+   "gadget": "sponge"
+  },
+  {
+   "id": "stump",
+   "name": "Ironbark Stump",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "...#########...",
+    ".#############.",
+    "###..#####..###",
+    "##..##...##..##",
+    "##.##..#..##.##",
+    "##..##...##..##",
+    "###..#####..###",
+    ".#############.",
+    ".###.#####.###.",
+    ".###.#####.###.",
+    ".##..#####..##.",
+    ".##..#####..##.",
+    "###..#####..###",
+    "#####.###.#####",
+    "##.###...###.##"
+   ]
+  },
+  {
+   "id": "sword",
+   "name": "Sword",
+   "width": 10,
+   "height": 10,
+   "rows": [
+    ".....#....",
+    "....###...",
+    "....###...",
+    "....###...",
+    "....###...",
+    "....###...",
+    "..#######.",
+    ".#########",
+    ".....#....",
+    "....###..."
+   ]
+  },
+  {
+   "id": "tea-urn",
+   "name": "Tea Urn",
+   "width": 10,
+   "height": 10,
+   "rows": [
+    "....##....",
+    "..######..",
+    ".########.",
+    ".##.##.##.",
+    ".########.",
+    ".########.",
+    "##.####.##",
+    "..######..",
+    "...#..#...",
+    "..##..##.."
+   ]
+  },
+  {
+   "id": "thermos",
+   "name": "Thermos",
+   "width": 10,
+   "height": 10,
+   "rows": [
+    "...####...",
+    "..######..",
+    "...####...",
+    "..######..",
+    "..#....###",
+    "..#.##.#.#",
+    "..#.##.#.#",
+    "..#....###",
+    "..#....#..",
+    "..######.."
+   ]
+  },
+  {
+   "id": "tin-soldier",
+   "name": "Tin Soldier",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "....#######....",
+    "....#######....",
+    "....##.#.##....",
+    "....#######....",
+    ".....#####.....",
+    "...#########...",
+    "..###.###.###..",
+    "..##..###..##..",
+    "..##.#####.##..",
+    "..##.#####.##..",
+    ".....#####.....",
+    ".....##.##.....",
+    ".....##.##.....",
+    ".....##.##.....",
+    "....###.###...."
+   ]
+  },
+  {
+   "id": "vesper-ball",
+   "name": "Crystal Ball",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "....#######....",
+    "..###.....###..",
+    ".###.......###.",
+    ".##.........##.",
+    "##.....#.....##",
+    "##....###....##",
+    "##...#####...##",
+    "##....###....##",
+    "##.....#.....##",
+    ".##.........##.",
+    ".###.......###.",
+    "..###.....###..",
+    "....#######....",
+    "...#########...",
+    ".#############."
+   ]
+  },
+  {
+   "id": "weathervane",
+   "name": "Weathervane",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    ".....##........",
+    "....####.......",
+    "....#.###...##.",
+    ".....######.##.",
+    "...##########..",
+    "....#######....",
+    "......#.#..#...",
+    "##....#....##..",
+    "###############",
+    "##....#....##..",
+    "......#....#...",
+    ".....###.......",
+    "...#######.....",
+    "..##.###.##....",
+    ".###########..."
+   ]
+  },
+  {
+   "id": "whiteout-snowman",
+   "name": "Snowman",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "....#######....",
+    "....#######....",
+    "..###########..",
+    ".....#...#.....",
+    "....#.#.#.#....",
+    "....#.....#....",
+    "....#.###.#....",
+    ".....#...#.....",
+    "#..#########..#",
+    "##.##..#..##.##",
+    ".###...#...###.",
+    "..##...#...##..",
+    "..##...#...##..",
+    "..###.....###..",
+    "...#########..."
+   ]
+  },
+  {
+   "id": "wrench",
+   "name": "Wrench of Science",
+   "width": 15,
+   "height": 15,
+   "rows": [
+    "..###.....###..",
+    "..###.....###..",
+    "..####...####..",
+    "..###########..",
+    "...#########...",
+    "....#######....",
+    "......###......",
+    "......#.#......",
+    "......###......",
+    "......###......",
+    ".....#####.....",
+    "....###.###....",
+    "...##.....##...",
+    "....###.###....",
+    ".....#####....."
+   ]
+  },
+  {
+   "id": "yeti",
+   "name": "The Yeti",
+   "width": 20,
+   "height": 20,
+   "rows": [
+    "...##..........##...",
+    "..####........####..",
+    "..##.##########.##..",
+    ".##..............##.",
+    ".##..###....###..##.",
+    "##..##.##..##.##..##",
+    "##..#...#..#...#..##",
+    "##..#.#.#..#.#.#..##",
+    "##..##.##..##.##..##",
+    "##...###.##.###...##",
+    "###......##......###",
+    ".##..#########...##.",
+    ".##..#.#.#.#.#.#.##.",
+    ".##..#.........#.##.",
+    "###...#.#.#.#.#..###",
+    "####...#######...###",
+    ".###.............###",
+    "..####.........####.",
+    "...######.##.######.",
+    "..##.##.##..##.##.##"
+   ]
+  }
+ ],
+ "packGadgets": {},
+ "scenes": [
+  {
+   "id": "after-hours-opening",
+   "backdrop": "office",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Chapter 2: After Hours. The office, a week after the gremlin."
+      },
+      {
+       "who": "dee",
+       "text": "Mrs. Pell told her book club. Her book club told everyone."
+      },
+      {
+       "who": "rook",
+       "text": "Is that a good thing?"
+      },
+      {
+       "who": "dee",
+       "text": "We have eleven voicemails. Nine are about things that move at night."
+      },
+      {
+       "who": "rook",
+       "text": "Then we work nights. Get the flashlight. And the other flashlight."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "below-stairs-opening",
+   "backdrop": "office",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Chapter 8: Below Stairs. The office. A leaflet on the desk has a cartoon knight on it."
+      },
+      {
+       "who": "dee",
+       "text": "Castle Ambry. Daily tours, a gift shop, jousting on Sundays."
+      },
+      {
+       "who": "rook",
+       "text": "What's the problem?"
+      },
+      {
+       "who": "dee",
+       "text": "The tour used to go down one flight of stairs. Yesterday it went down nine. They have lost a school trip's packed lunches and a man called Dennis."
+      },
+      {
+       "who": "rook",
+       "text": "Who is Dennis?"
+      },
+      {
+       "who": "dee",
+       "text": "He plays Sir Dennis, in the jousting. He went down on Tuesday to look for the lunches."
+      },
+      {
+       "who": "rook",
+       "text": "I hope somebody told him the lunches are not worth it."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "bramble-reveal",
+   "backdrop": "glasshouse",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "hollis": {
+     "name": "Hollis",
+     "portrait": "hollis"
+    },
+    "bramble": {
+     "name": "Mother Bramble",
+     "portrait": "bramble"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The center dome. Thorns across the door, roses across the ceiling, and one bloom the size of a van."
+      },
+      {
+       "who": "hollis",
+       "text": "That is Mother Bramble. She won a ribbon once."
+      },
+      {
+       "who": "dee",
+       "text": "Rook, look at the stem. That's a brass key."
+      },
+      {
+       "who": "rook",
+       "text": "Someone wound up a rose? Can we unwind it?"
+      },
+      {
+       "who": "bramble",
+       "text": "Try."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "closing-time-intro",
+   "backdrop": "museum",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The museum, after closing. The exhibits stand very still, and every label has been rewritten in a neat hand."
+      },
+      {
+       "who": "dee",
+       "text": "He's re-labeled the whole collection."
+      },
+      {
+       "who": "rook",
+       "text": "The fire exit says 'Exhibit 40: Hope'."
+      },
+      {
+       "who": "dee",
+       "text": "Rook. Something is marching."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "closing-time-outro",
+   "backdrop": null,
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "curator": {
+     "name": "Curator Ambrose",
+     "portrait": "curator"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "who": "dee",
+       "text": "Curator back in his case. For real this time. I watched Rook lock it.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "And he paid the invoice. Clockwork people are very punctual.",
+       "if": "won"
+      },
+      {
+       "who": "dee",
+       "text": "He didn't make these keys, you know. The maker's mark isn't his.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "That sounds like next week's problem.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "He's re-labeled us. I'm 'Exhibit 41: Unpaid'.",
+       "if": "!won"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "cold-snap-opening",
+   "backdrop": "van",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Chapter 6: Cold Snap. The van, pointed uphill, with chains on its tires."
+      },
+      {
+       "who": "dee",
+       "text": "The Summit Station observatory hasn't answered its radio in a week."
+      },
+      {
+       "who": "rook",
+       "text": "Maybe they are busy."
+      },
+      {
+       "who": "dee",
+       "text": "Their last two messages were 'the snowman moved' and 'that's not a snowman'."
+      },
+      {
+       "who": "rook",
+       "text": "Right. It's a mountain, so I packed a coat."
+      },
+      {
+       "who": "dee",
+       "text": "I'm packing towels."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "curator-return",
+   "backdrop": "curators-office",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "curator": {
+     "name": "Curator Ambrose",
+     "portrait": "curator"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The curator's office. Every clock in the room is ticking in time with the jar."
+      },
+      {
+       "who": "curator",
+       "text": "Splendid work. Truly. You have returned all my keys."
+      },
+      {
+       "who": "dee",
+       "text": "He's been winding things up all over the county. Curator, why?"
+      },
+      {
+       "who": "curator",
+       "text": "Every collection needs a curator. And this collection was missing its two finest pieces."
+      },
+      {
+       "who": "rook",
+       "text": "You still owe us for the night shift."
+      },
+      {
+       "who": "curator",
+       "text": "Then do collect. Lights, please!"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "deep-end-intro",
+   "backdrop": "aquarium",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "bo": {
+     "name": "Keeper Bo",
+     "portrait": "bo"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The aquarium, after closing. Every tank glows blue. One of them is sparking."
+      },
+      {
+       "who": "bo",
+       "text": "Thank goodness. I'm Bo, night keeper. The animals have been... organizing."
+      },
+      {
+       "who": "rook",
+       "text": "Organizing how?"
+      },
+      {
+       "who": "bo",
+       "text": "The eel shorted the lights. The cuttlefish inked the gift shop. And Old Tess hasn't blinked in three days."
+      },
+      {
+       "who": "dee",
+       "text": "Eels zap unless you finish the live line. Ink hides your marks until you finish a line through it. Noted."
+      },
+      {
+       "who": "rook",
+       "text": "And Old Tess is...?"
+      },
+      {
+       "who": "bo",
+       "text": "In charge."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "deep-end-outro",
+   "backdrop": null,
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "bo": {
+     "name": "Keeper Bo",
+     "portrait": "bo"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "who": "bo",
+       "text": "She's sulking under her rock. The eel's asleep. I could cry.",
+       "if": "won"
+      },
+      {
+       "who": "dee",
+       "text": "Tanks clean, lights on, nobody inked. Mostly nobody inked.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "I'm putting 'octopus diplomacy' on the business cards.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "I can't feel my arms. Old Tess can feel all eight of hers.",
+       "if": "!won"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "deep-water-opening",
+   "backdrop": "van",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Chapter 3: Deep Water. A van, a map, and a smell of low tide."
+      },
+      {
+       "who": "dee",
+       "text": "You told the aquarium we're 'water-certified'."
+      },
+      {
+       "who": "rook",
+       "text": "We are. I've been near water. I've been in water. Once."
+      },
+      {
+       "who": "dee",
+       "text": "I'm packing towels."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "end-of-the-line-opening",
+   "backdrop": "office",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Chapter 7: End of the Line. The office. A train timetable has come under the door, forty years out of date."
+      },
+      {
+       "who": "dee",
+       "text": "Halt Junction. That line closed before either of us was born."
+      },
+      {
+       "who": "rook",
+       "text": "Then why is the stationmaster phoning us about delays?"
+      },
+      {
+       "who": "dee",
+       "text": "Because the 11:59 still comes through. Every night. Nobody's driving it."
+      },
+      {
+       "who": "rook",
+       "text": "Is it on time, at least?"
+      },
+      {
+       "who": "dee",
+       "text": "Forty years late. They'd like it to stop apologizing over the loudspeakers."
+      },
+      {
+       "who": "rook",
+       "text": "I'll get the van."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "first-job-intro",
+   "backdrop": "workshop",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Monday at the workshop. Something is beeping. Nobody knows what."
+      },
+      {
+       "who": "rook",
+       "text": "Great news, everybody! I got us a job. A real one. With money."
+      },
+      {
+       "who": "dee",
+       "text": "Rook, the last \"real job\" was a raccoon's birthday party."
+      },
+      {
+       "who": "rook",
+       "text": "And it paid in exposure! Anyway. Mrs. Pell's generator died, and she needs a new part by sundown."
+      },
+      {
+       "who": "dee",
+       "text": "Easy. We find the part, bolt it in, go home legends."
+      },
+      {
+       "who": "rook",
+       "text": "Small catch: there's a goblin at her back door."
+      },
+      {
+       "who": "dee",
+       "text": "That's a medium catch."
+      },
+      {
+       "who": "rook",
+       "text": "Also the part's buried at the old dig site. Also her cellar has a bat."
+      }
+     ],
+     "choices": [
+      {
+       "text": "A normal bat?",
+       "next": "bat"
+      },
+      {
+       "text": "Let's go.",
+       "next": "go"
+      }
+     ]
+    },
+    "bat": {
+     "lines": [
+      {
+       "who": "dee",
+       "text": "No bat is normal. This one breathes fog."
+      },
+      {
+       "who": "rook",
+       "text": "Right into your clues. Very rude."
+      }
+     ],
+     "next": "go"
+    },
+    "go": {
+     "lines": [
+      {
+       "who": "dee",
+       "text": "You solve the pictures, boss. I'll yell encouragement from a safe distance."
+      },
+      {
+       "who": "rook",
+       "text": "And I'll handle the invoice!"
+      },
+      {
+       "text": "You grab your toolbox. Something is still beeping."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "first-job-outro",
+   "backdrop": null,
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "who": "dee",
+       "text": "Generator's humming, the gremlin's evicted, and Rook invoiced a bat. Nice work, boss.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "Okay, we didn't get paid. But we're alive, which is basically a tip.",
+       "if": "!won"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "forger-intro",
+   "backdrop": "gallery",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "forger": {
+     "name": "The Forger",
+     "portrait": "forger"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The east gallery. Every painting is still wet."
+      },
+      {
+       "who": "forger",
+       "text": "Ah, visitors! Admire my collection. Every clue on that canvas is genuine. Mostly."
+      },
+      {
+       "who": "dee",
+       "text": "See the <mask> clues? Five of them. Three are fakes. The other two are telling the truth."
+      },
+      {
+       "who": "rook",
+       "text": "So we don't trust any <mask> clue. We solve those rows from the columns. If a row lights up, it was honest."
+      },
+      {
+       "who": "dee",
+       "text": "And if it's filled right but stays dark, it's a forgery. Then we tap <search> Call out and point at it. Guess wrong and it hurts us."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "glasshouse-intro",
+   "backdrop": "glasshouse",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "hollis": {
+     "name": "Hollis",
+     "portrait": "hollis"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The Glasshouse, after dark. Every pane is fogged. Something in there is breathing."
+      },
+      {
+       "who": "hollis",
+       "text": "You're the odd-jobs people? Good. Mind the flytrap. It's been learning."
+      },
+      {
+       "who": "rook",
+       "text": "Learning what?"
+      },
+      {
+       "who": "hollis",
+       "text": "Timing. It snaps at anything that dawdles, and it'll rip up your work out of spite."
+      },
+      {
+       "who": "dee",
+       "text": "That's two tricks at once. The museum's exhibits only had one each."
+      },
+      {
+       "who": "hollis",
+       "text": "Everything in here has two tricks now. And the old rose in the center dome has more than that."
+      },
+      {
+       "who": "rook",
+       "text": "Two tricks, two rates. Lead the way."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "glasshouse-outro",
+   "backdrop": null,
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "hollis": {
+     "name": "Hollis",
+     "portrait": "hollis"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "who": "hollis",
+       "text": "She's back to being a rose. A bad-tempered rose, but those I can manage.",
+       "if": "won"
+      },
+      {
+       "who": "dee",
+       "text": "And one more brass key, same maker as the museum's. Into the jar it goes.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "I'm putting 'plant whisperer' on the business cards. Right under 'octopus diplomacy'.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "I've been pruned. I'd like that noted on the invoice.",
+       "if": "!won"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "green-thumbs-opening",
+   "backdrop": "office",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Chapter 4: Green Thumbs. The office. A towel is still drying on the radiator."
+      },
+      {
+       "who": "dee",
+       "text": "The botanical garden called. Their head gardener says the plants have stopped taking direction."
+      },
+      {
+       "who": "rook",
+       "text": "Plants don't take direction. That's what makes them plants."
+      },
+      {
+       "who": "dee",
+       "text": "One of them bit a school group."
+      },
+      {
+       "who": "rook",
+       "text": "Book it. Where did I put my lucky key?"
+      },
+      {
+       "who": "dee",
+       "text": "It is evidence. It lives in the jar. It has a label."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "gremlin-intro",
+   "backdrop": "generator",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "gremlin": {
+     "name": "Generator Gremlin",
+     "portrait": "gremlin"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Part in hand, you reach Mrs. Pell's generator. It rattles. Then it giggles."
+      },
+      {
+       "who": "dee",
+       "text": "Generators shouldn't giggle."
+      },
+      {
+       "who": "rook",
+       "text": "Mrs. Pell? Quick question. Did you know you have a gremlin?"
+      },
+      {
+       "who": "gremlin",
+       "text": "This is MY generator. I've lived here rent-free since 1987."
+      },
+      {
+       "who": "gremlin",
+       "text": "And I like it DARK. Good luck reading your little numbers."
+      },
+      {
+       "who": "dee",
+       "text": "Boss, I made you something. The Wrench of Science. Picture it, then hit him with it."
+      },
+      {
+       "who": "gremlin",
+       "text": "Wrench? WRENCH?!"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "midway-intro",
+   "backdrop": "midway",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "bigsby": {
+     "name": "Bigsby",
+     "portrait": "bigsby"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The Midway at midnight. Every bulb is lit and the music is a little too slow."
+      },
+      {
+       "who": "bigsby",
+       "text": "Bigsby. I own this place. Owned. The Ringmaster's been running it since Tuesday."
+      },
+      {
+       "who": "rook",
+       "text": "Is the Ringmaster a problem?"
+      },
+      {
+       "who": "bigsby",
+       "text": "We never hired a ringmaster."
+      },
+      {
+       "who": "dee",
+       "text": "So the mirrors scramble, the fortune teller lies, and the strongman hits like a strongman."
+      },
+      {
+       "who": "rook",
+       "text": "Two tickets, please. Business expense."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "midway-outro",
+   "backdrop": null,
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "bigsby": {
+     "name": "Bigsby",
+     "portrait": "bigsby"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "who": "bigsby",
+       "text": "The lights are off and the music's stopped. I've never been so happy to be bankrupt.",
+       "if": "won"
+      },
+      {
+       "who": "dee",
+       "text": "One more key, one more label. That jar's starting to look like a pattern.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "It's a lovely jar.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "I would like a refund. He did say no refunds.",
+       "if": "!won"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "night-mail-intro",
+   "backdrop": "junction",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "pim": {
+     "name": "Stationmaster Pim",
+     "portrait": "pim"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Halt Junction, a quarter to midnight. Weeds between the rails. One lamp still lit."
+      },
+      {
+       "who": "pim",
+       "text": "You'll be the odd-jobs people. Mind the signals. They've started giving opinions."
+      },
+      {
+       "who": "rook",
+       "text": "Signals don't have opinions."
+      },
+      {
+       "who": "pim",
+       "text": "This one has fogged its own lamp and shuffled the timetable. And the inspector is writing fines with numbers on them that are not numbers."
+      },
+      {
+       "who": "dee",
+       "text": "Something's moving in the coal yard, too."
+      },
+      {
+       "who": "pim",
+       "text": "That is Gerald. Gerald used to be the coal."
+      },
+      {
+       "who": "rook",
+       "text": "Soot is extra."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "night-mail-outro",
+   "backdrop": null,
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "pim": {
+     "name": "Stationmaster Pim",
+     "portrait": "pim"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "who": "pim",
+       "text": "The 11:59 has arrived at platform one. Forty years late. I have filled in the form.",
+       "if": "won"
+      },
+      {
+       "who": "dee",
+       "text": "Key's in the jar. The mail sacks are on the platform, addressed to people who moved away years ago.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "I delivered one. It was a birthday card. They were very surprised.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "We've been fined for traveling without a ticket. We weren't even on the train.",
+       "if": "!won"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "night-shift-intro",
+   "backdrop": "museum",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "curator": {
+     "name": "Curator Ambrose",
+     "portrait": "curator"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Rook's phone rings at 11:58 p.m. It's a museum."
+      },
+      {
+       "who": "curator",
+       "text": "Mrs. Pell says you evicted her gremlin. I have a... similar situation."
+      },
+      {
+       "who": "rook",
+       "text": "We're experts in similar situations! What's the situation?"
+      },
+      {
+       "who": "curator",
+       "text": "After closing, the exhibits get up. The chest bites. The owl scrambles things. The beetle is mostly just large."
+      },
+      {
+       "who": "dee",
+       "text": "Scrambles things?"
+      },
+      {
+       "who": "curator",
+       "text": "Signs. Labels. Your little numbers, I imagine."
+      }
+     ],
+     "choices": [
+      {
+       "text": "How do they wake up?",
+       "next": "why"
+      },
+      {
+       "text": "We'll take it.",
+       "next": "go"
+      }
+     ]
+    },
+    "why": {
+     "lines": [
+      {
+       "who": "curator",
+       "text": "No idea. Certainly nothing to do with me."
+      },
+      {
+       "who": "dee",
+       "text": "That's exactly what someone it has to do with would say."
+      }
+     ],
+     "next": "go"
+    },
+    "go": {
+     "lines": [
+      {
+       "who": "rook",
+       "text": "Night shift rates are double, by the way."
+      },
+      {
+       "who": "curator",
+       "text": "Of course they are."
+      },
+      {
+       "text": "The museum doors creak open. Somewhere inside, something ticks."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "night-shift-outro",
+   "backdrop": null,
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "curator": {
+     "name": "Curator Ambrose",
+     "portrait": "curator"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "who": "dee",
+       "text": "Exhibits back on their stands, rex back in one piece. Mostly the right pieces.",
+       "if": "won"
+      },
+      {
+       "who": "dee",
+       "text": "No curator, though. Just this, still in the wall.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "A brass key. It goes in a jar, as evidence. Also, I may have booked us a job at the aquarium. It's fine. Probably.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "The good news is the beetle didn't eat us. The bad news is we're locked in.",
+       "if": "!won"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "old-wyrm-reveal",
+   "backdrop": "hoard",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "dennis": {
+     "name": "Sir Dennis",
+     "portrait": "dennis"
+    },
+    "wyrm": {
+     "name": "The Old Wyrm",
+     "portrait": "wyrm"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The ninth flight. The stairs open onto gold, and the gold breathes in."
+      },
+      {
+       "who": "dennis",
+       "text": "Foul beast! I challenge you! Also, I should say, I only really do Sundays."
+      },
+      {
+       "who": "dee",
+       "text": "Brass key, between the shoulder blades. Same as the others. Someone wound this up with a very long arm."
+      },
+      {
+       "who": "rook",
+       "text": "Ma'am, the castle closes at five."
+      },
+      {
+       "who": "wyrm",
+       "text": "Mine."
+      },
+      {
+       "who": "rook",
+       "text": "I'm fairly sure that's the gift shop's float."
+      },
+      {
+       "who": "wyrm",
+       "text": "MINE."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "ostrander-reveal",
+   "backdrop": "chart-room",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "priya": {
+     "name": "Priya",
+     "portrait": "priya"
+    },
+    "ostrander": {
+     "name": "Professor Ostrander",
+     "portrait": "ostrander"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The top floor. Every wall is covered in charts, and every chart has been corrected in red."
+      },
+      {
+       "who": "ostrander",
+       "text": "You are late. I have reviewed your invoice, and your figures do not add up."
+      },
+      {
+       "who": "rook",
+       "text": "They're not meant to add up. They're meant to be paid."
+      },
+      {
+       "who": "dee",
+       "text": "Brass key, on a lanyard. Professor, who gave you that?"
+      },
+      {
+       "who": "ostrander",
+       "text": "A colleague, for services to his collection. Now then. Page one. Rejected."
+      },
+      {
+       "who": "priya",
+       "text": "She does that."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "peer-review-opening",
+   "backdrop": "office",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Chapter 9: Peer Review. A letter on very good paper, with a very long footnote."
+      },
+      {
+       "who": "dee",
+       "text": "The Ostrander Institute has mislaid a building."
+      },
+      {
+       "who": "rook",
+       "text": "How do you mislay a building?"
+      },
+      {
+       "who": "dee",
+       "text": "They call it the Annex. It's not on any of their plans, but it's still getting a power bill."
+      },
+      {
+       "who": "rook",
+       "text": "Who works there?"
+      },
+      {
+       "who": "dee",
+       "text": "One professor. She stopped answering emails last spring. Now she only sends them back, corrected."
+      },
+      {
+       "who": "rook",
+       "text": "I had a teacher like that."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "rex-reveal",
+   "backdrop": "museum",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "curator": {
+     "name": "Curator Ambrose",
+     "portrait": "curator"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The beetle's down. The museum goes quiet, except for a steady tick from the curator's office."
+      },
+      {
+       "who": "curator",
+       "text": "Splendid work. Truly. You may go."
+      },
+      {
+       "who": "dee",
+       "text": "Curator, why are you ticking?"
+      },
+      {
+       "who": "curator",
+       "text": "I am not ticking. You are ticking."
+      },
+      {
+       "who": "rook",
+       "text": "He's clockwork. He's been winding up the exhibits. Oh, this is going on the invoice."
+      },
+      {
+       "who": "curator",
+       "text": "Every collection needs a curator. And every curator needs a centerpiece. Do excuse me."
+      },
+      {
+       "text": "He turns a brass key in the wall and slips out the back. In the main hall, a great many bones stand up."
+      },
+      {
+       "who": "rook",
+       "text": "Is that on the invoice?"
+      },
+      {
+       "who": "dee",
+       "text": "Everything is on the invoice. Run."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "ringmaster-reveal",
+   "backdrop": "midway",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "ringmaster": {
+     "name": "The Ringmaster",
+     "portrait": "ringmaster"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "who": "ringmaster",
+       "text": "Tonight only! Two tinkerers, one puzzle, and no refunds!"
+      },
+      {
+       "who": "dee",
+       "text": "See the <mask> clues? Some of them are lying again. And the <gear> ones are out of order."
+      },
+      {
+       "who": "rook",
+       "text": "He's got the whole act. Dee, why is his moustache turning by itself?"
+      },
+      {
+       "who": "dee",
+       "text": "There's a brass key sticking out of that hat."
+      },
+      {
+       "who": "ringmaster",
+       "text": "For my next trick: you lose!"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "step-right-up-opening",
+   "backdrop": "office",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Chapter 5: Step Right Up. A flyer under the office door, smelling of sawdust."
+      },
+      {
+       "who": "dee",
+       "text": "A travelling carnival. The rides have been running at night, with nobody on them."
+      },
+      {
+       "who": "rook",
+       "text": "Free rides?"
+      },
+      {
+       "who": "dee",
+       "text": "The flyer says 'SEND HELP'. In very nice lettering."
+      },
+      {
+       "who": "rook",
+       "text": "Showmanship. I respect it."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "summit-station-intro",
+   "backdrop": "summit",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "lund": {
+     "name": "Dr. Lund",
+     "portrait": "lund"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Summit Station. The wind has teeth. Dr. Lund meets you at the door in four coats."
+      },
+      {
+       "who": "lund",
+       "text": "Thank goodness. The star charts have stopped adding up, and something very large is sitting on our generator."
+      },
+      {
+       "who": "rook",
+       "text": "We do generators! We started in generators!"
+      },
+      {
+       "who": "lund",
+       "text": "I should also mention the footprints."
+      },
+      {
+       "who": "rook",
+       "text": "What about the footprints?"
+      },
+      {
+       "who": "lund",
+       "text": "They go up the ridge. Nothing has come back down."
+      },
+      {
+       "who": "dee",
+       "text": "I am glad I brought towels."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "summit-station-outro",
+   "backdrop": null,
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "lund": {
+     "name": "Dr. Lund",
+     "portrait": "lund"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "who": "lund",
+       "text": "The charts add up. The comet's only a comet. I'm taking off one coat.",
+       "if": "won"
+      },
+      {
+       "who": "dee",
+       "text": "The yeti is asleep, the key is in the jar, and the towels were useful.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "The towels were not useful.",
+       "if": "won"
+      },
+      {
+       "who": "dee",
+       "text": "The towels were useful.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "I can't feel anything below the neck. Bill them for the neck, too.",
+       "if": "!won"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "tess-reveal",
+   "backdrop": "aquarium",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "bo": {
+     "name": "Keeper Bo",
+     "portrait": "bo"
+    },
+    "tess": {
+     "name": "Old Tess",
+     "portrait": "tess"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The center tank. The water is very still. Then it isn't."
+      },
+      {
+       "who": "tess",
+       "text": "Forty years I've watched this door. Forty years of tapping on my glass."
+      },
+      {
+       "who": "bo",
+       "text": "She's never talked before."
+      },
+      {
+       "who": "tess",
+       "text": "I've never had anything to say. Now I do: get out of my aquarium."
+      },
+      {
+       "who": "rook",
+       "text": "Technically it's Bo's aquarium."
+      },
+      {
+       "who": "tess",
+       "text": "Technically, I have eight arms."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "the-1159-reveal",
+   "backdrop": "junction",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "pim": {
+     "name": "Stationmaster Pim",
+     "portrait": "pim"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Midnight, and for the first time in forty years, something is early. The rails begin to hum."
+      },
+      {
+       "who": "pim",
+       "text": "Stand behind the yellow line, please."
+      },
+      {
+       "who": "dee",
+       "text": "It's not slowing down."
+      },
+      {
+       "who": "rook",
+       "text": "Excuse me! Is this the 11:59?"
+      },
+      {
+       "who": "dee",
+       "text": "Brass key, on the boiler where the whistle ought to be. Still turning."
+      },
+      {
+       "who": "rook",
+       "text": "I'd like to report a late train."
+      },
+      {
+       "text": "The whistle blows. It sounds a lot like an apology."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "the-annex-intro",
+   "backdrop": "annex",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "priya": {
+     "name": "Priya",
+     "portrait": "priya"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The Annex. A long corridor that hums. Every door has a sign saying NOT THIS DOOR."
+      },
+      {
+       "who": "priya",
+       "text": "You're from facilities? Finally. I'm a third-year. I have been a third-year for six years."
+      },
+      {
+       "who": "priya",
+       "text": "Don't pet the dog. Don't help the clone. And some of the numbers on these boards are falsified."
+      },
+      {
+       "who": "rook",
+       "text": "Which ones?"
+      },
+      {
+       "who": "priya",
+       "text": "That's the trouble with falsified numbers."
+      },
+      {
+       "who": "dee",
+       "text": "Who is in charge here?"
+      },
+      {
+       "who": "priya",
+       "text": "Professor Ostrander. She has already read your invoice. She had notes."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "the-annex-outro",
+   "backdrop": null,
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "priya": {
+     "name": "Priya",
+     "portrait": "priya"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "who": "priya",
+       "text": "The Annex is back on the map, and they say I can graduate. I don't know what to do with myself.",
+       "if": "won"
+      },
+      {
+       "who": "dee",
+       "text": "Another key for the jar. That's a lot of keys, Rook. And the jar has started making a noise.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "That's probably just the jar.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "Our invoice came back with comments. So did we.",
+       "if": "!won"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "undercroft-intro",
+   "backdrop": "undercroft",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "dennis": {
+     "name": "Sir Dennis",
+     "portrait": "dennis"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Castle Ambry, after the last tour. The gift shop is shut. The stairs keep going."
+      },
+      {
+       "who": "dennis",
+       "text": "Halt! Oh, thank goodness. Are you from the council?"
+      },
+      {
+       "who": "rook",
+       "text": "Close enough. How's it looking down there?"
+      },
+      {
+       "who": "dennis",
+       "text": "That armor isn't one of ours. Something in the cellar ate the map. The rats have a king now. I bowed. I panicked."
+      },
+      {
+       "who": "dee",
+       "text": "And at the bottom?"
+      },
+      {
+       "who": "dennis",
+       "text": "Something very large, asleep on what I'd hoped was the gift shop float. It has been breathing on the stairs."
+      },
+      {
+       "who": "dee",
+       "text": "Nobody said anything about a dragon."
+      },
+      {
+       "who": "rook",
+       "text": "Dragons are a different rate."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "undercroft-outro",
+   "backdrop": null,
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "dennis": {
+     "name": "Sir Dennis",
+     "portrait": "dennis"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "who": "dennis",
+       "text": "One flight of stairs, as advertised! The council has sent a very nice note.",
+       "if": "won"
+      },
+      {
+       "who": "dee",
+       "text": "Key goes in the jar. The hoard turned out to be mostly chocolate coins from the gift shop.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "Not all of it. I checked.",
+       "if": "won"
+      },
+      {
+       "who": "rook",
+       "text": "Dennis is leading us back up. He has asked us to call him sir. We're calling him sir.",
+       "if": "!won"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "wound-up-opening",
+   "backdrop": "office",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "Wound Up. The office, late. The jar of brass keys is ticking."
+      },
+      {
+       "who": "dee",
+       "text": "Keys don't tick."
+      },
+      {
+       "who": "rook",
+       "text": "These do. All of them, in time. And an envelope came. Museum letterhead."
+      },
+      {
+       "text": "'You are cordially invited to a private viewing. Closing time. Do bring the keys.'"
+      },
+      {
+       "who": "dee",
+       "text": "That's a trap."
+      },
+      {
+       "who": "rook",
+       "text": "That is definitely a trap. Night rates are still double, though."
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "yeti-reveal",
+   "backdrop": "summit",
+   "cast": {
+    "rook": {
+     "name": "Rook",
+     "portrait": "rook"
+    },
+    "dee": {
+     "name": "Dee",
+     "portrait": "dee"
+    },
+    "yeti": {
+     "name": "The Yeti",
+     "portrait": "yeti"
+    }
+   },
+   "start": "start",
+   "nodes": {
+    "start": {
+     "lines": [
+      {
+       "text": "The ridge above the station. The snow stands up, and then it keeps standing up."
+      },
+      {
+       "who": "dee",
+       "text": "That's not a snowdrift."
+      },
+      {
+       "who": "yeti",
+       "text": "HRRRM."
+      },
+      {
+       "who": "rook",
+       "text": "Sir, this is a private observatory."
+      },
+      {
+       "who": "dee",
+       "text": "Brass key. Back of the neck. Who winds up a yeti?"
+      },
+      {
+       "who": "rook",
+       "text": "Someone with a very tall stepladder."
+      },
+      {
+       "who": "yeti",
+       "text": "HRRRRRM."
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "backdrops": {
+  "annex": [
+   ".##############################.",
+   "..############################..",
+   "..##########........##########..",
+   "...#########........#########...",
+   "....########################....",
+   ".....######################.....",
+   ".....########......########.....",
+   "......#######......#######......",
+   ".##....##################....##.",
+   ".###....################....###.",
+   ".####...######....######...####.",
+   ".#####...#####....#####...#####.",
+   ".#####....############....#####.",
+   ".#####.....####..####.....#####.",
+   "....##..#..####..####..#..##....",
+   ".....#..##..########..##..#.....",
+   "........###..........###........",
+   "........###..........###........",
+   "..##......#..######..#......##..",
+   ".#####.......######.......#####.",
+   ".#####...#...#....#...#...#####.",
+   ".#####..###..#....#..###..#####.",
+   ".#####..###..######..###..#####.",
+   ".#####..###..######..###..#####.",
+   ".#####..###..######..###..#####.",
+   ".#####..###..######..###..#####.",
+   ".#####..###..######..###..#####.",
+   ".#####..###..######..###..#####.",
+   ".#####..###..######..###..#####.",
+   ".#####..###..######..###..#####.",
+   ".#####..###.########.###..#####.",
+   ".#####..################..#####.",
+   ".#####..################..#####.",
+   ".#####..##............##..#####.",
+   ".#####..################..#####.",
+   ".#####..################..#####.",
+   ".#####..################..#####.",
+   ".#####....................#####.",
+   ".#####.##################.#####.",
+   ".##############################.",
+   ".##############################.",
+   ".##############################.",
+   ".###........................###.",
+   ".##############################.",
+   ".##############################.",
+   ".##############################.",
+   ".##############################.",
+   "################################"
+  ],
+  "aquarium": [
+   "..............####..............",
+   "..........####....####..........",
+   "........###...####...###........",
+   ".......##..##########..##.......",
+   "......#..##############..#......",
+   ".....#..####.#.#########..#.....",
+   "....#..####...########.##..#....",
+   "...##.######.#.#####.....#.##...",
+   "...#.###.#.########.......#.#...",
+   "..##.##...#######.#.......#.##..",
+   "..#.####.#.#########.#.#.###.#..",
+   "..#.################.#.#.###.#..",
+   "..#.############.##.##.##.##.#..",
+   ".#.#######################.##.#.",
+   ".#.############.#############.#.",
+   ".#.###.######...#############.#.",
+   ".#.########...##########.####.#.",
+   ".#.######.........#####..####.#.",
+   ".#.##.#........#....##...####.#.",
+   ".#.####..##....#....#....####.#.",
+   ".#.###.........#.........####.#.",
+   ".#.####........#....#....####.#.",
+   ".#.####........#....##...####.#.",
+   ".#.######.........#####..####.#.",
+   ".#.##########.##########.####.#.",
+   ".#.##########################.#.",
+   ".#.######################.###.#.",
+   ".#.####.#..##############.###.#.",
+   ".#.###...##.########.####..##.#.",
+   ".#.####.#.#..#######.#####.##.#.",
+   ".#.#######.##.#######.#.##.##.#.",
+   ".#.#######.##.#######.##..###.#.",
+   ".#.########..#######.###..###.#.",
+   ".#.########..#######.##.##.##.#.",
+   ".#.##.########.#######.######.#.",
+   ".#.######.########.#######.##.#.",
+   ".#............................#.",
+   ".##############################.",
+   "................................",
+   "................................",
+   "################################",
+   "..#......#......#......#......#.",
+   "..#......#......#......#......#.",
+   "..#......#......#......#......#.",
+   "..#......#......#......#......#.",
+   "################################",
+   "################################",
+   "################################"
+  ],
+  "chart-room": [
+   "................................",
+   "................................",
+   "................................",
+   ".#############..###############.",
+   ".########.####..###############.",
+   ".########.####..###############.",
+   ".####.###.####..##..###########.",
+   ".####.###.#.##..####...########.",
+   ".##.#.###.#.##..#######.#######.",
+   ".##.#.#.#.#.##..########.######.",
+   ".##.#.#.#.#.##..#########.#####.",
+   ".##.#.#.#.#.##..##########..###.",
+   ".#############..############..#.",
+   ".#############..###############.",
+   "................................",
+   "................................",
+   ".###########..#################.",
+   ".###########..#################.",
+   ".#####.#####..##.##........####.",
+   ".###......##..#################.",
+   ".###.#.##.##..##...###..###..##.",
+   ".##.##.###.#..#################.",
+   ".##.##.....#..##......##.....##.",
+   ".##.######.#..#################.",
+   ".###.####.##..##....##..##...##.",
+   ".###......##..#################.",
+   ".###########..##.##........####.",
+   ".###########..#################.",
+   ".###########..#################.",
+   "................................",
+   "........######..................",
+   ".......................######...",
+   "...###########..................",
+   ".......................######...",
+   "...###########..................",
+   "################################",
+   "################################",
+   "...##......................##...",
+   "...##......................##...",
+   "...##......................##...",
+   "...##......................##...",
+   "...##......................##...",
+   "...##......................##...",
+   "...##......................##...",
+   "...##......................##...",
+   "################################",
+   "################################",
+   "################################"
+  ],
+  "curators-office": [
+   "................................",
+   "................................",
+   "................#........#......",
+   "..............##.##....##.##....",
+   "..............#.#.#...#.....#...",
+   "....#........#..#..#..#..#..#...",
+   "..##.##.......#..##..#...#...#..",
+   "..#.#.#.......##.##...#...###...",
+   ".#..#..#........#.....#.....#...",
+   "..#..##................##.##....",
+   "..##.##..................#......",
+   "....#.......#...................",
+   ".........###.###.........####...",
+   ".......##.......##.......####...",
+   "......##....#....##....########.",
+   "......#.....#.....#....########.",
+   ".....#......#......#...####.###.",
+   ".....#......#......#...##...#.#.",
+   ".....#......#......#...##..##.#.",
+   "....#.......#.......#..#...#....",
+   ".....#.......##....#...##.....#.",
+   ".....#.........##..#...##.....#.",
+   ".....#.............#...####.###.",
+   "......#...........#....########.",
+   "......##.........##....########.",
+   ".......##.......##.....##....##.",
+   ".........###.###.......##....##.",
+   "...#........#..........##....##.",
+   ".##.##.................##....##.",
+   ".#.#.#...####..........##....##.",
+   "#..#..#.######.........##....##.",
+   ".#..##..#....#.........##....##.",
+   ".##.##..#...##.........##....##.",
+   "...#....#.#.##.........##....##.",
+   "........####.#.........##.#####.",
+   "........#.#..#.........##.#####.",
+   "........######.........##.#####.",
+   "#####################..##....##.",
+   "#####################..##....##.",
+   "..##............##.....##....##.",
+   "..##............##.....########.",
+   "..##............##.....########.",
+   "..##............##.....########.",
+   "..##............##.....########.",
+   "..##............##.....########.",
+   "################################",
+   "################################",
+   "################################"
+  ],
+  "gallery": [
+   "................................",
+   "................................",
+   "................................",
+   "################################",
+   "........###...........###.......",
+   "........###...........###.......",
+   "................................",
+   "................................",
+   "................................",
+   "...##########################...",
+   "...#........................#...",
+   "...#.#################.####.#...",
+   "...#.################...###.#...",
+   "...#.###.###########.....##.#...",
+   "...#.##...######.####...###.#...",
+   "...#.#.....####...####.####.#...",
+   "...#........##.....########.#...",
+   "...#................#######.#...",
+   ".....................######.#...",
+   "......................#####.#...",
+   ".......................####.#...",
+   ".....######################.#...",
+   "...#........................#...",
+   "...##########################...",
+   ".......#....#......#....#.......",
+   ".......#....#...........#.......",
+   "............#...........#.......",
+   "................................",
+   "................................",
+   "................................",
+   "...###########....###########...",
+   "...#.........#....#.........#...",
+   "...#.###.###.#....#.###.###.#...",
+   "...#.##...##.#....#.##...##.#...",
+   "...#.#.....#.#....#.#.....#.#...",
+   "...#.##...##.#....#.##...##.#...",
+   "...#.###.###.#....#.###.###.#...",
+   "...#.#.....#.#....#.#.....#.#...",
+   "...#.#.....#.#....#.#.....#.#...",
+   "...#.#.....#.#....#.#.....#.#...",
+   "...#.#.....#.#....#.#.....#.#...",
+   "...#.........#....#.........#...",
+   "...###########....###########...",
+   "................................",
+   "................................",
+   "################################",
+   "################################",
+   "################################"
+  ],
+  "generator": [
+   "........................#..#....",
+   "................................",
+   ".....................#####......",
+   ".....................#####......",
+   "...########...........###.......",
+   "...#..##..#...........###.......",
+   "...#..##..#...........###.......",
+   "...########...........###.......",
+   "...#..##..#...........###.......",
+   "...#..##..#...........###.......",
+   "...#..##..#...........###.......",
+   "...########...........###.......",
+   "......................###.......",
+   "......................###.......",
+   "......................###.......",
+   "....########################....",
+   "....#.####################.#....",
+   "....#######.################....",
+   "....#####..#..####.......###....",
+   "....####.##.##.###.......###....",
+   "....####.#..##.###..#..#.###....",
+   "....###.#..#..#.##..#..#.###....",
+   "....####.#...#.###.......###....",
+   "....####.##.##.###.......###....",
+   "....#####..#..####.......###....",
+   "....#######.################....",
+   "....########################....",
+   "....########################....",
+   "....###..................###....",
+   "....########################....",
+   "....###..................###....",
+   "....########################....",
+   "....###..................###....",
+   "....########################....",
+   "#######..................###....",
+   "....########################....",
+   "....###..................###....",
+   "....########################....",
+   "....###..................###....",
+   "....#.####################.#....",
+   "....########################....",
+   "..############################..",
+   "..############################..",
+   "................................",
+   "................................",
+   "################################",
+   "################################",
+   "################################"
+  ],
+  "glasshouse": [
+   "..............#..#..............",
+   "..........#####..#####..........",
+   ".........######..######.........",
+   ".......#.######..######.#.......",
+   "......##.######..######.##......",
+   ".....###.######..######.###.....",
+   "....####.######..######.####....",
+   "...#####.######..######.#####...",
+   "...#####.######..######.#####...",
+   "..######.######..######.######..",
+   "................................",
+   "..######.######..######.######..",
+   "..######.######..######.######..",
+   ".#######.######..######...#####.",
+   ".#######.######..###....#....##.",
+   ".######...#####..##..#######..#.",
+   ".####...#...###..##.#########.#.",
+   ".###..#####..##..#..#########...",
+   ".###.###.###.##..#.###########..",
+   ".##..###.###..#..#.#..#..#..#...",
+   "....####.####...................",
+   ".##..###.###..#..#..#..#..#..#..",
+   ".##.#.##.##.#.#..#.###########..",
+   ".#..##.....##....#.###########..",
+   ".#.#####.#####...#.###########..",
+   ".#...###.###.....#..#########...",
+   ".##.#.##.##.#.#..##.#########.#.",
+   ".##.##.....##.#..##..#######..#.",
+   ".##.####.####.#..###...##....##.",
+   ".##..###.###..#..#####.##.#####.",
+   ".###.###.###.##..#####.##.#####.",
+   "......##.##............##.......",
+   ".......##.....##.##....##.......",
+   ".......##....###.###...#######..",
+   ".......##.....##.##....#######..",
+   ".......##....#.#.#.#...##.......",
+   ".......##...###..#.##.###.......",
+   ".......##....##...##..###.......",
+   ".......##....###.###...##.......",
+   ".......##....###.###...##.......",
+   ".......##.....##.##....##.......",
+   ".......##..............##.......",
+   "################################",
+   "................................",
+   "################################",
+   "################################",
+   "################################",
+   "################################"
+  ],
+  "hoard": [
+   "################################",
+   "################################",
+   "################################",
+   "##.##.##.##.##.##.##.##.##.##.##",
+   "...##.##.##.##....##.##.##.##...",
+   "......##.##.##.......##.##.##...",
+   ".........##.##..........##.##...",
+   "............##.............##...",
+   "................................",
+   "...............#................",
+   "..............###...............",
+   ".......#.......#................",
+   "......###.......................",
+   ".......#...............#........",
+   "......................###.......",
+   ".......................#........",
+   "................................",
+   "................................",
+   "................................",
+   "............#..##..#......#.....",
+   "............#..##..#......#.....",
+   "............########......#.....",
+   "............##.##.##......#.....",
+   "............########......#.....",
+   "..........................#.....",
+   "........................#####...",
+   "..........############....#.....",
+   "........##.###.###.###.#..#.....",
+   "......###################.#.....",
+   ".....####################.#.....",
+   ".................###.###..#.....",
+   "....###########.#########.#.#...",
+   "..#.###########.#########.#.##..",
+   ".#..####...####.##.###.##.#.##..",
+   "###......#......#########.#.####",
+   "###.####...####.#########...####",
+   ".##.###########..###.###.###.###",
+   "###.###########.################",
+   "###.###########.################",
+   "##..............##.###.###.###.#",
+   "################################",
+   "################################",
+   ".###.###.###.###.###.###.###.###",
+   "################################",
+   "################################",
+   "##.###.###.###.###.###.###.###.#",
+   "################################",
+   "################################"
+  ],
+  "junction": [
+   "................................",
+   "................................",
+   "................#.......#.......",
+   "...#.....#......................",
+   ".......##.......................",
+   "......##........................",
+   "......##............#...........",
+   ".....###........................",
+   "......###...............####.#..",
+   "......####..............####....",
+   ".......#####..#.........#..#....",
+   ".........#..............####....",
+   "..............##........####....",
+   "..............##..#.....#..#....",
+   ".....#........##........####....",
+   "..............##................",
+   ".......######.##.........##.....",
+   "......##########.........##.....",
+   ".....##########........#########",
+   "....############.......#########",
+   "...##############........##.....",
+   "..################.......##.....",
+   "...##############........##.....",
+   "...##############........##.....",
+   "...##############........##.....",
+   "...##..#.###...##........##.....",
+   "...##..#.###...##........##.....",
+   "...#########...##........##.....",
+   "...##..#.###...##........##.....",
+   "...##..#.###...##........##.....",
+   "...#########...##........##.....",
+   "...#########...##........##.....",
+   "...#########...##........##.....",
+   "...#########...##........##.....",
+   "................................",
+   "################################",
+   ".##.##.##.##.##.##.##.##.##.##.#",
+   "................................",
+   "################################",
+   "################################",
+   "#...#...#...#...#...#...#...#...",
+   "################################",
+   "################################",
+   "################################",
+   "################################",
+   "################################",
+   "################################",
+   "################################"
+  ],
+  "midway": [
+   "................................",
+   "................................",
+   "................................",
+   "#.............................#.",
+   "#.#.#.....................#.#.#.",
+   "..#.#.#.#.............#.#.#.#...",
+   "......#.#.#.#.#.#.#.#.#.#.......",
+   "..........#.#.#.#.#.#...........",
+   "................................",
+   "......................#####.....",
+   "......................#####.....",
+   "..........#...........#.........",
+   "......#########.......#.........",
+   "....##...###...##....###........",
+   "..###.....#.....##..##.##.......",
+   "..###.....#.....##.##...##......",
+   "..#..#....#....#...##...##......",
+   ".#....#...#...#...##..#..##.....",
+   ".#.....#..#..#...##.#.#.#.##....",
+   ".#......#.#.#...###.#.#.#.###...",
+   ".#.......###...###.##.#.##.###..",
+   "#############..##.##.###.##.##..",
+   "###......###..##.###.###.###.##.",
+   ".#......###..###.###.###.###.###",
+   ".#.....#.##.###.####.###.####.##",
+   ".#....#..#..##.####.#####.####.#",
+   "..#..#..#..###.####.#####.####.#",
+   "..###...#.###.#####.#####.#####.",
+   "..###...#....#.##.##.##.##.##.##",
+   "..####..#.#..#.##.##.##.##.##.##",
+   "......######.#.##.##.##.##.##.##",
+   ".......#.###.#.##.##.##.##.##.##",
+   ".......#.###.#.##.##.##.##.##.##",
+   "......#......#.##.##.##.##.##.##",
+   "......#......#.##.#........##.##",
+   "......#......#.##.#........##.##",
+   ".....#.......#.##.#........##.##",
+   ".....#.......#.##.#........##.##",
+   ".....#.......#.##.#........##.##",
+   ".....#.......#.##.#........##.##",
+   "....#........#.##.#........##.##",
+   "....#........#.##.#........##.##",
+   "....#........#.##.#........##.##",
+   "...#.........#.##.#........##.##",
+   "...#............................",
+   "################################",
+   "################################",
+   "################################"
+  ],
+  "museum": [
+   "................................",
+   "................................",
+   "################################",
+   "################################",
+   "################################",
+   "################################",
+   "................................",
+   "################################",
+   "####........................####",
+   "####........................####",
+   ".##..........................##.",
+   ".##..........................##.",
+   ".##..........................##.",
+   ".##..........................##.",
+   ".##..#######.................##.",
+   ".##..###..##.................##.",
+   ".##..#######.................##.",
+   ".##..#########...............##.",
+   ".##..#.#.#.#..###............##.",
+   ".##..######..########........##.",
+   ".##..######..#.#.#####.......##.",
+   ".##..........#.#.#.####......##.",
+   ".##..........#.#.#.####......##.",
+   ".##..........#.#.#.#.###.....##.",
+   ".##..........#.#.#.#.####....##.",
+   ".##............#.#...##.##...##.",
+   ".##..........###.#....##.#...##.",
+   ".##..........##.......##.##..##.",
+   ".##..........##.......##..#..##.",
+   ".##..........##......##......##.",
+   ".##.........##.......##......##.",
+   ".##.........##.......##......##.",
+   ".##.........##......##.......##.",
+   ".##.........##......##.......##.",
+   ".##.......#####....#####.....##.",
+   ".##.......#####....#####.....##.",
+   ".##...#####################..##.",
+   ".##...#####################..##.",
+   ".##...#...................#..##.",
+   ".##...#####################..##.",
+   ".##...#####################..##.",
+   ".##...#####################..##.",
+   ".##...#####################..##.",
+   "####..#####################.####",
+   "####..#####################.####",
+   "################################",
+   "################################",
+   "################################"
+  ],
+  "office": [
+   "................................",
+   "................................",
+   "................................",
+   "................................",
+   "................................",
+   "................................",
+   "...###############..............",
+   "...#.............#..............",
+   "...#.###########.#..............",
+   "...#.###.#######.#....####......",
+   "...#.##...###.##.#...######.....",
+   "...#.#.....#####.#...######.....",
+   "...#.##...######.#...#....#.....",
+   "...#.###.######..#...#...##.###.",
+   "...#.######.####.#...#.#.##.###.",
+   "...#.###########.#...####.#.#.#.",
+   "...#.###...#####.#...#.#..#.###.",
+   "...#.###.#.#####.#...######.###.",
+   "...#.###...###...#..###########.",
+   "...#.......###.#.#..............",
+   "...#..#..#.#.....#..............",
+   "...#.......#.#...#..............",
+   "...#.......#...#.#..............",
+   "...#..#....#.....#..............",
+   "...#.......#.#...#..............",
+   "...#.............#...##########.",
+   "...###############...#........#.",
+   ".....................#........#.",
+   ".....................#...##...#.",
+   "...........#####.....#........#.",
+   "....###..............#........#.",
+   "....####..######.....##########.",
+   "....###..............#........#.",
+   "###################..#........#.",
+   "###################..#...##...#.",
+   "..##...........##....#........#.",
+   "..##...........##....#........#.",
+   "..##...........##....##########.",
+   "..##...........##....#........#.",
+   "..##...........##....#........#.",
+   "..##...........##....#...##...#.",
+   "..##...........##....#........#.",
+   "..##...........##....#........#.",
+   "..##...........##....##########.",
+   "..##...........##....##########.",
+   "################################",
+   "################################",
+   "################################"
+  ],
+  "summit": [
+   "................................",
+   "................................",
+   "...........#....................",
+   "...#....................###.....",
+   ".....................######.....",
+   ".................####.#####.....",
+   "..............###..###..........",
+   ".......#.........##.............",
+   "..............###...............",
+   "............##...............#..",
+   "................................",
+   "..................#.............",
+   "........................#.......",
+   "............####..##............",
+   "...........######..##...........",
+   "..........#######..###..........",
+   "..........########..##......#...",
+   ".........##########..##....###..",
+   ".........##########..##...#####.",
+   "....#....###########..#..#######",
+   "...###...##############.########",
+   "..#####..##############..#.#.#.#",
+   ".#######.##############.#.#.#.#.",
+   "########.##############.########",
+   ".#.#.#.#.##############.########",
+   "#.#.#.#..##############.########",
+   "########.##############.########",
+   "########.##############.########",
+   "########.####......####.########",
+   "########.####.####.####.########",
+   "########.####.####.####.########",
+   "########.####.####.####.########",
+   "########.####.####.####.########",
+   "########.####.####.####.########",
+   "########.####.####.####.########",
+   "########.####.####.####.########",
+   "########.####.####.####.########",
+   "########.####.####.####.########",
+   "################################",
+   "################################",
+   "#############.#.#.##############",
+   "##############...###############",
+   "###.#.#.######...###############",
+   "####...#################.#.#.###",
+   "####...##################...####",
+   "#########################...####",
+   "################################",
+   "################################"
+  ],
+  "undercroft": [
+   "#####.#####.#####.#####.#####.##",
+   "#####.#####.#####.#####.#####.##",
+   "#####.#####.#####.#####.#####.##",
+   "................................",
+   "##.#####.#####.#####.#####.#####",
+   "##.#####.#####.#####.#####.#####",
+   "##.#####.#####.#####.#####.#####",
+   "................................",
+   "#####.#####.###...#####.#####.##",
+   "#####.#####.........###.#####.##",
+   "#####.####............#.#####.##",
+   "................................",
+   "##.#####...............###.#####",
+   "##.#####................##.#####",
+   "##.#####................##.#####",
+   "................................",
+   "#.....#..................#.....#",
+   "#..#..#.......####.......#..#..#",
+   "#..#..#.......####.......#..#..#",
+   "..###......................###..",
+   "#..#..#..................#..#..#",
+   "#.###.#......######......#.###.#",
+   "#..#..#......######......#..#..#",
+   "...#........................#...",
+   "#..#..#..................#..#..#",
+   "#..#..#.....########.....#..#..#",
+   "#.....#.....########.....#.....#",
+   "................................",
+   "##.####..................#.#####",
+   "##.####....##########....#.#####",
+   "##.####....##########....#.#####",
+   "................................",
+   "#####.#..................####.##",
+   "#####.#...############...####.##",
+   "#####.#...############...####.##",
+   "................................",
+   "##.####..................#.#####",
+   "##.####..##############..#.#####",
+   "##.####..##############..#.#####",
+   "................................",
+   "#####.#..................####.##",
+   "#####.#.################.####.##",
+   "#####.#######################.##",
+   ".......##################.......",
+   "##.#######################.#####",
+   "##.#######################.#####",
+   "##.#######################.#####",
+   ".......##################......."
+  ],
+  "van": [
+   "################################",
+   "################################",
+   "################################",
+   "################################",
+   "################################",
+   "#..........##########..........#",
+   "#..........#........#..........#",
+   "#..........##########..........#",
+   "#..............................#",
+   "#................#.............#",
+   "#.......#...............#......#",
+   "#.....................#####....#",
+   "#.....................#####....#",
+   "##...................#######..##",
+   "##....................#####...##",
+   "##...........#........#####...##",
+   "##......................#.....##",
+   "##............................##",
+   "##....#............#..........##",
+   "##............................##",
+   "##............................##",
+   "##..........###............#####",
+   "##.........#####...........#####",
+   "##....##########.....#....######",
+   "##..##############.#############",
+   "################################",
+   "################################",
+   "##............................##",
+   "##.............##.............##",
+   "###..........##..#...........###",
+   "###.........#########........###",
+   "###.......############.......###",
+   "###.....#######..#######.....###",
+   "###....##...###..#########...###",
+   "###..#....#....############..###",
+   "####...#######...###############",
+   "###..#####.#####..##############",
+   "###.###.......###.##############",
+   "##..##..#####..##..#############",
+   "##.##..#######..##.#############",
+   "##....#########....#############",
+   "################################",
+   "################################",
+   "################################",
+   "################################",
+   "################################",
+   "################################",
+   "################################"
+  ],
+  "workshop": [
+   "................................",
+   "................................",
+   "................................",
+   "................................",
+   "................................",
+   "................................",
+   "..############################..",
+   "..############################..",
+   "..##.###.###.###.###.###.###.#..",
+   "..#############..#..##.....###..",
+   "..####.......##..#..##.....###..",
+   "..####.......#.......#.....###..",
+   "..##.#.......##......#.....#.#..",
+   "..####.......##.....###....###..",
+   "..######...#####...#####...###..",
+   "..######...#####...####....###..",
+   "..##.###...#.###...#.###...#.#..",
+   "..######...#####...####....###..",
+   "..######...#####...#####...###..",
+   "..######...#####...####....###..",
+   "..##.###...#.###...#.###...#.#..",
+   "..######...#####...####....###..",
+   "..######...#####...#####...###..",
+   "..######...#####....###....###..",
+   "..##.###...#.###.....###...###..",
+   "..######...####......##....###..",
+   "..##############....####...###..",
+   "..##############....##########..",
+   "..##.###.###.###.###.#######.#..",
+   "..############################..",
+   ".....................#######....",
+   "....#######..........#...#.#....",
+   "....#########........#...###....",
+   "......###............#####.#....",
+   "......###............#######....",
+   "################################",
+   "################################",
+   "..##........................##..",
+   "..##........................##..",
+   "..##........................##..",
+   "..##........................##..",
+   "..##........................##..",
+   "..##........................##..",
+   "..##........................##..",
+   "..##........................##..",
+   "################################",
+   "################################",
+   "################################"
+  ]
+ }
+}

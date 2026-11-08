@@ -41,7 +41,7 @@ endif
 
 include $(PVSNESLIB_HOME)/devkitsnes/snes_rules
 
-.PHONY: all debug release rom assets check host-check asset-check tcc-check clean smoke import
+.PHONY: all debug release rom assets check host-check asset-check tcc-check unused-check clean smoke smoke-all import
 
 all: debug
 
@@ -100,29 +100,27 @@ host-check: assets
 tcc-check:
 	@python3 tools/check_tcc_pitfalls.py
 
-check: host-check asset-check tcc-check
+# Functions the headers declare that nothing calls (tools/find_unused.py).
+unused-check:
+	@python3 tools/find_unused.py --strict
 
-MESEN_BIN ?= /Applications/Mesen.app/Contents/MacOS/Mesen
-MESEN_SAVES ?= $(HOME)/Library/Application Support/MesenCE/Saves
+check: host-check asset-check tcc-check unused-check
+
 SMOKE ?= boot
-SMOKE_FRAMES ?= 600
 
-# Headless MesenCE run of test/smoke/$(SMOKE).timeline against the debug ROM;
-# screenshots land in build/smoke/$(SMOKE)/. Starts from a blank battery
-# save unless KEEP_SAVE=1. test/smoke/$(SMOKE).pokes, when there is one, sets
-# up RAM by symbol first (tools/pokes.py).
-SMOKE_POKE_FILE := test/smoke/$(SMOKE).pokes
+# Headless MesenCE runs (tools/smoke.py): test/smoke/$(SMOKE).timeline on the
+# debug ROM, screenshots in build/smoke/$(SMOKE)/ and a contact sheet
+# build/smoke/$(SMOKE).png. A blank battery save unless KEEP_SAVE=1; a
+# test/smoke/$(SMOKE).pokes file sets RAM up first. SMOKE_FRAMES overrides the
+# length (default: the timeline's last frame + 40). MESEN_BIN and
+# MESEN_SAVES point at MesenCE.
 smoke: debug
-	@rm -rf build/smoke/$(SMOKE) && mkdir -p build/smoke/$(SMOKE)
-	@test "$(KEEP_SAVE)" = 1 || rm -f "$(MESEN_SAVES)/picross-$(VERSION_NAME)-debug-$(BUILD_ID).srm"
-	@SMOKE_POKES="$(if $(wildcard $(SMOKE_POKE_FILE)),$(shell python3 tools/pokes.py $(SMOKE_POKE_FILE) build/debug/picross-$(VERSION_NAME)-debug-$(BUILD_ID).sym 2>/dev/null))" \
-		SMOKE_TIMELINE=$(CURDIR)/test/smoke/$(SMOKE).timeline \
-		SMOKE_OUT=$(CURDIR)/build/smoke/$(SMOKE) SMOKE_FRAMES=$(SMOKE_FRAMES) \
-		"$(MESEN_BIN)" --testRunner --doNotSaveSettings --noAudio \
-		--debug.scriptWindow.allowIoOsAccess=true \
-		$(CURDIR)/tools/mesen_smoke.lua \
-		$(CURDIR)/build/debug/picross-$(VERSION_NAME)-debug-$(BUILD_ID).sfc
-	@ls build/smoke/$(SMOKE) | wc -l | xargs echo "smoke screenshots:"
+	@python3 tools/smoke.py $(SMOKE) --no-build $(if $(SMOKE_FRAMES),--frames $(SMOKE_FRAMES)) \
+		$(if $(filter 1,$(KEEP_SAVE)),--keep-save) $(if $(SMOKE_PROBES),--probes "$(SMOKE_PROBES)")
+
+# Every timeline; build/smoke/all.png has each one's last screenshot.
+smoke-all: debug
+	@python3 tools/smoke.py --all --no-build
 
 clean: cleanBuildRes cleanRom cleanLogs
 	@rm -rf build assets/generated

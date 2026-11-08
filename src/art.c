@@ -26,11 +26,6 @@ const u8 *art_image(u8 group, u8 i)
     return s_icons[i];
 }
 
-void art_palette(u8 group, u8 i, u8 pal)
-{
-    dmaCopyCGram((u8 *)art_image(group, i), (u16)pal << 4, 32);
-}
-
 void art_upload(u8 group, u8 i, u16 tile, u8 pal, u16 bytes)
 {
     const u8 *img = art_image(group, i);

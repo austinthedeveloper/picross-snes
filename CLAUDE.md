@@ -13,25 +13,38 @@ runs. Conventions come from Pickleball '94 (`../pickleball`, especially
   GitHub (`austinthedeveloper/picross-snes`) with a PR. CI (ADR-009) must
   pass. The user merges unless they ask otherwise; nothing goes to `main`
   directly.
-- A release: bump `VERSION_NAME`, write `docs/releases/vX.Y.Z.md`, merge,
-  then tag `vX.Y.Z` on `main` and push the tag; `release.yml` publishes
-  the ROM (ADR-009). Smoke-run the published ROM: CI's build differs from
-  a local one byte for byte.
+- Stacked PRs (one based on another's branch) merge bottom-first, each
+  retargeted to `main` first: `python3 tools/pr_stack.py merge TOP` does
+  it, `pr_stack.py` shows stacks, `pr_stack.py strays` finds merged work
+  that never reached `main` (it happened: #35-#37, fixed by #38).
+- A release: `python3 tools/release.py X.Y.Z` (branch, version bump,
+  drafted notes); merge it; `release.py X.Y.Z --check` says when to tag;
+  pushing the tag makes `release.yml` publish the ROM (ADR-009). Smoke-run
+  the published ROM (`tools/smoke.py --all --release vX.Y.Z`): CI's build
+  differs from a local one byte for byte.
 - A feature gets an ADR in `docs/decisions/` (next free number) and a task
   in `milestones/`. A defect gets a row in `docs/KNOWN_ISSUES.md`. Unplanned
   ideas go in `docs/IDEAS.md`.
-- The puzzles come from the web game: `make import` re-reads
-  `../../picross/src/puzzles` into `data/pack.json` (committed). Never edit
-  `data/pack.json` by hand; never reorder its slots (docs/PUZZLES.md).
+- The puzzles, art and story come from the web game: `make import` re-reads
+  `../../picross` into `data/pack.json`, `data/art/` and `data/story.json`
+  (committed; ADR-010). Never edit them by hand; never reorder their slots
+  (docs/PUZZLES.md). The daily sync (ADR-011) opens a PR when the web
+  changes, or an issue when the story importer finds something to port:
+  port it, add it to `SUPPORTED` in `tools/import_story.py`, sync again.
+- Story rules mirror the web's `src/game/battle.ts`, `run.ts` and
+  `dialogue.ts` function for function (`src/battle.c`, `fight_rules.c`,
+  `story_run.c`, `dialogue.c`); a rules change there is a change here.
+- `tools/README.md` lists every script.
 
 ## Before calling something done
 
-1. `make check`: host tests, pack validation, the 816-tcc lint. Warnings
-   are errors on the host.
+1. `make check`: host tests, pack and story validation, the 816-tcc lint,
+   unused functions. Warnings are errors on the host.
 2. `make debug` builds with no errors, and the free ROM space it prints is
    still positive (grow `ROMBANKS`/`ROMSIZE` together when it isn't).
-3. Something visible: run a smoke timeline and look at the screenshots
-   (`python3 tools/contact_sheet.py out.png build/smoke/<name>/*.png`).
+3. Something visible: run a smoke timeline and look at its contact sheet
+   (`make smoke SMOKE=<name>` writes `build/smoke/<name>.png`), or
+   `make smoke-all` before a PR that touches screens.
 4. Anything on a solve, a scene change or a save: probe its cost in frames
    (below). The solve bookkeeping is about 7 frames; keep it there.
 
@@ -67,19 +80,25 @@ runs. Conventions come from Pickleball '94 (`../pickleball`, especially
 
 ## Running the ROM headless
 
-- `make smoke SMOKE=<name> SMOKE_FRAMES=<n>` plays `test/smoke/<name>.timeline`
-  on the debug ROM and saves screenshots in `build/smoke/<name>/`. Lines are
-  `<first> <last> <buttons>` and `shot <frame>`. Runs start from a blank
-  battery save unless `KEEP_SAVE=1`.
+- `make smoke SMOKE=<name>` (or `python3 tools/smoke.py <name> ...`) plays
+  `test/smoke/<name>.timeline` on the debug ROM: screenshots in
+  `build/smoke/<name>/`, a contact sheet `build/smoke/<name>.png`, and a
+  failure when it gets fewer screenshots than asked for. Lines are
+  `<first> <last> <buttons>` (buttons comma-separated) and `shot <frame>`.
+  The run lasts to the last frame + 40 unless `SMOKE_FRAMES`. Runs start
+  from a blank battery save unless `KEEP_SAVE=1`. `--list` shows the
+  timelines; `--release`, `--run` and `--rom` play a published ROM.
 - Probing RAM: `SMOKE_PROBES="name=<hex>:<size>"` prints values on shot
   frames; take the address from `build/debug/*.sym` (`awk '$2=="g_x"'`).
   `g_solve_frames` holds the last solve's bookkeeping cost.
-- Pillow is not installed; `tools/contact_sheet.py` tiles screenshots and
+- Pillow is not installed; `tools/png.py` reads and writes PNGs and
   `sips -z 448 512 in.png --out out.png` upscales one.
 - Sound: `tools/mesen_voices.lua` (same environment variables, no
   `--noAudio`) prints each SPC700 voice start, to show effects really play.
 - A `test/smoke/<name>.pokes` file next to a timeline writes RAM by symbol
   before the run plays (`tools/pokes.py`): set up a save instead of playing
   up to it (`badge.pokes` marks 21 starter puzzles solved).
+  `tools/board_pokes.py` writes one that leaves a board a cell short of
+  solved (`story_win.pokes`); poke after the play screen opens.
 - MesenCE keeps saves in `~/Library/Application Support/MesenCE/Saves/`,
   named after the ROM file.

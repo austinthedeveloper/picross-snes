@@ -1,5 +1,5 @@
-# The Goblin's board solved but for its first filled cell (story_win.timeline).
-# Written by hand from data/story.json; g_right_filled matches.
+# encounter goblin (story puzzle sword): solved but for 1 cell(s).
+# python3 tools/board_pokes.py --encounter goblin --frame 365 --leave 1
 365 g_cells+14 1 1
 365 g_cells+15 1 1
 365 g_cells+16 1 1

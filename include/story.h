@@ -90,6 +90,9 @@ const u8 *node_choice(const u8 *node, u8 i);        /* 6 bytes */
 #define CHOICE_SET_VALUES(c) ((c)[3])
 #define CHOICE_TEXT(c) ((u16)((c)[4] | ((c)[5] << 8)))
 
+/* A scene's save slot (seen scenes). */
+u8 scene_slot(u8 s);
+
 /* Backdrops: width, height, then rows of bits. */
 const u8 *story_backdrop(u8 b);
 

@@ -2,7 +2,11 @@
  * game's src/game/dialogue.test.ts, on the real imported scenes. */
 #include <string.h>
 
+#include "battle.h"
 #include "dialogue.h"
+#include "play.h"
+#include "save.h"
+#include "story_run.h"
 #include "story.h"
 #include "test_support.h"
 
@@ -114,6 +118,71 @@ static void test_every_scene_ends(void)
     }
 }
 
+static void test_unlocks_and_runs(void)
+{
+    u8 counts[COUNT_KINDS] = { 1, 0, 0, 2, 1, 0 };
+    u8 i;
+
+    save_blank();
+    CHECK(job_unlocked(RUN_ID_FIRST_JOB));
+    CHECK(!job_unlocked(RUN_ID_NIGHT_SHIFT));
+    CHECK(chapter_open(0));
+    CHECK(!chapter_open(1));
+    CHECK_EQ(run_current(), STORY_NONE);
+
+    /* First Job: 12 HP and a patch kit. */
+    run_start(RUN_ID_FIRST_JOB, MODE_HEARTS);
+    CHECK_EQ(run_current(), RUN_ID_FIRST_JOB);
+    CHECK_EQ(g_run.hp, 12);
+    CHECK_EQ(run_gadget_count_held(), 1);
+    CHECK_EQ(g_run.gadgets[0] - 1, GADGET_PATCH_KIT);
+    run_damage(5);
+    run_heal(3);
+    CHECK_EQ(g_run.hp, 10);
+    run_heal(9);
+    CHECK_EQ(g_run.hp, 12);
+    CHECK(run_gadget_add(GADGET_BOMB));
+    CHECK_EQ(run_gadget_count_held(), 2);
+    run_gadget_remove(0);
+    CHECK_EQ(g_run.gadgets[0] - 1, GADGET_BOMB);
+    CHECK_EQ(run_gadget_count_held(), 1);
+    run_add_tally(counts, 2);
+    CHECK_EQ(g_run.tally[COUNT_GADGETS_USED], 2);
+    CHECK_EQ(g_run.tally[6], 2);
+    run_damage(3);
+    for (i = 0; i < run_length(RUN_ID_FIRST_JOB); i++) {
+        CHECK_EQ(g_run.status, RUN_ACTIVE);
+        run_complete_encounter();
+    }
+    CHECK_EQ(g_run.status, RUN_WON);
+    run_record_result();
+    run_record_result();  /* once only */
+    CHECK_EQ(job_stats(RUN_ID_FIRST_JOB)->plays, 1);
+    CHECK_EQ(job_stats(RUN_ID_FIRST_JOB)->wins, 1);
+    CHECK_EQ(job_stats(RUN_ID_FIRST_JOB)->hits_on_wins, 1);
+    CHECK_EQ(job_stats(RUN_ID_FIRST_JOB)->best_hp, 9);
+    CHECK(job_cleared(RUN_ID_FIRST_JOB));
+    CHECK(job_unlocked(RUN_ID_NIGHT_SHIFT));
+    CHECK(chapter_open(1));
+
+    /* A lost run counts a play, not a win; a Relaxed win keeps best HP. */
+    run_start(RUN_ID_FIRST_JOB, MODE_RELAXED);
+    run_damage(200);
+    CHECK_EQ(g_run.status, RUN_LOST);
+    CHECK_EQ(g_run.hp, 0);
+    run_complete_encounter();
+    CHECK_EQ(g_run.node, 0);
+    run_record_result();
+    CHECK_EQ(job_stats(RUN_ID_FIRST_JOB)->plays, 2);
+    CHECK_EQ(job_stats(RUN_ID_FIRST_JOB)->wins, 1);
+
+    /* Seen scenes, by slot. */
+    CHECK(!scene_seen(SCENE_ID_FIRST_JOB_INTRO));
+    scene_mark_seen(SCENE_ID_FIRST_JOB_INTRO);
+    CHECK(scene_seen(SCENE_ID_FIRST_JOB_INTRO));
+    CHECK(!scene_seen(SCENE_ID_FIRST_JOB_OUTRO));
+}
+
 int main(void)
 {
     story_init();
@@ -121,5 +190,6 @@ int main(void)
     test_outro_flags();
     test_stage();
     test_every_scene_ends();
+    test_unlocks_and_runs();
     TEST_END("story");
 }

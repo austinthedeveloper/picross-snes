@@ -16,7 +16,5 @@ const u8 *art_image(u8 group, u8 i);
  * palette `pal`. In forced blank (or a VBlank with room: a 64x64 portrait
  * is 2 KiB). bytes: the tile data's size (64 * 32 for a portrait). */
 void art_upload(u8 group, u8 i, u16 tile, u8 pal, u16 bytes);
-/* Just the palette, to BG palette pal. */
-void art_palette(u8 group, u8 i, u8 pal);
 
 #endif

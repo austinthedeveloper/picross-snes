@@ -4,10 +4,12 @@
 
 A Super Nintendo demake of the [Picross web game](https://github.com/austinthedeveloper/picross), built in C
 and 65816 assembly with [PVSnesLib](https://github.com/alekmaul/pvsneslib)
-4.6.0. It is the free-play half of that game: all 523 handmade puzzles in
-their 19 collections plus the 16 murals, with the tracking, ranks, badges
-and achievements around them. Story mode (jobs, fights, scenes, endless,
-the daily) is cut from this first version (docs/decisions/ADR-002).
+4.6.0. It has that game's free play (all 523 handmade puzzles in their 19
+collections plus the 16 murals, with the tracking, ranks, badges and
+achievements around them) and its story mode: Rook and Dee's odd jobs,
+chapter by chapter, with fights, digs, rest stops and scenes. The story is
+imported from the web game and kept in step with it by a daily sync
+(docs/decisions/ADR-010, ADR-011). Endless and the daily puzzle aren't in.
 
 ![Title, free play, a puzzle list, a 10x10 and a 15x15 board, a result, the badge shelf, murals](docs/screens.png)
 
@@ -21,6 +23,11 @@ the daily) is cut from this first version (docs/decisions/ADR-002).
 - A badge per collection (bronze, silver, gold) and 21 achievements
 - Battery save: every record, plus one board to come back to
 - Synthesized sound effects (pencil taps, line chimes, a solve jingle)
+- Story mode: 10 chapters of jobs with the web game's scenes, portraits and
+  backdrops; fights against enemies with the eight powers (fog, scrambles,
+  armor, forgeries, charge, ink, swaps, turns), gadgets, Relaxed or Hits on
+
+![The jobs board, a path map, a fight, a finisher](docs/story.png)
 
 ## Play
 
@@ -65,5 +72,7 @@ LoROM with 8 KiB of battery SRAM.
 - [Product brief](docs/00_PRODUCT_BRIEF.md): what this version is and isn't
 - [Layout](docs/LAYOUT.md): screens, VRAM, palettes, the board's placement
 - [Puzzles](docs/PUZZLES.md): importing the pack, the ROM format, save slots
-- [Decisions](docs/decisions/), [known issues](docs/KNOWN_ISSUES.md),
+- [Tools](tools/README.md): every script, by what it's for
+- [Decisions](docs/decisions/) (story mode: ADR-010, the web sync:
+  ADR-011), [known issues](docs/KNOWN_ISSUES.md),
   [ideas](docs/IDEAS.md), [milestones](milestones/00_MASTER_CHECKLIST.md)

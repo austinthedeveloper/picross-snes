@@ -15,6 +15,27 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from png import read_png, write_png  # noqa: E402
 
 
+def sheet(out, inputs, cols=3, scale=1):
+    """Tiles the PNGs in inputs into out (tools/smoke.py calls this)."""
+    images = [read_png(p) for p in inputs]
+    w = max(i[0] for i in images) * scale
+    h = max(i[1] for i in images) * scale
+    gap = 4
+    cols = min(cols, len(images))
+    nrows = (len(images) + cols - 1) // cols
+    W, H = cols * w + (cols + 1) * gap, nrows * h + (nrows + 1) * gap
+    canvas = [[(60, 60, 70)] * W for _ in range(H)]
+    for n, (iw, ih, rows) in enumerate(images):
+        ox = gap + (n % cols) * (w + gap)
+        oy = gap + (n // cols) * (h + gap)
+        for y in range(ih * scale):
+            src = rows[y // scale]
+            dst = canvas[oy + y]
+            for x in range(iw * scale):
+                dst[ox + x] = src[x // scale]
+    write_png(str(out), W, H, canvas)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("out")
@@ -22,23 +43,7 @@ def main():
     parser.add_argument("--cols", type=int, default=3)
     parser.add_argument("--scale", type=int, default=1)
     args = parser.parse_args()
-    images = [read_png(p) for p in args.inputs]
-    w = max(i[0] for i in images) * args.scale
-    h = max(i[1] for i in images) * args.scale
-    gap = 4
-    cols = min(args.cols, len(images))
-    nrows = (len(images) + cols - 1) // cols
-    W, H = cols * w + (cols + 1) * gap, nrows * h + (nrows + 1) * gap
-    canvas = [[(60, 60, 70)] * W for _ in range(H)]
-    for n, (iw, ih, rows) in enumerate(images):
-        ox = gap + (n % cols) * (w + gap)
-        oy = gap + (n // cols) * (h + gap)
-        for y in range(ih * args.scale):
-            src = rows[y // args.scale]
-            dst = canvas[oy + y]
-            for x in range(iw * args.scale):
-                dst[ox + x] = src[x // args.scale]
-    write_png(args.out, W, H, canvas)
+    sheet(args.out, args.inputs, args.cols, args.scale)
 
 
 if __name__ == "__main__":

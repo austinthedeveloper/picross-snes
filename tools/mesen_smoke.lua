@@ -16,7 +16,7 @@
 --   SMOKE_POKES     optional work-RAM writes, ";"-separated, each
 --                   "first,last,once,condaddr,condsize,condvalue,addr,size,
 --                   value" in decimal (condsize 0: no condition; last -1:
---                   no end). tools/mesen_probe.py builds them from symbols.
+--                   no end). tools/pokes.py builds them from symbols.
 
 local timeline_path = os.getenv("SMOKE_TIMELINE")
 local out = os.getenv("SMOKE_OUT") or "."

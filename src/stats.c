@@ -44,17 +44,6 @@ const char *tier_name(u8 tier)
     return s_tier_names[tier];
 }
 
-u8 stats_size_index(u8 side)
-{
-    if (side <= 5)
-        return SIZE_5;
-    if (side <= 10)
-        return SIZE_10;
-    if (side <= 15)
-        return SIZE_15;
-    return SIZE_20;
-}
-
 /* Per collection: puzzles solved in hearts mode, and perfectly. */
 static u8 s_hearts[COLLECTION_COUNT];
 static u8 s_perfect[COLLECTION_COUNT];

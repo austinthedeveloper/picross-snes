@@ -36,7 +36,6 @@ typedef struct {
 extern Stats g_stats;
 
 void stats_compute(Stats *s);
-u8 stats_size_index(u8 side);
 
 /* Ranks (web: src/puzzles/ranks.ts). */
 const char *rank_name(u8 rank);

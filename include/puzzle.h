@@ -72,4 +72,9 @@ extern u8 g_max_col_clues;
 
 void puzzle_load(u16 slot);
 
+/* Works the clues out from g_solution again. */
+void puzzle_derive_clues(void);
+/* Turns the square puzzle in play a quarter clockwise (a fight, ADR-010). */
+void puzzle_turn(void);
+
 #endif

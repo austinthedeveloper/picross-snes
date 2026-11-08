@@ -94,18 +94,29 @@ and the engine helpers line for line, with host tests.
   (`save.h StorySave`, `src/story_run.c`: the web's run.ts, runSave.ts and
   unlock rules)
   - Verified: `test_migrate_v1` loads a 0.2.0 image; `test_unlocks_and_runs`
-- [ ] `M4-JOBS-01` Jobs board by chapter (unlocks, chapter openings) and
-  the path map (nodes, HP, gadgets)
-- [ ] `M4-FIGHT-01` The fight screen: battle bar (enemy, HP, meters,
-  gadgets), clue overlays (fog, scramble, weak points, suspects, wipes, the
-  live line), ink, call-outs, phase banners, announcements
-- [ ] `M4-DIG-01` Digs and rest stops
-- [ ] `M4-RESULT-01` Results with the outro, job stats
+- [x] `M4-JOBS-01` Jobs board by chapter (unlocks, chapter openings,
+  Overtime and boss fights under cleared jobs) and the path map (nodes, HP,
+  gadgets) (`src/jobs.c`, `src/map.c`)
+  - Verified: `story.timeline`
+- [x] `M4-FIGHT-01` The fight screen (`src/story_play.c` on the play
+  screen): the corner (enemy, HP, your HP, meters, messages), clue overlays
+  (fog blanks, scrambles sorted, forgeries shown) and marks (weak points,
+  suspects, wipes, the live line), ink, phase cards with taunts, hits in
+  Hits-on runs, swaps and turns after the stroke, call-outs (Y), gadgets
+  (SELECT), the finisher, knock-outs
+  - Verified: `story.timeline`, `story_win.timeline` (the Goblin to its
+    finisher and back to the map); KNOWN_ISSUES #7-#9
+- [x] `M4-DIG-01` Digs (the gadget reward) and rest stops (the countdown
+  and its heal)
+- [x] `M4-RESULT-01` Results with the outro's sign-off, job stats
+  (`src/run_result.c`)
 
 ## M5: Story extras
 
-- [ ] `M5-OVERTIME-01` Overtime runs
-- [ ] `M5-BOSS-01` Standalone boss fights
+- [ ] `M5-OVERTIME-01` Overtime runs (on the board and playable; not
+  played through yet)
+- [ ] `M5-BOSS-01` Standalone boss fights (on the board; not played
+  through yet)
 - [ ] `M5-ENDLESS-01` Endless
 - [ ] `M5-BADGE-01` The web game's story badges
 - [ ] `M5-TIPS-01` Power tips the first time each power appears

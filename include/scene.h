@@ -16,6 +16,9 @@ enum {
     SCENE_HOW_TO,
     SCENE_MURALS,
     SCENE_DIALOGUE,
+    SCENE_JOBS,
+    SCENE_MAP,
+    SCENE_RUN_RESULT,
     SCENE_COUNT,
     SCENE_NONE = 0xFF
 };
@@ -74,6 +77,14 @@ extern u8 g_story_next;
 void dialogue_enter(void);
 void dialogue_update(void);
 void dialogue_leave(void);
+/* Story mode (jobs.c, map.c, run_result.c). */
+void story_open(void);
+void jobs_enter(void);
+void jobs_update(void);
+void map_enter(void);
+void map_update(void);
+void run_result_enter(void);
+void run_result_update(void);
 /* The next unsolved tile of g_sel_mural (selected), or 0xFF. */
 u8 murals_next_tile(void);
 /* Opens the murals screen on this tile of g_sel_mural. */

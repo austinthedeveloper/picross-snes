@@ -3,6 +3,7 @@
 #include "input.h"
 #include "scene.h"
 #include "story.h"
+#include "text_wrap.h"
 #include "tiles.h"
 #include "video.h"
 
@@ -54,38 +55,9 @@ static u8 s_choice;
 static u16 s_backdrop_map[32 * 28];
 static u8 s_tile_buf[32];
 
-/* Greedy word wrap into at most TEXT_LINES lines of TEXT_W. */
 static void wrap(const u8 *t)
 {
-    u8 pos = 0;
-    u8 start;
-    u8 col;
-    u8 brk;
-
-    s_lines = 0;
-    while (t[pos] && s_lines < TEXT_LINES) {
-        while (t[pos] == ' ')
-            pos++;
-        if (t[pos] == 0)
-            break;
-        start = pos;
-        col = 0;
-        brk = 0xFF;
-        while (t[start + col] && t[start + col] != '\n' && col < TEXT_W) {
-            if (t[start + col] == ' ')
-                brk = col;
-            col++;
-        }
-        if (t[start + col] && t[start + col] != ' ' && t[start + col] != '\n'
-            && brk != 0xFF)
-            col = brk;
-        s_line_start[s_lines] = start;
-        s_line_len[s_lines] = col;
-        s_lines++;
-        pos = start + col;
-        if (t[pos] == '\n')
-            pos++;
-    }
+    s_lines = text_wrap(t, TEXT_W, TEXT_LINES, s_line_start, s_line_len);
 }
 
 static void clear_box(void)

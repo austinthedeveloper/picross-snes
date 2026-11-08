@@ -109,10 +109,8 @@ void title_update(void)
             }
         }
         if (s_sel == ITEM_STORY) {
-            /* For now: First Job's intro (the jobs board comes next). */
-            g_story_scene = SCENE_ID_FIRST_JOB_INTRO;
-            g_story_flags = 0;
-            g_story_next = SCENE_TITLE;
+            story_open();
+            return;
         }
         scene_goto(s_scenes[s_sel]);
     }

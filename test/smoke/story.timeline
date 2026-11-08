@@ -1,0 +1,15 @@
+# Title -> STORY (Odd Jobs opens: no opening scene) -> jobs board -> First
+# Job (its intro, skipped with START) -> the path map -> the Goblin fight.
+shot 80
+90 91 a
+shot 150
+160 161 a
+shot 230
+240 241 start
+shot 300
+310 311 a
+shot 380
+390 391 a
+394 395 right
+398 399 a
+shot 460

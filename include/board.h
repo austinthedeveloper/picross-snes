@@ -29,6 +29,8 @@ extern u8 g_board_last_value;
 void board_clear(void);
 /* Sets a cell, keeping the counts and the dirty list. */
 void board_set(u16 index, u8 value);
+/* Counts filled cells again after g_cells was written directly. */
+void board_recount(void);
 u8 board_solved(void);
 /* 1 when row r's (column c's) filled runs equal its clues. */
 u8 board_row_done(u8 r);

@@ -31,3 +31,6 @@ A version of the fights is in docs/IDEAS.md.
 ## Amendments
 - 2026-11-07: murals are in after all (ADR-008): they're free-play
   puzzles, and as pack slots they cost little.
+- 2026-11-07: story mode is coming in after all (ADR-010), imported from
+  the web game and kept in step with it (ADR-011). The daily puzzle stays
+  cut.

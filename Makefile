@@ -67,9 +67,15 @@ rom: assets
 assets:
 	@python3 tools/gen_assets.py
 
-# Re-import the pack from the web game (sibling checkout ../../picross).
+# Re-import everything from the web game (ADR-010, ADR-011): the pack, the
+# art and the story. WEB is a checkout of it (default: the sibling checkout).
+# The story import fails, writing nothing, if the web uses something the SNES
+# has no code for yet, and lists what.
+WEB ?= ../../picross
 import:
-	@python3 tools/import_pack.py
+	@python3 tools/import_pack.py --from $(WEB)
+	@python3 tools/import_art.py --from $(WEB)
+	@python3 tools/import_story.py --from $(WEB)
 	@python3 tools/gen_assets.py
 
 asset-check:

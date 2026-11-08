@@ -1,0 +1,161 @@
+name: Sync from the web game
+
+# Brings the web game's latest puzzles, art and story to the cartridge
+# (ADR-011). Every day, by hand, or when the web repo pings it, this imports
+# from the web game's main branch:
+#
+# - Nothing changed: done.
+# - Everything imports and builds: opens (or updates) one "Sync from the web
+#   game" PR on the branch sync/web, with what changed and a ROM to try.
+# - The web uses something the SNES has no code for yet (a new power, a new
+#   gadget, a character without a glyph): opens (or updates) one "Web sync
+#   needs porting" issue listing it, and changes nothing. The issue closes by
+#   itself once a sync succeeds.
+on:
+  schedule:
+    - cron: "17 9 * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [web-updated]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: sync-web
+  cancel-in-progress: false
+
+env:
+  WEB_REPO: austinthedeveloper/picross
+  BRANCH: sync/web
+  PR_TITLE: Sync from the web game
+  ISSUE_TITLE: Web sync needs porting
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/checkout@v7
+        with:
+          repository: ${{ env.WEB_REPO }}
+          ref: main
+          path: .web
+
+      - name: Note the web commit
+        id: web
+        run: |
+          echo "sha=$(git -C .web rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          echo "subject=$(git -C .web log -1 --format=%s)" >> "$GITHUB_OUTPUT"
+          # The web checkout lives inside this one; keep it out of git status.
+          echo ".web/" >> .git/info/exclude
+
+      - name: Import
+        id: import
+        run: |
+          set -o pipefail
+          python3 tools/import_pack.py --from .web
+          python3 tools/import_art.py --from .web
+          if python3 tools/import_story.py --from .web --report "$RUNNER_TEMP/report.md"; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: File what needs porting
+        if: steps.import.outputs.ok == 'false'
+        run: |
+          set -euo pipefail
+          {
+            echo "The daily sync couldn't import the web game at ${{ env.WEB_REPO }}@${{ steps.web.outputs.sha }} (${{ steps.web.outputs.subject }})."
+            echo
+            cat "$RUNNER_TEMP/report.md"
+            echo
+            echo "Port these (or fix the web data), then run **Sync from the web game** from the Actions tab, or wait for tomorrow's run. This issue closes when a sync succeeds."
+            echo
+            echo "[Run log]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
+          } > "$RUNNER_TEMP/issue.md"
+          number=$(gh issue list --state open --search "in:title \"$ISSUE_TITLE\"" --json number --jq '.[0].number // empty')
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file "$RUNNER_TEMP/issue.md"
+          else
+            gh label create sync --color 0e8a16 --description "Web game sync" 2>/dev/null || true
+            gh issue create --title "$ISSUE_TITLE" --label sync --body-file "$RUNNER_TEMP/issue.md"
+          fi
+          echo "::warning::The web game uses features the SNES doesn't support yet; filed as an issue."
+
+      - name: Close a stale porting issue
+        if: steps.import.outputs.ok == 'true'
+        run: |
+          number=$(gh issue list --state open --search "in:title \"$ISSUE_TITLE\"" --json number --jq '.[0].number // empty')
+          if [ -n "$number" ]; then
+            gh issue close "$number" --comment "Imported cleanly at ${{ env.WEB_REPO }}@${{ steps.web.outputs.sha }}."
+          fi
+
+      - name: What changed
+        id: changes
+        if: steps.import.outputs.ok == 'true'
+        run: |
+          set -euo pipefail
+          python3 tools/gen_assets.py
+          if git diff --quiet -- data && [ -z "$(git status --porcelain -- data)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Up to date with ${{ env.WEB_REPO }}@${{ steps.web.outputs.sha }}."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            python3 tools/sync_summary.py > "$RUNNER_TEMP/summary.md"
+            cat "$RUNNER_TEMP/summary.md"
+          fi
+
+      - uses: ./.github/actions/setup-pvsneslib
+        if: steps.changes.outputs.changed == 'true'
+
+      - name: make check and make release
+        id: build
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          make check
+          make release
+          echo "rom=$(ls build/release/picross-*.sfc)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v7
+        if: steps.changes.outputs.changed == 'true'
+        with:
+          name: sync-rom-${{ steps.web.outputs.sha }}
+          path: build/release/*.sfc
+          if-no-files-found: error
+
+      - name: Open or update the sync PR
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git add data
+          git commit -q -m "Sync from the web game at ${{ steps.web.outputs.sha }}" \
+            -m "${{ env.WEB_REPO }}@${{ steps.web.outputs.sha }}: ${{ steps.web.outputs.subject }}"
+          git push -f origin "$BRANCH"
+          {
+            echo "Imported from ${{ env.WEB_REPO }}@${{ steps.web.outputs.sha }} (${{ steps.web.outputs.subject }}) by \`make import\`."
+            echo
+            cat "$RUNNER_TEMP/summary.md"
+            echo
+            echo "This run already passed \`make check\` and built the release ROM: download it from the [run's artifacts]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) and give the new content a play before merging."
+            echo
+            echo "A PR opened by Actions doesn't start CI on its own. To run it, close and reopen this PR, or push to the branch."
+          } > "$RUNNER_TEMP/pr.md"
+          number=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --body-file "$RUNNER_TEMP/pr.md"
+          else
+            gh pr create --base main --head "$BRANCH" --title "$PR_TITLE" --body-file "$RUNNER_TEMP/pr.md"
+          fi

@@ -7,6 +7,8 @@ their 19 collections plus the 16 murals, with the tracking, ranks, badges
 and achievements around them. Story mode (jobs, fights, scenes, endless,
 the daily) is cut from this first version (docs/decisions/ADR-002).
 
+![Title, free play, a puzzle list, a 10x10 and a 15x15 board, a result, the badge shelf, murals](docs/screens.png)
+
 - 523 puzzles from 5×5 to 20×20, each one with a unique solution, drawn in
   the web game and imported as data (`data/pack.json`)
 - 16 murals: big pictures in 90 tile puzzles that fill in as you solve them

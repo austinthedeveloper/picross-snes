@@ -83,8 +83,12 @@ and the engine helpers line for line, with host tests.
   - Verified: `test/test_battle.c` against the real story (Gremlin phases,
     Beetle armor, Forger call-outs, Eel charge, Mimic swaps, Weathervane
     turns, fake clues, ink, live line, bombs)
-- [ ] `M4-DIALOGUE-01` Scene runner (flags, choices, conditions) and the
+- [x] `M4-DIALOGUE-01` Scene runner (flags, choices, conditions) and the
   scene player: backdrop, portraits on a stage of three, typed text, choices
+  (`src/dialogue.c`, `src/scene_view.c`, `src/art.c`; lower case and story
+  glyphs in the font; the ROM grows to 512 KiB)
+  - Verified: `test/test_story.c` (First Job's intro and choice, the
+    outro's won flag, the stage, every scene ends), `scene.timeline`
 - [ ] `M4-SAVE-01` Save version 2: job results, seen scenes and tips, the
   current run with its board and battle; migration from version 1
 - [ ] `M4-JOBS-01` Jobs board by chapter (unlocks, chapter openings) and

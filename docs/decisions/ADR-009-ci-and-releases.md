@@ -4,7 +4,7 @@ Status: Accepted (2026-11-07)
 ## Decision
 GitHub Actions builds every PR and every push to `main`
 (`.github/workflows/ci.yml`): `make check`, then `make release`, a check
-that the ROM is 256 KiB, and the ROM and its symbols uploaded as an
+that the ROM is the size the Makefile sets (ROMBANKS x 32 KiB), and the ROM and its symbols uploaded as an
 artifact. Pushing a tag `vX.Y.Z` runs `.github/workflows/release.yml`,
 which builds that commit the same way and publishes a GitHub release with
 `picross-94-vX.Y.Z.sfc`, its `.sym` and a SHA-256, using

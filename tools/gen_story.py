@@ -306,6 +306,9 @@ def build(pack, story_puzzle_base):
                  "ENDLESS_HP", "ENDLESS_HEAL", "BREAK_EVERY", "LOOKAHEAD"):
         h.append(f"#define {name} {c[name]}")
     h.append(f"#define WARM_UP_DIV {div}")
+    # The web's --backdrop token (src/styles/tokens.css): scenery behind a scene.
+    r, g, b = 0xE2, 0xDE, 0xD3
+    h.append(f"#define COLOUR_BACKDROP 0x{(r >> 3) | ((g >> 3) << 5) | ((b >> 3) << 10):04X}")
     h += [f"#define STORY_CHAPTERS {len(story['chapters'])}",
           f"#define STORY_RUNS {len(runs)}",
           f"#define STORY_ENCOUNTERS {len(encs)}",
@@ -324,6 +327,9 @@ def build(pack, story_puzzle_base):
     for g in gadgets:
         h.append(f"#define GADGET_{g['id'].upper().replace('-', '_')} {gadget_ix[g['id']]}")
     h.append("#define SPRITE_UNKNOWN %d" % sprites.index("unknown"))
+    cname = lambda s: s.upper().replace("-", "_")
+    h += [f"#define SCENE_ID_{cname(s['id'])} {i}" for i, s in enumerate(scenes)]
+    h += [f"#define RUN_ID_{cname(r['id'])} {i}" for i, r in enumerate(runs)]
     h += ["#endif", ""]
 
     bins = {"story_tab": bytes(tab), "story_str": bytes(strings.index)}

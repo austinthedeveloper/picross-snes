@@ -42,3 +42,6 @@ pack_minfo_bin:
 
 ; The story (tools/gen_story.py, ADR-010).
 .include "assets/generated/story_data.asm"
+
+; Portraits, enemy sprites and icons (tools/gen_art.py).
+.include "assets/generated/art_data.asm"

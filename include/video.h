@@ -36,6 +36,14 @@ void video_fade_out(void);
 /* Uploads both shadow maps whole and fades in. */
 void video_fade_in(void);
 
+/* Copies a 16-colour palette to BG palette pal at the next VBlank. */
+void video_queue_palette(const u8 *src, u8 pal);
+/* Puts every palette back as at boot (forced blank). */
+void video_restore_palette(void);
+
+/* BG2: the backdrop behind story scenes (ADR-010); off elsewhere. */
+#define VRAM_BG2_MAP 0x5800
+
 void bg1_clear(void);
 void bg3_clear(void);
 void bg1_put(u8 x, u8 y, u16 entry);
@@ -66,7 +74,7 @@ void bg3_center(u8 y, const char *s, u8 pal);
  * one pixel a cell, uploaded in VBlank when it changes. The board's is up
  * to 20x20; a mural preview is up to 45x45. Colours: 0 clear, 1 ink,
  * 2 light (an empty cell), 3 accent. */
-#define THUMB_TILE 96
+#define THUMB_TILE 112
 #define THUMB_COLS 6
 void thumb_clear(u8 width, u8 height);
 /* A board cell: filled (ink) or not (light). */

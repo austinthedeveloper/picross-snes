@@ -1,0 +1,7 @@
+# The starter set's slots 1-21 solved (best 60 s), so solving the heart
+# (slot 0) earns its bronze badge. Records start at g_save+176 (ADR-003);
+# a record is 4 bytes: best (u16), flags, solves.
+repeat 21 4
+95 g_save+180 2 60
+repeat 21 4
+95 g_save+182 1 1

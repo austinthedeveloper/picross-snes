@@ -4,9 +4,6 @@ Unplanned; not to be built by accident.
 
 - **Music**: a quiet title tune; SNESMOD can play a module under the
   effects (Pickleball '94's ambience does).
-- **Live thumbnail** in the HUD corner: the board so far, one pixel a cell
-  (a 20x20 is 3x3 tiles), updated per changed cell.
-- **16-pixel cells** for 5x5 and 10x10 boards (2x2 tiles a cell).
 - **Murals**: the web game's tiled pictures (16 of them), each tile a
   puzzle; the mural fills in as you solve its tiles.
 - **A vertical 4-pixel scroll** on 20x20 boards, so row 0 isn't needed.

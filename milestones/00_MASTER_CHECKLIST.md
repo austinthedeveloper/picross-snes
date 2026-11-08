@@ -36,6 +36,10 @@
   - Accept: board, line, mistake, hint, solve, news and menu sounds; an option
     to turn them off
   - Verified: ADR-006, `mesen_voices.lua` on `solve_heart.timeline`
-- [ ] `M2-THUMB-01` Live thumbnail in the HUD
-- [ ] `M2-BIG-01` 16-pixel cells for small boards
+- [x] `M2-THUMB-01` Live thumbnail in the HUD
+  - Verified: `hearts.timeline`, `tour.timeline` (the painted run shows)
+- [x] `M2-BIG-01` 16-pixel cells for small boards
+  - Accept: 5x5 and 10x10 boards, their clues, cursor, solved picture and
+    result picture at double size
+  - Verified: ADR-007, `solve_heart.timeline`, `medium.timeline`
 - [ ] `M2-MURAL-01` Murals

@@ -13,6 +13,7 @@ here and in tools/font.py. Outputs (never committed):
   sfx.it, sfx.h    the sound effects (tools/sfx.py), for smconv
   pack_*.bin       the puzzle pack (docs/PUZZLES.md has the layout)
   tiles.h          tile and palette numbers for the C code
+  big_tiles.h      the 16-pixel cells' and clues' tile tables
   pack.h           pack counts and limits
   pack_data.c      the pack .bin files as C arrays, for the host tests
 
@@ -40,7 +41,11 @@ MAX_SIDE = 20
 NAME_MAX = 20
 COLLECTION_NAME_MAX = 19
 # Clue room per board size (docs/LAYOUT.md): row clues, column clues.
-CLUE_ROOM = {5: (5, 5), 10: (8, 7), 15: (8, 8), 20: (9, 8)}
+# 5x5 and 10x10 use 16-pixel cells and clues, so they have less room.
+CLUE_ROOM = {5: (3, 3), 10: (4, 3), 15: (8, 8), 20: (9, 8)}
+BIG_MAX_CLUE = 10
+# BG1 tiles fill VRAM words $0000-$3FFF: 1024 4bpp tiles.
+BG1_TILE_LIMIT = 1024
 
 # ---------------------------------------------------------------- colours
 # The web game's light theme tokens (src/styles/tokens.css).
@@ -158,12 +163,26 @@ class Tiles:
         self.data = bytearray()
         self.names = {}
         self.count = 0
+        self.seen = {}
 
     def add(self, tile, name=None):
         if name:
             self.names[name] = self.count
         self.data += encode(tile, 4)
         self.count += 1
+        return self.count - 1
+
+    def add_shared(self, tile):
+        """A tile, reusing an identical one added this way before."""
+        key = encode(tile, 4)
+        if key not in self.seen:
+            self.seen[key] = self.add(tile)
+        return self.seen[key]
+
+    def add_big(self, px):
+        """A 16x16 picture as four shared tiles: TL, TR, BL, BR."""
+        return [self.add_shared([row[tx * 8:tx * 8 + 8] for row in px[ty * 8:ty * 8 + 8]])
+                for ty in range(2) for tx in range(2)]
 
     def pad_to(self, n):
         while self.count < n:
@@ -192,6 +211,54 @@ def cell_tile(state, left_guide, top_guide, bottom=False):
             t[y][2 + i] = 5
             t[y][6 - i] = 5
     return t
+
+
+def big_cell(state, left_guide, top_guide, bottom):
+    """A 16-pixel cell (5x5 and 10x10 boards), drawn like cell_tile."""
+    px = [[0] * 16 for _ in range(16)]
+    for y in range(16):
+        for x in range(16):
+            if bottom and y == 15:
+                px[y][x] = 3
+            elif y == 0 or x == 0:
+                guide = (y == 0 and top_guide) or (x == 0 and left_guide)
+                px[y][x] = 3 if guide else 2
+            elif state == 1:
+                px[y][x] = 4
+            else:
+                px[y][x] = 1
+    if state == 2:
+        top = 4 if not bottom else 3
+        for i in range(8):
+            for d in (0, 1):
+                y = top + i
+                if 4 + i + d < 16:
+                    px[y][4 + i + d] = 5
+                if 11 - i + d < 16:
+                    px[y][11 - i + d] = 5
+    return px
+
+
+def scale2(rows):
+    return ["".join(ch * 2 for ch in row) for row in rows for _ in range(2)]
+
+
+def big_clue(n, bg):
+    """A 16x16 clue: the 5x7 font at double size (10 in narrow digits)."""
+    px = [[bg] * 16 for _ in range(16)]
+
+    def put(rows, x0, y0):
+        for y, row in enumerate(rows):
+            for x, ch in enumerate(row):
+                if ch == "#":
+                    px[y0 + y][x0 + x] = 4
+    s = str(n)
+    if len(s) == 1:
+        put(scale2(GLYPHS[s]), 4, 2)
+    else:
+        put(scale2(NARROW[s[0]]), 1, 2)
+        put(scale2(NARROW[s[1]]), 9, 2)
+    return px
 
 
 def clue_tile(n, bg=6):
@@ -304,7 +371,20 @@ def board_tiles(collections, puzzles_by_id):
         tiles.add(t, "T_FRAME" if i == 0 else None)
     tiles.add(bar_tile(False), "T_BAR_EMPTY")
     tiles.add(bar_tile(True), "T_BAR_FULL")
-    tiles.pad_to(64)
+    # 16-pixel cells: [state][variant] -> TL TR BL BR, variant = left guide
+    # + (bottom row ? 4 : 2 * top guide) (a bottom row never has a top guide).
+    big_cells = []
+    for state in range(3):
+        for lg, tg, bottom in ((0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0), (0, 0, 1), (1, 0, 1)):
+            big_cells.append(tiles.add_big(big_cell(state, lg, tg, bottom)))
+    big_clues = []
+    for bg in (6, 7):
+        for n in range(BIG_MAX_CLUE + 1):
+            big_clues.append(tiles.add_big(big_clue(n, bg)))
+    tiles.big_cells = big_cells
+    tiles.big_clues = big_clues
+    while tiles.count % 16:
+        tiles.add(blank())
     for i, c in enumerate(collections):
         for j, t in enumerate(medal_tiles(puzzles_by_id[c["emblem"]]["rows"])):
             tiles.add(t, "T_MEDAL" if i == 0 and j == 0 else None)
@@ -312,19 +392,22 @@ def board_tiles(collections, puzzles_by_id):
 
 
 def obj_tiles():
-    """The cursor: an 11x11 two-ring box as a 16x16 sprite (tiles 0,1,16,17)."""
-    px = [[0] * 16 for _ in range(16)]
-    for y in range(11):
-        for x in range(11):
-            d = min(x, y, 10 - x, 10 - y)
-            if d == 0:
-                px[y][x] = 2
-            elif d == 1:
-                px[y][x] = 1
+    """The cursors as 16x16 sprites: an 11x11 two-ring box for 8-pixel cells
+    (tiles 0,1,16,17) and a 16x16 one for 16-pixel cells (2,3,18,19)."""
     sheet = [blank() for _ in range(32)]
-    for ty in range(2):
-        for tx in range(2):
-            sheet[ty * 16 + tx] = [[px[ty * 8 + y][tx * 8 + x] for x in range(8)] for y in range(8)]
+    for first, size in ((0, 11), (2, 16)):
+        px = [[0] * 16 for _ in range(16)]
+        for y in range(size):
+            for x in range(size):
+                d = min(x, y, size - 1 - x, size - 1 - y)
+                if d == 0:
+                    px[y][x] = 2
+                elif d == 1:
+                    px[y][x] = 1
+        for ty in range(2):
+            for tx in range(2):
+                sheet[ty * 16 + first + tx] = [[px[ty * 8 + y][tx * 8 + x] for x in range(8)]
+                                               for y in range(8)]
     return b"".join(encode(t, 4) for t in sheet)
 
 
@@ -444,8 +527,9 @@ def main():
     for c in pack["collections"]:
         c["emblem"] = choose_emblem(c, by_id)
     tiles = board_tiles(pack["collections"], by_id)
-    if tiles.count > 512:
-        print(f"board.pic: {tiles.count} tiles; BG1 has room for 512", file=sys.stderr)
+    if tiles.count > BG1_TILE_LIMIT:
+        print(f"board.pic: {tiles.count} tiles; BG1 has room for {BG1_TILE_LIMIT}",
+              file=sys.stderr)
         sys.exit(1)
     if args.check:
         print(f"assets: ok ({len(pack['puzzles'])} puzzles, {tiles.count} BG1 tiles)")
@@ -474,6 +558,18 @@ def main():
           "#define PAL_LOCKED 2", "#define PAL_BRONZE 3", "#define PAL_SILVER 4",
           "#define PAL_GOLD 5", "#endif", ""]
     write_if_changed(OUT / "tiles.h", "\n".join(h))
+
+    def table(name, rows):
+        body = ",\n".join("    " + ", ".join(str(t) for t in r) for r in rows)
+        return f"static const u16 {name}[{len(rows) * 4}] = {{\n{body}\n}};"
+    h = ["/* Generated by tools/gen_assets.py: 16-pixel cells and clues as",
+         " * four BG1 tiles each (TL, TR, BL, BR). Include once (board_view.c). */",
+         "/* [(state * 6 + variant) * 4]: variant = left guide + (bottom ? 4 : 2 * top guide) */",
+         table("s_big_cells", tiles.big_cells),
+         f"/* [(striped * {BIG_MAX_CLUE + 1} + n) * 4] */",
+         f"#define BIG_MAX_CLUE {BIG_MAX_CLUE}",
+         table("s_big_clues", tiles.big_clues), ""]
+    write_if_changed(OUT / "big_tiles.h", "\n".join(h))
 
     live = [p for p in pack["puzzles"] if not p.get("retired")]
     by_size = {s: sum(1 for p in live if p["width"] == s) for s in CLUE_ROOM}

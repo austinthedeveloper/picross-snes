@@ -1,6 +1,6 @@
 # Picross '94
 
-A Super Nintendo demake of the [Picross web game](../../picross), built in C
+A Super Nintendo demake of the [Picross web game](https://github.com/austinthedeveloper/picross), built in C
 and 65816 assembly with [PVSnesLib](https://github.com/alekmaul/pvsneslib)
 4.6.0. It is the free-play half of that game: all 523 handmade puzzles in
 their 19 collections plus the 16 murals, with the tracking, ranks, badges
@@ -50,6 +50,8 @@ LoROM with 8 KiB of battery SRAM.
 
 ## Docs
 
+- [Wiki](https://github.com/austinthedeveloper/picross-snes/wiki): how to
+  play, building, testing, architecture, adding puzzles
 - [CLAUDE.md](CLAUDE.md): workflow, the rules of the code, running headless
 - [Product brief](docs/00_PRODUCT_BRIEF.md): what this version is and isn't
 - [Layout](docs/LAYOUT.md): screens, VRAM, palettes, the board's placement

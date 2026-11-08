@@ -83,8 +83,9 @@ asset-check:
 
 # The core (no PPU, no pads) builds on the host for tests.
 HOST_CORE := src/puzzle.c src/board.c src/history.c src/play.c src/save.c \
-	src/progress.c src/stats.c assets/generated/pack_data.c test/host_sram.c
-HOST_TESTS := core save
+	src/progress.c src/stats.c src/battle.c src/fight_rules.c src/story.c \
+	assets/generated/pack_data.c assets/generated/story_data.c test/host_sram.c
+HOST_TESTS := core save battle
 CC_HOST ?= cc
 
 host-check: assets

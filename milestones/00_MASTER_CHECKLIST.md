@@ -46,3 +46,14 @@
   - Accept: the 16 murals' 90 tiles playable, the picture fills in, rank
     points and two achievements, CONTINUE on a tile
   - Verified: ADR-008, `test_murals`, `test_mural_stats`, `murals.timeline`
+
+## M3: First release
+
+- [x] `M3-CI-01` CI: `make check` and the release ROM on every PR and push
+  to `main`, the ROM as an artifact
+  - Verified: ADR-009, the CI run on its PR
+- [ ] `M3-REL-01` A tagged release with the ROM attached
+  - Accept: `release.yml` publishes `picross-94-vX.Y.Z.sfc` from a tag
+- [ ] `M3-PLAY-01` Played through by hand (#19)
+- [ ] `M3-HW-01` Tried on real hardware from a flash cart (#20)
+

@@ -9,8 +9,13 @@ runs. Conventions come from Pickleball '94 (`../pickleball`, especially
 
 ## Workflow
 
-- New work goes on `feature/cld-<topic>`, branched off `main`. The user
-  reviews and merges; never push.
+- New work goes on `feature/cld-<topic>`, branched off `main`, pushed to
+  GitHub (`austinthedeveloper/picross-snes`) with a PR. CI (ADR-009) must
+  pass. The user merges unless they ask otherwise; nothing goes to `main`
+  directly.
+- A release: bump `VERSION_NAME`, write `docs/releases/vX.Y.Z.md`, merge,
+  then tag `vX.Y.Z` on `main` and push the tag; `release.yml` publishes
+  the ROM (ADR-009).
 - A feature gets an ADR in `docs/decisions/` (next free number) and a task
   in `milestones/`. A defect gets a row in `docs/KNOWN_ISSUES.md`. Unplanned
   ideas go in `docs/IDEAS.md`.

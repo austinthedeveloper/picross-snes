@@ -891,6 +891,16 @@
       "attack": 4,
       "taunt": "Rearranging the collection!",
       "swap": true
+     },
+     {
+      "at": 0.6,
+      "name": "Unfolded Curator",
+      "taunt": "Flat was never my best side."
+     },
+     {
+      "at": 0.3,
+      "name": "Overwound Curator",
+      "taunt": "Back under glass with you."
      }
     ]
    }

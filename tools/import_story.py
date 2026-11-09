@@ -50,8 +50,10 @@ SUPPORTED = {
     "enemy": {"name", "sprite", "hp", "attack", "fog", "scramble", "phases", "armor",
               "fakes", "suspects", "charge", "rotate"},
     "armor": {"weakPoints", "attack"},
+    # "board" moves a web fight between a flat board and a 3D block; the SNES
+    # has no block, so it's read and dropped and the fight stays flat (ADR-012).
     "phase": {"at", "name", "sprite", "attack", "taunt", "fog", "fogCount", "scramble",
-              "scrambleCount", "swap", "ink", "inkCount", "charge", "rotate"},
+              "scrambleCount", "swap", "ink", "inkCount", "charge", "rotate", "board"},
     "lines": {"rows", "cols"},
     "scene": {"id", "backdrop", "cast", "start", "nodes"},
     "cast": {"name", "portrait"},
@@ -583,7 +585,8 @@ def import_enemy(e, where, w, h, problems):
     for i, p in enumerate(e.get("phases", [])):
         pwhere = f"{where} phase {i + 1}"
         check_fields(p, "phase", pwhere, problems)
-        q = {k: v for k, v in p.items()}
+        # A board switch has nothing to switch to here (ADR-012).
+        q = {k: v for k, v in p.items() if k != "board"}
         for key in ("fog", "scramble"):
             if key in p:
                 q[key] = check_lines(p[key], pwhere, w, h, problems)

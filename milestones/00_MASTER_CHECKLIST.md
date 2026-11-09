@@ -120,4 +120,7 @@ and the engine helpers line for line, with host tests.
 - [ ] `M5-ENDLESS-01` Endless
 - [ ] `M5-BADGE-01` The web game's story badges
 - [ ] `M5-TIPS-01` Power tips the first time each power appears
+- [x] `M5-BOARD-01` Bosses that switch board on the web (a phase's `board`)
+  import and play flat (ADR-012; the Curator's 60% and 30% phases)
+  - Verified: `make import` against the web's `main` after its PR #136
 

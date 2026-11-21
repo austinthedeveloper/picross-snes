@@ -15,14 +15,14 @@ draw) fails the import with a list of exactly what needs porting, and
 writes nothing. `--report` writes that list as Markdown for the sync
 workflow (.github/workflows/sync-web.yml) to file as an issue.
 
-What it reads, all under src/:
+What it reads, under some package's src/ (tools/web_paths.py finds which):
 - puzzles/chapters, runs, encounters, scenes, backdrops: *.json
 - puzzles/run/*.json: puzzles only fights and digs use (pack puzzles come
   from data/pack.json, by id)
 - puzzles/gadgets.ts: the gadget catalog
-- ui/powers.ts: each enemy power's name and tip
-- game/battle.ts, puzzles/runs.ts, puzzles/endless.ts, game/game.ts: the
-  tuning constants (CONSTANTS below)
+- fight/tips.ts: each enemy power's name and flat-board tip
+- fight/battle.ts, game/fightBoard.ts, puzzles/runs.ts, puzzles/endless.ts,
+  game/game.ts: the tuning constants (CONSTANTS below)
 
 Save slots (ADR-003) are append-only, as for the pack: jobs and scenes keep
 the slot they were first imported with, because the battery save records
@@ -33,6 +33,8 @@ import json
 import re
 import sys
 from pathlib import Path
+
+from web_paths import src as web_src
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "story.json"
@@ -70,15 +72,16 @@ SUPPORTED = {
 
 # Tuning constants: (file, name). The SNES uses them as #defines, so a web
 # rebalance flows through. A missing one fails the import.
+# (file, name, the web's name when it differs.)
 CONSTANTS = [
-    ("game/battle.ts", "CHIP_DAMAGE"),
-    ("game/battle.ts", "WEAK_POINT_DAMAGE"),
-    ("game/battle.ts", "ARMOR_HIT_LINES"),
-    ("game/battle.ts", "ARMOR_HIT_DAMAGE"),
-    ("game/battle.ts", "CALL_OUT_DAMAGE"),
-    ("game/battle.ts", "FALSE_ACCUSATION_HEAL"),
-    ("game/battle.ts", "ZAP_DAMAGE"),
-    ("game/battle.ts", "WARM_UP_SHARE"),
+    ("fight/battle.ts", "CHIP_DAMAGE"),
+    ("fight/battle.ts", "WEAK_POINT_DAMAGE", "TARGET_DAMAGE"),
+    ("fight/battle.ts", "ARMOR_HIT_LINES"),
+    ("fight/battle.ts", "ARMOR_HIT_DAMAGE"),
+    ("fight/battle.ts", "CALL_OUT_DAMAGE"),
+    ("fight/battle.ts", "FALSE_ACCUSATION_HEAL"),
+    ("fight/battle.ts", "ZAP_DAMAGE"),
+    ("game/fightBoard.ts", "WARM_UP_SHARE"),
     ("puzzles/runs.ts", "REST_LATE_HEAL"),
     ("puzzles/endless.ts", "ENDLESS_HP"),
     ("puzzles/endless.ts", "ENDLESS_HEAL"),
@@ -274,7 +277,7 @@ def check_lines(data, where, width, height, problems):
 
 def load_dir(web, sub):
     out = {}
-    for path in sorted((web / "src/puzzles" / sub).glob("*.json")):
+    for path in sorted(web_src(web, f"puzzles/{sub}").glob("*.json")):
         out[path.stem] = (path, json.loads(path.read_text(encoding="utf-8")))
     return out
 
@@ -294,7 +297,6 @@ def main():
     parser.add_argument("--report", help="write the problems as Markdown here on failure")
     args = parser.parse_args()
     web = Path(args.src)
-    src = web / "src"
     problems = Problems()
 
     pack = json.loads(PACK.read_text(encoding="utf-8"))
@@ -311,7 +313,7 @@ def main():
             **({"gadget": p["gadget"]} if "gadget" in p else {}),
         }
     pack_gadgets = {}
-    for path in sorted((src / "puzzles/pack").glob("*.json")):
+    for path in sorted(web_src(web, "puzzles/pack").glob("*.json")):
         p = json.loads(path.read_text(encoding="utf-8"))
         if "gadget" in p:
             pack_gadgets[p["id"]] = p["gadget"]
@@ -327,7 +329,7 @@ def main():
 
     # Gadgets: the catalog in gadgets.ts.
     gadgets = []
-    catalog = ts_value(src / "puzzles/gadgets.ts", "catalog", problems) or []
+    catalog = ts_value(web_src(web, "puzzles/gadgets.ts"), "catalog", problems) or []
     for g in catalog:
         where = f"gadgets.ts {g.get('id')}"
         kind = (g.get("effect") or {}).get("kind")
@@ -342,19 +344,21 @@ def main():
 
     # Power tips.
     tips = {}
-    powers = ts_value(src / "ui/powers.ts", "POWERS", problems) or {}
+    # Each tip has a version per board (`tip.flat`, `tip.block`); the SNES is the flat one.
+    powers = ts_value(web_src(web, "fight/tips.ts"), "POWER_TIPS", problems) or {}
     for key, p in powers.items():
         where = f"powers.ts {key}"
         if key not in SUPPORTED["power"]:
             problems.need_port(where, f"enemy power `{key}`")
+        tip = p["tip"]["flat"] if isinstance(p["tip"], dict) else p["tip"]
         tips[key] = {"name": clean_text(p["name"], where, problems),
-                     "tip": clean_text(p["tip"], where, problems)}
+                     "tip": clean_text(tip, where, problems)}
     for key in SUPPORTED["power"] - set(tips):
         problems.bad("powers.ts", f"no tip for `{key}`")
 
     constants = {}
-    for rel, name in CONSTANTS:
-        constants[name] = ts_value(src / rel, name, problems)
+    for rel, name, *web_name in CONSTANTS:
+        constants[name] = ts_value(web_src(web, rel), (web_name or [name])[0], problems)
 
     # Backdrops.
     backdrops = {}

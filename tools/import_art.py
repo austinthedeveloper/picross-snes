@@ -37,6 +37,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from png import read_png_rgba, write_png  # noqa: E402
+from web_paths import public as web_public  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "art"
@@ -309,7 +310,7 @@ def main():
                         help=f"also write {PREVIEW.relative_to(ROOT)}")
     args = parser.parse_args()
 
-    art_dir = Path(args.src) / "public" / "art"
+    art_dir = web_public(args.src, "art")
     if not art_dir.is_dir():
         sys.exit(f"import_art: no art at {art_dir}")
     jobs, errors = collect(art_dir)

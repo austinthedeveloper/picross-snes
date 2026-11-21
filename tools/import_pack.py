@@ -24,11 +24,46 @@ import re
 import sys
 from pathlib import Path
 
+from web_paths import src as web_src
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "pack.json"
 
 
-def parse_order(index_ts):
+# Web collection names too long for the SNES list (COLLECTION_NAME_MAX in
+# tools/gen_assets.py), and what the cartridge calls them instead.
+SHORT_NAMES = {
+    "Pets and instruments": "Pets & instruments",
+}
+
+
+def collection_name(comment):
+    """A theme comment's collection name: the text before any note in
+    parentheses or after a colon ("Pets and instruments (20x20), insane: ...")."""
+    name = re.split(r"\s\(|:", comment, maxsplit=1)[0].strip()
+    return SHORT_NAMES.get(name, name)
+
+
+def string_array(ts, name):
+    """The ids in `const NAME ... = [ 'a', 'b', ... ]` in a .ts file's text."""
+    m = re.search(rf"const\s+{name}\b[^=]*=\s*\[", ts)
+    if not m:
+        raise SystemExit(f"ORDER spreads {name}, which isn't a string array")
+    return re.findall(r"'([^']+)'", ts[m.end():ts.index("]", m.end())])
+
+
+def spread_ids(web, index_ts, name):
+    """The ids of `...NAME` in ORDER: an array in index.ts itself, or imported
+    from another package (`import { NAME } from '@picross/shared/puzzles/pairs'`)."""
+    imp = re.search(rf"import\s*{{[^}}]*\b{name}\b[^}}]*}}\s*from\s*'@picross/([^/']+)/([^']+)'",
+                    index_ts)
+    if not imp:
+        return string_array(index_ts, name)
+    path = Path(web) / "packages" / imp.group(1) / "src" / f"{imp.group(2)}.ts"
+    return string_array(path.read_text(encoding="utf-8"), name)
+
+
+def parse_order(index_ts, web=None):
     """[(collection name, [ids...]), ...] in ORDER, from the theme comments."""
     start = index_ts.index("const ORDER = [")
     body = index_ts[start:index_ts.index("];", start)]
@@ -36,13 +71,17 @@ def parse_order(index_ts):
     for line in body.splitlines():
         comment = re.match(r"\s*// (.*)", line)
         if comment:
-            groups.append((comment.group(1).strip(), []))
+            groups.append((collection_name(comment.group(1)), []))
             continue
         item = re.match(r"\s*'([^']+)'", line)
-        if item:
+        spread = re.match(r"\s*\.\.\.(\w+)", line)
+        if item or spread:
             if not groups:
                 raise SystemExit("ORDER starts without a theme comment")
-            groups[-1][1].append(item.group(1))
+            if item:
+                groups[-1][1].append(item.group(1))
+            else:
+                groups[-1][1].extend(spread_ids(web, index_ts, spread.group(1)))
     return groups
 
 
@@ -51,12 +90,12 @@ def main():
     parser.add_argument("--from", dest="src", default=str(ROOT.parent.parent / "picross"))
     args = parser.parse_args()
     web = Path(args.src)
-    index_ts = (web / "src/puzzles/index.ts").read_text(encoding="utf-8")
-    ratings = json.loads((web / "src/puzzles/ratings.json").read_text(encoding="utf-8"))
-    groups = parse_order(index_ts)
+    index_ts = web_src(web, "puzzles/index.ts").read_text(encoding="utf-8")
+    ratings = json.loads(web_src(web, "puzzles/ratings.json").read_text(encoding="utf-8"))
+    groups = parse_order(index_ts, web)
 
     pack = {}
-    for path in sorted((web / "src/puzzles/pack").glob("*.json")):
+    for path in sorted(web_src(web, "puzzles/pack").glob("*.json")):
         p = json.loads(path.read_text(encoding="utf-8"))
         pack[p["id"]] = p
 
@@ -82,7 +121,7 @@ def main():
             collection_of[pid] = "Extras"
 
     murals = []
-    for path in (web / "src/puzzles/murals").glob("*.json"):
+    for path in web_src(web, "puzzles/murals").glob("*.json"):
         m = json.loads(path.read_text(encoding="utf-8"))
         t, rows = m["tile"], m["solution"]
         across, down = len(rows[0]) // t, len(rows) // t
